@@ -4,25 +4,31 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-map
 
 const MyMapComponent = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=" + process.env.REACT_APP_API_URL + "&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `800px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withScriptjs,
   withGoogleMap
 )((props) =>
-  <GoogleMap
-    defaultZoom={8}
-    defaultCenter={{ lat: -34.397, lng: 150.644 }}
-  >
-    {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} onClick={props.onMarkerClick} />}
-  </GoogleMap>
+    <div>
+        {console.log(props)}
+        <GoogleMap
+            defaultZoom={8}
+            defaultCenter={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }}
+        >
+            {props.isMarkerShown && <Marker position={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }} onClick={props.onMarkerClick} />}
+        </GoogleMap>
+    </div>
+  
 )//)
 
 export default class MyFancyComponent extends React.PureComponent {
+
   state = {
     isMarkerShown: false,
+    geoLoc: this.props.geoLoc
   }
 
   componentDidMount() {
@@ -41,11 +47,18 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   render() {
+    console.log(this.props.geoLoc)
     return (
-      <MyMapComponent
-        isMarkerShown={this.state.isMarkerShown}
-        onMarkerClick={this.handleMarkerClick}
-      />
+        <div>
+            {this.props.geoLoc !== '' && 
+                <MyMapComponent
+                    isMarkerShown={this.state.isMarkerShown}
+                    onMarkerClick={this.handleMarkerClick}
+                    geoLoc={this.props.geoLoc}
+                />
+            }
+        </div>
+      
     )
   }
 }
