@@ -166,15 +166,16 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger 
   }
 
-  onPolygonClick = (props, polygon, e) => {
+  onPolygonClick = (props) => {
     //i think e is where i clicked, so probably can get rid of it
     
     const editingId = props.id; 
     const editedPolygon = this.state.markers[editingId]
+    const polygon = this 
     console.log(editingId)
     console.log(props)
-    console.log(polygon)
-    console.log(e)
+
+    debugger 
 
     function getPaths(polygon){
       var coordinates = (polygon.getPath().getArray());
@@ -206,34 +207,8 @@ export default class MyFancyComponent extends React.PureComponent {
       debugger 
       
       return latLng 
-      /*
-      console.log(latLng.lat())
-      console.log(latLng.lng())
-      console.log(this.state.markers[0].polygonCoords)
-      console.log(this)
-
-      const polygonHere = this[0]
-      const idOfPolygon = this[1] 
-
-      ///how to get latLng.lat() and latLng.lng() to the right places in the state.markers... 
-
-      const newLat = latLng.lat()
-      const newLng = latLng.lng()
-      const newLatLng = [newLat, newLng]
-      debugger 
-      this[2].push(newLatLng)
-
-
-      //debugger 
-
-      return this 
-      */
-
+      
     }, polygonDetails)
-
-    //console.log(this.ref.props.paths)
-    //console.log(this.state.markers[0].polygonCoords)
-    //debugger 
 
     const markersWithNewPolygonCoords = Object.assign([], this.state.markers)
     //markersWithNewPolygonCoords[editingId].polygonObject = updatedPolygon 
@@ -246,6 +221,15 @@ export default class MyFancyComponent extends React.PureComponent {
       
     })
     console.log(this.state.editPolygon)
+  }
+
+  onPolygonDrag = () => {
+      debugger 
+      //eventually this will give option of saving state, but it should take marker with it, no? or maybe... not?
+  }
+
+  onPolygonChange = (polygon, props, event) => {
+      debugger 
   }
 
   setPolygonsNow = () => {
@@ -264,8 +248,9 @@ export default class MyFancyComponent extends React.PureComponent {
         strokeWeight={2}
         fillColor="#0000FF"
         fillOpacity={0.35} 
-        onClick={this.onPolygonClick.bind(this)}
-        onMouseDown={event => console.log(event)}
+        onClick={this.onPolygonClick} //.bind(this)}
+        onMouseUp={this.onPolygonChange} //.bind(this)}
+        onDrag={this.onPolygonDrag}
         options={{
           editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
           draggable: true 
@@ -293,6 +278,12 @@ export default class MyFancyComponent extends React.PureComponent {
     if (this.state.markers.length > 0) {
       markersList = this.setMarkersNow();
       polygonList = this.setPolygonsNow();
+    }
+
+    if (this.props.geoLoc !== '') {
+        this.state.markers.map(marker => {
+            console.log(marker.polygonCoords)
+        })
     }
 
     return (
