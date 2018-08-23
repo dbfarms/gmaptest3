@@ -1,9 +1,7 @@
 import React from "react"
 import { compose, withProps } from "recompose"
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon } from "react-google-maps"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Circle, Rectangle, Polyline } from "react-google-maps"
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
-
-//const { DrawingManager } = require("react-google-maps/lib/components/drawing/DrawingManager");
 
 import PolylinenFunctions from './PolylineFunctions';
 
@@ -34,7 +32,12 @@ const MyMapComponent = compose(
             {props.polygonList}
 
             <DrawingManager
-              
+              onCircleComplete={props.onDrawingComplete} 
+              onMarkerComplete={props.onDrawingComplete}
+              onOverlayComplete={props.onDrawingComplete}
+              onPolygonComplete={props.onDrawingComplete}
+              onPolylineComplete={props.onDrawingComplete}
+              onRectangleComplete={props.onDrawingComplete}
             />
 
         </GoogleMap>
@@ -48,21 +51,18 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //debugger
 
+    this.handleDrawingComplete = this.handleDrawingComplete.bind(this)
     this.state = {
       isMarkerShown: false,
+      polyMenu: {key: '', type: ''},
       geoLoc: this.props.geoLoc,
       markers: [],
-      parentPolygon: this.props.parentPolygon,
+      polygons: [],
+      rectangles: [],
+      polylines: [],
+      circles: [],
     }
   }
-
-  /*
-  state = {
-    isMarkerShown: false,
-    geoLoc: this.props.geoLoc,
-    markers: [],
-  }
-  */
 
   componentDidMount() {
     this.delayedShowMarker()
@@ -99,12 +99,12 @@ export default class MyFancyComponent extends React.PureComponent {
 
       const geoLoc = nextProps.geoLoc
       //debugger 
-      const testPolyLine = [
+      const testPolyLine = [ //HAVENT DONE ANYTHING WITH THIS YET
         {lat: geoLoc.lat, lng: geoLoc.lng },
         {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
         {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
       ]
-      console.log(testPolyLine)
+      //console.log(testPolyLine)
 
       this.setState ({
         markers: markerListHere,
@@ -119,6 +119,135 @@ export default class MyFancyComponent extends React.PureComponent {
     }, 3000)
   }
 
+  handleDrawingComplete = (props) => {
+
+    let newDrawing
+
+    //debugger 
+
+    switch(props.type) {
+      case "circle":
+        newDrawing = <Circle 
+                        props={props}
+                        //key={key}
+                        //id={key}
+                        ref={this.bindRef.bind(this)}
+                        //ref={key}
+                        //path={polygon.polygonCoords} //do i need to include this here?
+                        //paths={polygon.polygonCoords}
+                        strokeColor="#0000FF"
+                        strokeOpacity={0.8}
+                        strokeWeight={2}
+                        fillColor="#0000FF"
+                        fillOpacity={0.35} 
+                        onClick={this.onPolygonClick} //.bind(this)}
+                        onMouseUp={this.onPolygonChange.bind(this)} //, key)}
+                        onMouseOver={this.onMouseOver.bind(this)}
+                        onDrag={this.onPolygonDrag}
+                        options={{
+                          editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+                          draggable: true 
+                        }}
+                     />
+
+        const newCircleList = Object.assign([], this.state.circles)
+        newCircleList.push(newDrawing)
+
+        //debugger 
+        return (
+          this.setState({
+            circles: newCircleList
+          })
+        ) 
+      case "polygon":
+        newDrawing = <Polygon 
+            props={props}
+        />
+
+        const newPolygonList = Object.assign([], this.state.polygons)
+        newPolygonList.push(newDrawing)
+
+        //debugger 
+        return (
+          this.setState({
+            polygons: newPolygonList
+          })
+        ) 
+      case "polyline":
+        newDrawing = <Polyline 
+              props={props}
+              //key={key}
+              //id={key}
+              ref={this.bindRef.bind(this)}
+              //ref={key}
+              //path={polygon.polygonCoords} //do i need to include this here?
+              //paths={polygon.polygonCoords}
+              strokeColor="#0000FF"
+              strokeOpacity={0.8}
+              strokeWeight={2}
+              fillColor="#0000FF"
+              fillOpacity={0.35} 
+              onClick={this.onPolygonClick} //.bind(this)}
+              onMouseUp={this.onPolygonChange.bind(this)} //, key)}
+              onDrag={this.onPolygonDrag}
+              options={{
+                editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+                draggable: true 
+              }}
+          />
+
+          const newPolylineList = Object.assign([], this.state.polylines)
+          newPolylineList.push(newDrawing)
+
+          //debugger 
+          return (
+            this.setState({
+              polylines: newPolylineList
+            })
+          ) 
+      case "marker":
+        newDrawing = <Marker 
+              props={props}
+          />
+
+          const newMarkerList = Object.assign([], this.state.markers)
+          newMarkerList.push(newDrawing)
+
+          //debugger 
+          return (
+            this.setState({
+              markers: newMarkerList
+            })
+          ) 
+      case "marker":
+        newDrawing = <Rectangle 
+              props={props}
+          />
+
+          const newRectangleList = Object.assign([], this.state.rectangles)
+          newRectangleList.push(newDrawing)
+
+          //debugger 
+          return (
+            this.setState({
+              rectangles: newRectangleList
+            })
+          ) 
+      default:
+        break 
+    }
+
+    //debugger 
+  }
+
+  onMouseOver(key, type, props) {
+    //debugger 
+
+    this.setState({
+      polyMenu: {key: key, type: type}
+    })
+  }
+
   handleMarkerClick = () => {
     this.setState({ isMarkerShown: false })
     this.delayedShowMarker()
@@ -126,7 +255,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
   setMarkersNow = () => {
     const markers = this.state.markers.map((marker, key)=> {
-        console.log(marker)
+        //console.log(marker)
       return (
         <Marker 
           position={{lat: marker.position[0], lng: marker.position[1]}}
@@ -170,7 +299,7 @@ export default class MyFancyComponent extends React.PureComponent {
     const addedPolygonMarkers = Object.assign([], this.state.markers)
 
     //maybe collect all ref individually and add them to this.refs?    
-    console.log(ref)
+    //console.log(ref)
     if (ref != null) {
       //debugger 
       for (let i=0; i < addedPolygonMarkers.length; i++) {
@@ -195,14 +324,14 @@ export default class MyFancyComponent extends React.PureComponent {
     const editingId = props.id; 
     const editedPolygon = this.state.markers[editingId]
     const polygon = this 
-    console.log(editingId)
-    console.log(props)
+    //console.log(editingId)
+    //console.log(props)
 
     debugger 
 
     function getPaths(polygon){
       var coordinates = (polygon.getPath().getArray());
-      console.log(coordinates);
+      //console.log(coordinates);
     }
 
     getPaths(polygon)
@@ -214,11 +343,11 @@ export default class MyFancyComponent extends React.PureComponent {
     // - this.state.markers[at the position selected].polygonObject at whatever position is reflecting the correct
     //value for some reason 
     //eventually i'll need to do more than set state and post info to server... at which point i'll revisit this
-    console.log(editedPolygon)
+    //console.log(editedPolygon)
     for (let i=0; i<editedPolygon.polygonCoords.length; i++) {
       //debugger 
-      console.log(editedPolygon.polygonObject.polygon.getPath()["b"][i].lat())
-      console.log(editedPolygon.polygonObject.polygon.getPath()["b"][i].lng())
+      //console.log(editedPolygon.polygonObject.polygon.getPath()["b"][i].lat())
+      //console.log(editedPolygon.polygonObject.polygon.getPath()["b"][i].lng())
       editedPolygon.polygonObject.props.paths[i].lat = editedPolygon.polygonObject.polygon.getPath()["b"][i].lat()
       editedPolygon.polygonObject.props.paths[i].lng = editedPolygon.polygonObject.polygon.getPath()["b"][i].lng()
     }
@@ -243,7 +372,7 @@ export default class MyFancyComponent extends React.PureComponent {
       editPolygon: !this.state.editPolygon
       
     })
-    console.log(this.state.editPolygon)
+    //console.log(this.state.editPolygon)
   }
 
   onPolygonDrag = () => {
@@ -270,8 +399,9 @@ export default class MyFancyComponent extends React.PureComponent {
   setPolygonsNow = () => {
     const polygonsDrawn = this.state.markers.map((polygon, key) => {
 
+      const type="polygons"
       const newRef = this.bindRef.bind(this) 
-      console.log(newRef)
+      //console.log(newRef)
       const newPolygon = <Polygon
         key={key}
         id={key}
@@ -287,6 +417,7 @@ export default class MyFancyComponent extends React.PureComponent {
         onClick={this.onPolygonClick} //.bind(this)}
         onMouseUp={this.onPolygonChange.bind(this, key)}//this.state.parentPolygon(polygon, key)} //onPolygonChange.bind(this)} //.bind(this)}
         onDrag={this.onPolygonDrag}
+        onMouseOver={this.onMouseOver.bind(this, key, type)}
         options={{
           editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
           draggable: true 
@@ -310,8 +441,36 @@ export default class MyFancyComponent extends React.PureComponent {
     debugger 
   }
 
+  showDeets = () => {
+
+    //debugger
+    let shapeSelected 
+    let key = this.state.polyMenu.key 
+
+    switch(this.state.polyMenu.type) {
+      case("polygons"):
+        shapeSelected = this.state.polygons
+      case("circles"):
+        shapeSelected = this.state.circles
+      case ("polylines"):
+        shapeSelected = this.state.polylines 
+      case ("rectangles"):
+        shapeSelected = this.state.rectangles
+      case ("markers"):
+        shapeSelected = this.state.markers 
+      default:
+        break 
+    }
+
+    //debugger 
+
+    const shape = shapeSelected[key]
+
+    debugger 
+  }
+
   render() {
-    console.log(this.props.geoLoc)
+    //console.log(this.props.geoLoc)
 
     let markersList 
     let polygonList
@@ -324,12 +483,16 @@ export default class MyFancyComponent extends React.PureComponent {
 
     if (this.props.geoLoc !== '') {
         this.state.markers.map(marker => {
-            console.log(marker.polygonCoords)
+            //console.log(marker.polygonCoords)
         })
     } else {
       console.log("geoloc not updating")
     }
 
+    let showingDeets 
+    if (this.state.polyMenu.type !== '') {
+      showingDeets = this.showDeets()
+    }
     return (
         <div>
             <div>
@@ -345,7 +508,14 @@ export default class MyFancyComponent extends React.PureComponent {
               >
                 save changes
               </button>
-
+            </div>
+            <div className="menu">
+            <h3>menu</h3>
+            {this.state.polyMenu.type != '' &&
+              <div>
+                {showingDeets}
+              </div>
+            }
             </div>
             {this.props.geoLoc !== '' && 
                 <MyMapComponent
@@ -354,6 +524,8 @@ export default class MyFancyComponent extends React.PureComponent {
                     geoLoc={this.props.geoLoc}
                     markersList={markersList}
                     polygonList={polygonList}
+                    onDrawingComplete={this.handleDrawingComplete}
+                    circleList={this.state.circles}
 
                 />
             }
