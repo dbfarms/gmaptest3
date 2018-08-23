@@ -428,6 +428,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
       return (newPolygon)
     })
+
     return polygonsDrawn
   }
 
@@ -450,6 +451,38 @@ export default class MyFancyComponent extends React.PureComponent {
     switch(this.state.polyMenu.type) {
       case("polygons"):
         shapeSelected = this.state.polygons
+        const shape = shapeSelected[key]
+
+        //debugger 
+        console.log(shape)
+        return (
+          <div className="container">
+            <h2>Paths</h2>
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th>Vertex</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                </tr>
+              </thead>
+                {shape !== undefined && 
+                <tbody>
+                    {shape.props.path.map((pcoord, key) => {
+                      return (
+                        <tr key={key}>
+                          <td>{key + 1}</td>
+                          <td key={key + "lat"}>{pcoord.lat}</td>
+                          <td key={key + "lng"}>{pcoord.lng}</td>
+                        </tr>
+                      )
+                      })
+                    }
+                </tbody>
+                }
+            </table>
+          </div>
+        )
       case("circles"):
         shapeSelected = this.state.circles
       case ("polylines"):
@@ -461,12 +494,25 @@ export default class MyFancyComponent extends React.PureComponent {
       default:
         break 
     }
+  }
 
-    //debugger 
-
-    const shape = shapeSelected[key]
-
-    debugger 
+  setPolygonState(polygonList){
+    if (this.state.polygons.length == 0) {
+      this.setState({
+        polygons: polygonList
+      })
+    } else {
+      for (let i=0; i<polygonList.length; i++) {
+        console.log(i)
+        //debugger 
+        if (this.state.polygons[i].props.path !== polygonList[i].props.path) {
+          //debugger 
+          this.setState({
+            polygons: polygonList
+          })
+        }
+      }
+    }
   }
 
   render() {
@@ -479,11 +525,13 @@ export default class MyFancyComponent extends React.PureComponent {
     if (this.state.markers.length > 0) {
       markersList = this.setMarkersNow();
       polygonList = this.setPolygonsNow(); 
+      
+      this.setPolygonState(polygonList);
     }
 
     if (this.props.geoLoc !== '') {
         this.state.markers.map(marker => {
-            //console.log(marker.polygonCoords)
+            console.log(marker.polygonCoords)
         })
     } else {
       console.log("geoloc not updating")
