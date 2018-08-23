@@ -13,17 +13,18 @@ class App extends Component {
       geoLoc: ''
     }
 
+    //this.parentPolygon = this.parentPolygon.bind(this)
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}
       //debugger 
+      console.log(geoLoc)
       this.setState({
         geoLoc: geoLoc
       })
-      console.log(geoLoc)
+      
     });
   }
-  
 
   render() {
     return (
@@ -32,7 +33,7 @@ class App extends Component {
           <Player />
         </div>
         <div>
-          <MyFancyComponent geoLoc={this.state.geoLoc}/>
+          <MyFancyComponent geoLoc={this.state.geoLoc} />
         </div>
       </div>
     );

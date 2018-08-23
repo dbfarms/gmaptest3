@@ -2,6 +2,8 @@ import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon } from "react-google-maps"
 
+import PolygonFunctions from './PolygonFunctions';
+
 const MyMapComponent = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=" + process.env.REACT_APP_API_URL + "&v=3.exp&libraries=geometry,drawing,places",
@@ -34,12 +36,25 @@ const MyMapComponent = compose(
 )//)
 
 export default class MyFancyComponent extends React.PureComponent {
+  constructor(props) {
+    super(props)
 
+    this.state = {
+      isMarkerShown: false,
+      geoLoc: this.props.geoLoc,
+      markers: [],
+      parentPolygon: this.props.parentPolygon,
+    }
+    //this.onPolygonChange = this.onPolygonChange.bind(this)
+  }
+
+  /*
   state = {
     isMarkerShown: false,
     geoLoc: this.props.geoLoc,
     markers: [],
   }
+  */
 
   componentDidMount() {
     this.delayedShowMarker()
@@ -146,7 +161,7 @@ export default class MyFancyComponent extends React.PureComponent {
     this.ref = ref
     const addedPolygonMarkers = Object.assign([], this.state.markers)
 
-    
+    //maybe collect all ref individually and add them to this.refs?    
     console.log(ref)
     if (ref != null) {
       //debugger 
@@ -228,20 +243,33 @@ export default class MyFancyComponent extends React.PureComponent {
       //eventually this will give option of saving state, but it should take marker with it, no? or maybe... not?
   }
 
-  onPolygonChange = (polygon, props, event) => {
-      debugger 
+  onPolygonChange(key, props) {
+
+      //const newPolygonDeets = Object.assign({}, this.state.markers[key])
+      
+      const updatedMarkers = Object.assign([], this.state.markers)
+      updatedMarkers[key].polygonCoords[props.vertex].lat = props.latLng.lat()
+      updatedMarkers[key].polygonCoords[props.vertex].lng = props.latLng.lng()
+
+      //debugger 
+
+      //debugger 
+      this.setState({
+        markers: updatedMarkers
+      })
   }
 
   setPolygonsNow = () => {
     const polygonsDrawn = this.state.markers.map((polygon, key) => {
 
       const newRef = this.bindRef.bind(this) 
-
+      console.log(newRef)
       const newPolygon = <Polygon
         key={key}
         id={key}
         ref={this.bindRef.bind(this)}
         //ref={key}
+        path={polygon.polygonCoords}
         paths={polygon.polygonCoords}
         strokeColor="#0000FF"
         strokeOpacity={0.8}
@@ -249,7 +277,7 @@ export default class MyFancyComponent extends React.PureComponent {
         fillColor="#0000FF"
         fillOpacity={0.35} 
         onClick={this.onPolygonClick} //.bind(this)}
-        onMouseUp={this.onPolygonChange} //.bind(this)}
+        onMouseUp={this.onPolygonChange.bind(this, key)}//this.state.parentPolygon(polygon, key)} //onPolygonChange.bind(this)} //.bind(this)}
         onDrag={this.onPolygonDrag}
         options={{
           editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
@@ -257,14 +285,20 @@ export default class MyFancyComponent extends React.PureComponent {
         }}
       />
 
-      return (
-        newPolygon
-      )
+      //debugger 
+
+      return (newPolygon)
     })
     return polygonsDrawn
   }
 
   runsTest = () => {
+    debugger 
+  }
+
+  savesChanges = () => {
+    //should the button only show up if there's a change? how to check
+
     debugger 
   }
 
@@ -277,13 +311,15 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger 
     if (this.state.markers.length > 0) {
       markersList = this.setMarkersNow();
-      polygonList = this.setPolygonsNow();
+      polygonList = this.setPolygonsNow(); 
     }
 
     if (this.props.geoLoc !== '') {
         this.state.markers.map(marker => {
             console.log(marker.polygonCoords)
         })
+    } else {
+      console.log("geoloc not updating")
     }
 
     return (
@@ -294,6 +330,14 @@ export default class MyFancyComponent extends React.PureComponent {
                 >
                 test run
                 </button>
+            </div>
+            <div>
+              <button
+                onClick={this.savesChanges.bind(this)}
+              >
+                save changes
+              </button>
+
             </div>
             {this.props.geoLoc !== '' && 
                 <MyMapComponent
