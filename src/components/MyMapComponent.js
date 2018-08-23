@@ -1,8 +1,11 @@
 import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon } from "react-google-maps"
+import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
 
-import PolygonFunctions from './PolygonFunctions';
+//const { DrawingManager } = require("react-google-maps/lib/components/drawing/DrawingManager");
+
+import PolylinenFunctions from './PolylineFunctions';
 
 const MyMapComponent = compose(
   withProps({
@@ -30,6 +33,10 @@ const MyMapComponent = compose(
 
             {props.polygonList}
 
+            <DrawingManager
+              
+            />
+
         </GoogleMap>
     </div>
   
@@ -39,13 +46,14 @@ export default class MyFancyComponent extends React.PureComponent {
   constructor(props) {
     super(props)
 
+    //debugger
+
     this.state = {
       isMarkerShown: false,
       geoLoc: this.props.geoLoc,
       markers: [],
       parentPolygon: this.props.parentPolygon,
     }
-    //this.onPolygonChange = this.onPolygonChange.bind(this)
   }
 
   /*
