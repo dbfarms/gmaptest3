@@ -8,15 +8,9 @@ import './defaults.css'
 import './range.css'
 import '../App.css'
 
-import { version } from '../../package.json'
+//import { version } from '../../package.json'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
 import Duration from './Duration'
-
-const MULTIPLE_SOURCES = [
-  { src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', type: 'video/mp4' },
-  { src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.ogv', type: 'video/ogv' },
-  { src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.webm', type: 'video/webm' }
-]
 
 class Player extends Component {
   state = {

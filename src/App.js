@@ -10,7 +10,11 @@ class App extends Component {
     super()
 
     this.state = {
-      geoLoc: ''
+      geoLoc: '',
+      preloadedTracks: ['https://soundcloud.com/failed2012/march-8th-2017', 
+                       'https://soundcloud.com/failed2012/march-7th-2017', 
+                       'https://soundcloud.com/failed2012/march-4th-2017', 
+                       'https://soundcloud.com/failed2012/march-2nd-2017'],
     }
 
     //this.parentPolygon = this.parentPolygon.bind(this)
@@ -33,7 +37,7 @@ class App extends Component {
           <Player />
         </div>
         <div>
-          <MyFancyComponent geoLoc={this.state.geoLoc} />
+          <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks}/>
         </div>
       </div>
     );
