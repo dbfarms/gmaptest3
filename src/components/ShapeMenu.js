@@ -26,8 +26,8 @@ export default class ShapeMenu extends Component {
         let shapeSelected 
         let keyID = this.state.keyID 
         //debugger 
-        console.log(shape)
-        console.log(this.state.tracksList)
+        //console.log(shape)
+        //console.log(this.state.tracksList)
 
         return (
             <div className="container">

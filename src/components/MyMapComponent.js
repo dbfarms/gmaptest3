@@ -2,6 +2,7 @@ import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Circle, Rectangle, Polyline } from "react-google-maps"
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+
 import ShapeMenu from './ShapeMenu';
 
 import PolylinenFunctions from './PolylineFunctions';
@@ -32,6 +33,13 @@ const MyMapComponent = compose(
 
             {props.polygonToDraw}
 
+            {props.testMarker.show === true &&
+              <div>
+              {console.log(props.testMarker)}
+              <Marker position={{lat: props.testMarker.position.lat, lng: props.testMarker.position.lng}} />
+              </div>
+            }
+
             <DrawingManager
               onCircleComplete={props.onDrawingComplete} 
               onMarkerComplete={props.onDrawingComplete}
@@ -58,12 +66,14 @@ export default class MyFancyComponent extends React.PureComponent {
       isMarkerShown: false,
       polyMenu: {key: '', type: ''},
       geoLoc: this.props.geoLoc,
+      testMarker: {position: "", polygon: "", show: false},
       markers: [],
       polygons: [],
       rectangles: [],
       polylines: [],
       circles: [],
       tracks: this.props.tracks,
+      timer: 0,
     }
   }
 
@@ -117,6 +127,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   delayedShowMarker = () => {
+    //this is a dumb function i need to do something else with
     setTimeout(() => {
       this.setState({ isMarkerShown: true })
     }, 3000)
@@ -259,7 +270,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
   setMarkersNow = () => {
     const markers = this.state.markers.map((marker, key)=> {
-        //console.log(marker)
+      //console.log(marker)
       return (
         <Marker 
           position={{lat: marker.position[0], lng: marker.position[1]}}
@@ -406,7 +417,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
       const type="polygons"
       const newRef = this.bindRef.bind(this) 
-      console.log(newRef)
+      //console.log(newRef)
       const newPolygon = {polygon: <Polygon
         key={key}
         id={key}
@@ -438,8 +449,84 @@ export default class MyFancyComponent extends React.PureComponent {
     return polygonsDrawn
   }
 
-  runsTest = () => {
+  moveTestMarker = () => {
+
+    const oldTestMarker = this.state.testMarker
+    const newTestMarker = Object.assign({}, this.state.testMarker)
+    newTestMarker.position = {lat: oldTestMarker.position.lat, lng: oldTestMarker.position.lng}
+
+    const oldPosition = this.state.testMarker.position 
+
     debugger 
+
+    if (this.state.testMarker !== "") {
+
+      this.setState({
+        testMarker: {
+          position: {
+            lat: oldPosition.lat + .01, 
+            lng: oldPosition.lng + .01,
+            }
+        },
+      })
+      
+      //debugger 
+    }
+    console.log(this.state.testMarker)
+  }
+
+  runsTest = () => {
+    //creates a new marker at map center  (or as it turns out, not...)
+    //sets a timer to change state ever x-seconds
+    //needs to keep track of location and check if its within bounds of any of the polygons, etc
+    //some transition effects would be nice but not really important
+
+    const createTestMarker = {position: {lat: this.state.geoLoc.lat + .005, lng: this.state.geoLoc.lng + .005}, 
+          polygon: "", show: true}
+
+    this.setState({
+      testMarker: createTestMarker
+    })
+    //debugger 
+
+    let timer = 0
+    var moveIt = setInterval(mover, 10)
+
+    function mover() {
+      if (timer == 5) {
+        clearInterval(moveIt)
+      } else {
+        timer++ 
+
+        debugger 
+        if (this.state.testMarker !== "") {
+
+          this.setState({
+            testMarker: {
+              position: {
+                lat: this.state.testMarker.position.lat + .01, 
+                lng: this.state.testMarker.position.lng + .01,
+                }
+            },
+          })
+          
+          //debugger 
+        }
+      }
+    }
+
+    /*
+    setInterval(() => {
+      timer++ 
+      if (timer == 5) {
+
+      } else 
+      {
+
+      }
+      this.moveTestMarker()
+    }, 1000)
+    */
   }
 
   savesChanges = () => {
@@ -466,8 +553,8 @@ export default class MyFancyComponent extends React.PureComponent {
         this.setState({
           polygons: polygonList 
         })
-        console.log(polygonList[id])
-        console.log(shape)
+        //console.log(polygonList[id])
+        //console.log(shape)
         break
     }
 
@@ -484,7 +571,7 @@ export default class MyFancyComponent extends React.PureComponent {
           shapeSelected = this.state.polygons
           const shape = shapeSelected[key]
 
-          console.log(shape)
+          //console.log(shape)
           return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
       case("circles"):
           shapeSelected = this.state.circles
@@ -503,7 +590,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   setPolygonState(polygonList){
-    if (this.state.polygons.length == 0) {
+    if (this.state.polygons.length === 0) {
       this.setState({
         polygons: polygonList
       })
@@ -540,7 +627,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     if (this.props.geoLoc !== '') {
         this.state.markers.map(marker => {
-            console.log(marker.polygonCoords)
+            //console.log(marker.polygonCoords)
         })
     } else {
       console.log("geoloc not updating")
@@ -554,7 +641,7 @@ export default class MyFancyComponent extends React.PureComponent {
         <div>
             <div>
                 <button
-                    onClick={this.runsTest}
+                    onClick={this.runsTest.bind(this)}
                 >
                 test run
                 </button>
@@ -583,7 +670,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     polygonToDraw={polygonToDraw}
                     onDrawingComplete={this.handleDrawingComplete}
                     circleList={this.state.circles}
-
+                    testMarker={this.state.testMarker}
                 />
             }
         </div>
