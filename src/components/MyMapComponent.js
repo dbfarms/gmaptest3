@@ -3,6 +3,7 @@ import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Circle, Rectangle, Polyline } from "react-google-maps"
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
 
+import Pulse from './Pulse';
 import ShapeMenu from './ShapeMenu';
 
 import PolylinenFunctions from './PolylineFunctions';
@@ -74,11 +75,17 @@ export default class MyFancyComponent extends React.PureComponent {
       circles: [],
       tracks: this.props.tracks,
       timer: 0,
+      running: false,
     }
   }
 
   componentDidMount() {
     this.delayedShowMarker()
+  }
+
+  componentDidUpdate(prevState, props) {
+    //debugger
+    //console.log(prevState)
   }
 
   componentWillReceiveProps(nextProps){
@@ -92,6 +99,9 @@ export default class MyFancyComponent extends React.PureComponent {
     //also it creates the polygon here though it'll have to be done elsewhere soon
     if (nextProps.geoLoc) {
       //debugger 
+      const createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
+          polygon: "", show: false}
+      
       let markerListHere = []
       for (let i = 1; i<5; i++) {
         let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
@@ -118,10 +128,11 @@ export default class MyFancyComponent extends React.PureComponent {
         {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
       ]
       //console.log(testPolyLine)
-
+      console.log(createTestMarker)
       this.setState ({
         markers: markerListHere,
-        testPolyLine: testPolyLine
+        testPolyLine: testPolyLine,
+        testMarker: createTestMarker
       })
     }
   }
@@ -449,86 +460,6 @@ export default class MyFancyComponent extends React.PureComponent {
     return polygonsDrawn
   }
 
-  moveTestMarker = () => {
-
-    const oldTestMarker = this.state.testMarker
-    const newTestMarker = Object.assign({}, this.state.testMarker)
-    newTestMarker.position = {lat: oldTestMarker.position.lat, lng: oldTestMarker.position.lng}
-
-    const oldPosition = this.state.testMarker.position 
-
-    debugger 
-
-    if (this.state.testMarker !== "") {
-
-      this.setState({
-        testMarker: {
-          position: {
-            lat: oldPosition.lat + .01, 
-            lng: oldPosition.lng + .01,
-            }
-        },
-      })
-      
-      //debugger 
-    }
-    console.log(this.state.testMarker)
-  }
-
-  runsTest = () => {
-    //creates a new marker at map center  (or as it turns out, not...)
-    //sets a timer to change state ever x-seconds
-    //needs to keep track of location and check if its within bounds of any of the polygons, etc
-    //some transition effects would be nice but not really important
-
-    const createTestMarker = {position: {lat: this.state.geoLoc.lat + .005, lng: this.state.geoLoc.lng + .005}, 
-          polygon: "", show: true}
-
-    this.setState({
-      testMarker: createTestMarker
-    })
-    //debugger 
-
-    let timer = 0
-    var moveIt = setInterval(mover, 10)
-
-    function mover() {
-      if (timer == 5) {
-        clearInterval(moveIt)
-      } else {
-        timer++ 
-
-        debugger 
-        if (this.state.testMarker !== "") {
-
-          this.setState({
-            testMarker: {
-              position: {
-                lat: this.state.testMarker.position.lat + .01, 
-                lng: this.state.testMarker.position.lng + .01,
-                }
-            },
-          })
-          
-          //debugger 
-        }
-      }
-    }
-
-    /*
-    setInterval(() => {
-      timer++ 
-      if (timer == 5) {
-
-      } else 
-      {
-
-      }
-      this.moveTestMarker()
-    }, 1000)
-    */
-  }
-
   savesChanges = () => {
     //should the button only show up if there's a change? how to check
 
@@ -606,6 +537,21 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  returnFunction = () => {
+    console.log("running")
+
+    const newMarkerLocation = Object.assign({}, this.state.testMarker)
+
+    newMarkerLocation.position.lat = this.state.testMarker.position.lat + .00005
+    newMarkerLocation.position.lng = this.state.testMarker.position.lng + .00005
+
+    newMarkerLocation.show = true; 
+
+    this.setState({
+      testMarker: newMarkerLocation
+    })
+  }
+
   render() {
     //console.log(this.props.geoLoc)
 
@@ -640,11 +586,10 @@ export default class MyFancyComponent extends React.PureComponent {
     return (
         <div>
             <div>
-                <button
-                    onClick={this.runsTest.bind(this)}
-                >
-                test run
-                </button>
+              {<Pulse 
+                pulseTime={1} // In Seconds
+                pulseFunction={this.returnFunction}
+              />}
             </div>
             <div>
               <button
