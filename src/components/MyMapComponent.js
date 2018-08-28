@@ -6,6 +6,8 @@ import DrawingManager from "react-google-maps/lib/components/drawing/DrawingMana
 import Pulse from './Pulse';
 import ShapeMenu from './ShapeMenu';
 
+//still to make or maybe not i dunno
+import checkLocation from './TestFunctions';
 import PolylinenFunctions from './PolylineFunctions';
 
 const MyMapComponent = compose(
@@ -21,7 +23,7 @@ const MyMapComponent = compose(
     <div>
         {console.log(props)}
         <GoogleMap
-            defaultZoom={16}
+            defaultZoom={17}
             defaultCenter={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }}
         >
             {props.isMarkerShown && 
@@ -36,12 +38,16 @@ const MyMapComponent = compose(
 
             {props.testMarker.show === true &&
               <div>
-              {console.log(props.testMarker)}
-              <Marker position={{lat: props.testMarker.position.lat, lng: props.testMarker.position.lng}} />
+                {console.log(props.testMarker)}
+                <Marker position={{lat: props.testMarker.position.lat, lng: props.testMarker.position.lng}} />
+                
+                {props.thisTestMarker}
+                {console.log()}
               </div>
             }
 
-            <DrawingManager
+            {props.runnin !== false &&
+              <DrawingManager
               onCircleComplete={props.onDrawingComplete} 
               onMarkerComplete={props.onDrawingComplete}
               onOverlayComplete={props.onDrawingComplete}
@@ -49,6 +55,8 @@ const MyMapComponent = compose(
               onPolylineComplete={props.onDrawingComplete}
               onRectangleComplete={props.onDrawingComplete}
             />
+            }
+            
 
         </GoogleMap>
     </div>
@@ -64,10 +72,10 @@ export default class MyFancyComponent extends React.PureComponent {
     this.handleDrawingComplete = this.handleDrawingComplete.bind(this)
     this.chooseTrack = this.chooseTrack.bind(this)
     this.state = {
-      isMarkerShown: false,
+      isMarkerShown: true,
       polyMenu: {key: '', type: ''},
       geoLoc: this.props.geoLoc,
-      testMarker: {position: "", polygon: "", show: false},
+      testMarker: {position: "", marker: "", show: false},
       markers: [],
       polygons: [],
       rectangles: [],
@@ -80,7 +88,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.delayedShowMarker()
+    //this.delayedShowMarker()
   }
 
   componentDidUpdate(prevState, props) {
@@ -99,8 +107,51 @@ export default class MyFancyComponent extends React.PureComponent {
     //also it creates the polygon here though it'll have to be done elsewhere soon
     if (nextProps.geoLoc) {
       //debugger 
-      const createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
-          polygon: "", show: false}
+      
+      //debugger
+      
+      console.log("geo loc works")
+
+
+      //debugger 
+      let createTestMarker;
+      let actualMarker; 
+      //debugger
+      if (this.state.testMarker.position !== "" ) {
+        console.log("this one")
+        createTestMarker = {position: {lat: nextProps.testMarker.position.lat - .0000005, lng: nextProps.testMarker.position.lng - .0000005}, 
+          marker: "", show: false}
+
+        actualMarker = <Marker 
+            position= {{lat: nextProps.testMarker.position.lat  - .0000005, lng: nextProps.testMarker.position.lng - .0000005}}/>
+
+        debugger 
+        createTestMarker.marker = actualMarker
+        console.log(createTestMarker)
+      } else {
+        console.log("should only happen once")
+
+        createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
+        marker: "", show: false}
+
+        actualMarker = <Marker 
+        position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} lat={this.lat} lng={this.lng} />
+      
+          //debugger 
+        createTestMarker.marker = actualMarker
+
+        //const thisWork = actualMarker.props.lat(actualMarker.props.position.lat)
+
+        //debugger 
+
+      }
+
+
+      //const createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
+      //    polygon: "", show: false}
+
+      //const actualMarker = <Marker 
+      //    position= {{lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}}/>
       
       let markerListHere = []
       for (let i = 1; i<5; i++) {
@@ -137,12 +188,15 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  delayedShowMarker = () => {
-    //this is a dumb function i need to do something else with
-    setTimeout(() => {
-      this.setState({ isMarkerShown: true })
-    }, 3000)
+  lat(testMarker) {
+    //debugger 
+    return testMarker //.position.lat 
   }
+
+  lng(testMarker) {
+    return testMarker
+  }
+  
 
   handleDrawingComplete = (props) => {
 
@@ -274,9 +328,9 @@ export default class MyFancyComponent extends React.PureComponent {
     })
   }
 
-  handleMarkerClick = () => {
-    this.setState({ isMarkerShown: false })
-    this.delayedShowMarker()
+  handleMarkerClick = (e) => {
+    //this.setState({ isMarkerShown: false })
+    debugger 
   }
 
   setMarkersNow = () => {
@@ -537,6 +591,17 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  checkLocation = (e) => {
+    debugger 
+    
+    const whereAmI = this.state.testMarker.position 
+
+
+    //if ()
+    //checks if location is within polygon, and if so, gets props from that polygon 
+  
+  }
+
   returnFunction = () => {
     console.log("running")
 
@@ -547,9 +612,15 @@ export default class MyFancyComponent extends React.PureComponent {
 
     newMarkerLocation.show = true; 
 
+    this.checkLocation() //(); 
+
     this.setState({
       testMarker: newMarkerLocation
     })
+  }
+
+  handleMapClick = () => {
+    debugger 
   }
 
   render() {
@@ -583,6 +654,7 @@ export default class MyFancyComponent extends React.PureComponent {
     if (this.state.polyMenu.type !== '') {
       showingDeets = this.showDeets()
     }
+
     return (
         <div>
             <div>
@@ -610,12 +682,14 @@ export default class MyFancyComponent extends React.PureComponent {
                 <MyMapComponent
                     isMarkerShown={this.state.isMarkerShown}
                     onMarkerClick={this.handleMarkerClick}
+                    onClick={this.handleMapClick} // doesn't work 
                     geoLoc={this.props.geoLoc}
                     markersList={markersList}
                     polygonToDraw={polygonToDraw}
                     onDrawingComplete={this.handleDrawingComplete}
                     circleList={this.state.circles}
                     testMarker={this.state.testMarker}
+                    thisTestMarker={this.state.thisTestMarker}
                 />
             }
         </div>
