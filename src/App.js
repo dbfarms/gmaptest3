@@ -15,6 +15,7 @@ class App extends Component {
                        'https://soundcloud.com/failed2012/march-7th-2017', 
                        'https://soundcloud.com/failed2012/march-4th-2017', 
                        'https://soundcloud.com/failed2012/march-2nd-2017'],
+      activeTrack: null,
     }
 
     //this.parentPolygon = this.parentPolygon.bind(this)
@@ -30,14 +31,22 @@ class App extends Component {
     });
   }
 
+  nowPlaying = (polygonActive) => {
+    //debugger 
+
+    this.setState({
+      activeTrack: this.state.polygons[i].track 
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <div className='player-wrapper'>
-          <Player />
+          <Player activeTrack={activeTrack}/>
         </div>
         <div>
-          <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks}/>
+          <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks} nowPlaying={this.nowPlaying}/>
         </div>
       </div>
     );

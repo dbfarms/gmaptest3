@@ -87,7 +87,7 @@ export default class MyFancyComponent extends React.PureComponent {
       tracks: this.props.tracks,
       timer: 0,
       running: false,
-      //google: google,
+      nowPlaying: this.props.nowPlaying,
     }
   }
 
@@ -602,13 +602,8 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  checkLocation = (e) => {
-    //debugger 
+  checkLocation = () => {
     
-    //ok here! the array of lat/long need to reflect polygon paths... gonna need to iterate over each
-    //polygon and other shape and run below code to see
-    //then update player accordingly
-
     const latNow = this.state.testMarker.position.lat
     const lngNow = this.state.testMarker.position.lng 
 
@@ -621,14 +616,18 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger 
 
     for (let i =0; i<listOfPaths.length -1; i++) {
-      console.log(this.state.testMarker.marker.props.position)
+      //console.log(this.state.testMarker.marker.props.position)
       const inPolygonCheck = geolib.isPointInside(
         {latitude: latNow, longitude: lngNow},
         listOfPaths[i]
       ); // -> true 
-      console.log(inPolygonCheck)
+      //console.log(inPolygonCheck)
       if (inPolygonCheck === true ) {
-        debugger 
+        //debugger 
+        const polygonActive = this.state.polygons[i] 
+
+        this.state.nowPlaying(polygonActive)
+        
       }
     }
     
@@ -645,9 +644,6 @@ export default class MyFancyComponent extends React.PureComponent {
       ]
     ); // -> true 
     */
-    
-
-    //checks if location is within polygon, and if so, gets props from that polygon 
   
   }
 
