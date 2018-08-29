@@ -6,9 +6,12 @@ import DrawingManager from "react-google-maps/lib/components/drawing/DrawingMana
 import Pulse from './Pulse';
 import ShapeMenu from './ShapeMenu';
 
+import geolib from 'geolib'
 //still to make or maybe not i dunno
 import checkLocation from './TestFunctions';
 import PolylinenFunctions from './PolylineFunctions';
+
+const google = window.google;
 
 const MyMapComponent = compose(
   withProps({
@@ -84,6 +87,7 @@ export default class MyFancyComponent extends React.PureComponent {
       tracks: this.props.tracks,
       timer: 0,
       running: false,
+      //google: google,
     }
   }
 
@@ -125,7 +129,7 @@ export default class MyFancyComponent extends React.PureComponent {
         actualMarker = <Marker 
             position= {{lat: nextProps.testMarker.position.lat  - .0000005, lng: nextProps.testMarker.position.lng - .0000005}}/>
 
-        debugger 
+        //debugger 
         createTestMarker.marker = actualMarker
         console.log(createTestMarker)
       } else {
@@ -135,14 +139,14 @@ export default class MyFancyComponent extends React.PureComponent {
         marker: "", show: false}
 
         actualMarker = <Marker 
-        position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} lat={this.lat} lng={this.lng} />
+        position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
       
-          //debugger 
         createTestMarker.marker = actualMarker
 
+        //debugger 
+        //const testLatLng = props.google.maps.geometry.poly.containsLocation( actualMarker.latLng, this.state.markers[0].polygonObject.props.getPath())
         //const thisWork = actualMarker.props.lat(actualMarker.props.position.lat)
 
-        //debugger 
 
       }
 
@@ -188,13 +192,20 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  lat(testMarker) {
+  latLng(position) {
     //debugger 
-    return testMarker //.position.lat 
+    //this.lat(position.lat)
+    return position 
   }
 
-  lng(testMarker) {
-    return testMarker
+  lat() {
+    debugger 
+    //return testMarker //.position.lat 
+  }
+
+  lng() {
+    //debugger
+    //return testMarker
   }
   
 
@@ -592,10 +603,33 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   checkLocation = (e) => {
-    debugger 
+    //debugger 
     
-    const whereAmI = this.state.testMarker.position 
+    debugger 
+    const latNow = this.state.testMarker.marker.props.position.lat
+    const lngNow = this.state.testMarker.marker.props.position.lng 
+    //const markerLatLng = this.state.testMarker.marker.props 
 
+    
+    //ok here! the array of lat/long need to reflect polygon paths... gonna need to iterate over each
+    //polygon and other shape and run below code to see
+    //then update player accordingly
+    geolib.isPointInside(
+      {latitude: latNow, longitude: lngNow},
+      [
+          {latitude: 51.50, longitude: 7.40},
+          {latitude: 51.555, longitude: 7.40},
+          {latitude: 51.555, longitude: 7.625},
+          {latitude: 51.5125, longitude: 7.625}
+      ]
+    ); // -> true 
+
+    debugger
+
+    //const testLatLng = window.google.maps.geometry.poly.containsLocation(this.state.testMarker.marker.props.latLng(markerLatLng), this.state.markers[0].polygonObject.props.path)
+      
+    debugger 
+    //console.log(google.maps.geometry.poly.containsLocation(event.latLng, bermudaTriangle))
 
     //if ()
     //checks if location is within polygon, and if so, gets props from that polygon 
@@ -612,6 +646,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     newMarkerLocation.show = true; 
 
+    //debugger 
     this.checkLocation() //(); 
 
     this.setState({
