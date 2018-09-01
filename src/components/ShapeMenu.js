@@ -14,19 +14,32 @@ export default class ShapeMenu extends Component {
         }
     }
 
+    componentDidUpdate(props) {
+        console.log(props)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        this.setState({
+            key: nextProps.key,
+            shape: nextProps.shape
+        })
+    }
+
     toggleDropdown = () => {
       this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
 
     render() {
 
+        //debugger 
         const shape = this.state.shape 
         const dropdownOpen = this.state.dropdownOpen;
 
         let shapeSelected 
         let keyID = this.state.keyID 
         //debugger 
-        //console.log(shape)
+        console.log(shape)
         //console.log(this.state.tracksList)
 
         return (

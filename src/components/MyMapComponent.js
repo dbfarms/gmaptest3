@@ -1,13 +1,36 @@
+//app notes DO THIS NEXT STOP WHAT YOU'RE DOING GET SHIT IN ORDER  
+    /*
+    -maybe relearn redux...
+      -will want to once i start on backend so maybe get going now?
+
+      top layer calls in player and map
+      -receives information from map to send to player and other way around 
+      
+      map
+      -right now map does too much within file
+        -separate out functions (but, how again?)
+          -relearn how to do this, probably importing some way
+        -move drawingfunction functions to file? etc
+
+      player 
+        -haven't really done anything here yet
+
+      */ 
+
 import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Circle, Rectangle, Polyline } from "react-google-maps"
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+//import { connect } from 'react-redux'
+//import { bindActionCreators } from 'redux';
 
 import Pulse from './Pulse';
 import ShapeMenu from './ShapeMenu';
+import { willHandleDrawingComplete } from './DrawingFunctions';
 
 import geolib from 'geolib'
 //still to make or maybe not i dunno
+import {onTestPolygonChange} from './PolygonFunctions'
 import checkLocation from './TestFunctions';
 import PolylinenFunctions from './PolylineFunctions';
 
@@ -51,16 +74,14 @@ const MyMapComponent = compose(
 
             {props.runnin !== false &&
               <DrawingManager
-              onCircleComplete={props.onDrawingComplete} 
-              onMarkerComplete={props.onDrawingComplete}
-              onOverlayComplete={props.onDrawingComplete}
-              onPolygonComplete={props.onDrawingComplete}
-              onPolylineComplete={props.onDrawingComplete}
-              onRectangleComplete={props.onDrawingComplete}
-            />
+                onCircleComplete={props.onDrawingComplete} 
+                onMarkerComplete={props.onDrawingComplete}
+                onOverlayComplete={props.onDrawingComplete}
+                onPolygonComplete={props.onDrawingComplete}
+                onPolylineComplete={props.onDrawingComplete}
+                onRectangleComplete={props.onDrawingComplete}
+              />
             }
-            
-
         </GoogleMap>
     </div>
   
@@ -73,6 +94,7 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger
 
     this.handleDrawingComplete = this.handleDrawingComplete.bind(this)
+    this.onTestPolygonChange = onTestPolygonChange.bind(this)
     this.chooseTrack = this.chooseTrack.bind(this)
     this.state = {
       isMarkerShown: true,
@@ -88,16 +110,19 @@ export default class MyFancyComponent extends React.PureComponent {
       timer: 0,
       running: false,
       nowPlaying: this.props.nowPlaying,
+      shapeMenu: null,
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    //debugger 
     //this.delayedShowMarker()
   }
 
   componentDidUpdate(prevState, props) {
     //debugger
     //console.log(prevState)
+    console.log(props)
   }
 
   componentWillReceiveProps(nextProps){
@@ -192,6 +217,7 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  /*
   latLng(position) {
     //debugger 
     //this.lat(position.lat)
@@ -207,7 +233,45 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger
     //return testMarker
   }
-  
+  */
+
+  /*
+  handleDrawingComplete(props) {
+    //debugger 
+    
+    switch(props.type) {
+      case "circle":
+        const newCircleList = Object.assign([], this.state.circles)
+
+        //debugger 
+        return (
+          this.setState({
+            circles: newCircleList
+          })
+        ) 
+      case "polygon":
+      //how to get functions that require this (and do they really require this or not?)
+        const polygonList = Object.assign([], this.state.polygons)
+        const newList = willHandleDrawingComplete(props, polygonList)
+
+              
+              debugger 
+        return ( this.setState({ polygons: newList}))
+      case "polyline":
+          const polylineList = Object.assign([], this.state.polylines)
+          //newPolylineList.push(newDrawing)
+          return willHandleDrawingComplete(props, polylineList)
+      
+      case "marker":
+        const markersList = Object.assign([], this.state.markers)
+        //debugger 
+        return willHandleDrawingComplete(props, markersList)
+      default:
+        break 
+    } 
+    //willHandleDrawingComplete(props) //.bind(this)
+  }
+  */  
 
   handleDrawingComplete = (props) => {
 
@@ -333,10 +397,78 @@ export default class MyFancyComponent extends React.PureComponent {
 
   onMouseOver(key, type, props) {
     //debugger 
+    //console.log(key)
+    //console.log(type)
+
+    //not sure i need this... but right now i am using it i think
+
+    let shapeSelected
+    switch(type) {
+      case("polygons"):
+          shapeSelected = this.state.polygons
+          const shape = shapeSelected[key]
+          //console.log(shape)
+          //return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
+          console.log("polygon mouse over")
+          console.log(shape)
+          //debugger 
+          this.setState({
+            shapeMenu: { menu: <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>, shape: shape, key: key}
+          })
+      case("circles"):
+          shapeSelected = this.state.circles
+      case ("polylines"):
+          shapeSelected = this.state.polylines 
+      case ("rectangles"):
+          shapeSelected = this.state.rectangles
+      case ("markers"):
+          shapeSelected = this.state.markers 
+      default:
+          break 
+    }
 
     this.setState({
       polyMenu: {key: key, type: type}
     })
+
+    //load <ShapeMenu here 
+    
+  }
+
+  showShapeMenuDeets = () => {
+
+    const {key, type} = this.state.polyMenu
+
+    //console.log(key)
+    //console.log(type)
+    let shapeSelected
+
+    switch(type) {
+      case("polygons"):
+          shapeSelected = this.state.polygons
+          const shape = shapeSelected[key]
+          //console.log(shape) //THESE BOTH CHECK OUT OK
+          //console.log(key)
+
+          if (this.state.shapeMenu.shape !== shape && this.state.shapeMenu.key !== key) {
+            this.setState({
+              shapeMenu: { menu: <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>, shape: shape, key: key}
+            })
+          }
+          
+          //return (<ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>)
+          
+      case("circles"):
+          shapeSelected = this.state.circles
+      case ("polylines"):
+          shapeSelected = this.state.polylines 
+      case ("rectangles"):
+          shapeSelected = this.state.rectangles
+      case ("markers"):
+          shapeSelected = this.state.markers 
+      default:
+          break 
+      }
   }
 
   handleMarkerClick = (e) => {
@@ -508,7 +640,7 @@ export default class MyFancyComponent extends React.PureComponent {
         fillColor="#0000FF"
         fillOpacity={0.35} 
         onClick={this.onPolygonClick} //.bind(this)}
-        onMouseUp={this.onPolygonChange.bind(this, key)}//this.state.parentPolygon(polygon, key)} //onPolygonChange.bind(this)} //.bind(this)}
+        onMouseUp={this.onPolygonChange.bind(this, key) } // this.onTestPolygonChange
         onDrag={this.onPolygonDrag}
         onMouseOver={this.onMouseOver.bind(this, key, type)}
         options={{
@@ -520,6 +652,17 @@ export default class MyFancyComponent extends React.PureComponent {
       //debugger 
 
       return (newPolygon)
+    })
+
+    //randomly assigns track to polygon, eventually this will be thought out
+    polygonsDrawn.map(polygon => {
+      let preloadedTracks = ['https://soundcloud.com/failed2012/march-8th-2017', 
+                       'https://soundcloud.com/failed2012/march-7th-2017', 
+                       'https://soundcloud.com/failed2012/march-4th-2017', 
+                       'https://soundcloud.com/failed2012/march-2nd-2017']
+      const i = Math.floor(Math.random() * 5)
+
+      polygon.track = preloadedTracks[i]
     })
 
     return polygonsDrawn
@@ -557,6 +700,7 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger 
   }
 
+  /*
   showDeets = () => {
     
     const type = this.state.polyMenu.type 
@@ -566,7 +710,6 @@ export default class MyFancyComponent extends React.PureComponent {
       case("polygons"):
           shapeSelected = this.state.polygons
           const shape = shapeSelected[key]
-
           //console.log(shape)
           return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
       case("circles"):
@@ -584,6 +727,7 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger
     
   }
+  */
 
   setPolygonState(polygonList){
     if (this.state.polygons.length === 0) {
@@ -626,7 +770,7 @@ export default class MyFancyComponent extends React.PureComponent {
         //debugger 
         const polygonActive = this.state.polygons[i] 
 
-        this.state.nowPlaying(polygonActive)
+        this.state.nowPlaying(polygonActive, i)
         
       }
     }
@@ -684,7 +828,7 @@ export default class MyFancyComponent extends React.PureComponent {
       polygonList.forEach(polygon => {
         polygonToDraw.push(polygon.polygon)
       })
-      
+      //debugger  ///this is causing the warning 
       this.setPolygonState(polygonList);
     }
 
@@ -696,10 +840,15 @@ export default class MyFancyComponent extends React.PureComponent {
       console.log("geoloc not updating")
     }
 
-    let showingDeets 
+    
+    const showingDeets = this.showShapeMenuDeets() //this.state.shapeMenu ///////still not changing when mouse over
+    //console.log(showingDeets) // these console logs both work...
+    //console.log(this.state.polyMenu)
+    /*
     if (this.state.polyMenu.type !== '') {
       showingDeets = this.showDeets()
     }
+    */
 
     return (
         <div>
@@ -720,7 +869,9 @@ export default class MyFancyComponent extends React.PureComponent {
             <h3>menu</h3>
             {this.state.polyMenu.type !== '' &&
               <div>
-                {showingDeets}
+                {console.log(this.state)}
+                {/*showingDeets*/}
+                { <ShapeMenu shape={this.state.shapeMenu.shape} keyID={this.state.shapeMenu.key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>}
               </div>
             }
             </div>
@@ -743,3 +894,19 @@ export default class MyFancyComponent extends React.PureComponent {
     )
   }
 }
+
+//export default MyFancy
+/*
+const mapStateToProps = (state) => {
+  //debugger 
+  //state.farmGoods.data[0].relationships.farmer.data.id
+  return ({
+      farmGoods: state.farmGoods.all, //maybe add another {} in fg reducer for specific farmer?
+      days: state.days,
+      //user: state.user
+  })
+}
+
+
+export default connect()
+*/

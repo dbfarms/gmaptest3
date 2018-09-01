@@ -31,8 +31,8 @@ class App extends Component {
     });
   }
 
-  nowPlaying = (polygonActive) => {
-    //debugger 
+  nowPlaying = (polygonActive, i) => {
+    debugger 
 
     this.setState({
       activeTrack: this.state.polygons[i].track 
@@ -43,7 +43,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className='player-wrapper'>
-          <Player activeTrack={activeTrack}/>
+          <Player activeTrack={this.state.activeTrack}/>
         </div>
         <div>
           <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks} nowPlaying={this.nowPlaying}/>
