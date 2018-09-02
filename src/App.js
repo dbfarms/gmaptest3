@@ -18,7 +18,8 @@ class App extends Component {
       activeTrack: null,
     }
 
-    //this.parentPolygon = this.parentPolygon.bind(this)
+    this.nowPlaying = this.nowPlaying.bind(this)
+
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}
@@ -32,10 +33,20 @@ class App extends Component {
   }
 
   nowPlaying = (polygonActive, i) => {
-    debugger 
+    //debugger 
 
+    //return polygonActive.track 
+    this.setsTrack(polygonActive.track)
+    /*
     this.setState({
-      activeTrack: this.state.polygons[i].track 
+      activeTrack: polygonActive.track  
+    })
+    */
+  }
+
+  setsTrack(track) {
+    this.setState({
+      activeTrack: track
     })
   }
 

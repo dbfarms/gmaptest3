@@ -13,6 +13,24 @@ import ReactPlayer from 'react-player' //'../ReactPlayer'
 import Duration from './Duration'
 
 class Player extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      url: this.props.activeTrack,
+      playing: true,
+      volume: 0.8,
+      muted: false,
+      played: 0,
+      loaded: 0,
+      duration: 0,
+      playbackRate: 1.0,
+      loop: false,
+      activeTrack: this.props.activeTrack,
+    }
+  }
+  
+  /*
   state = {
     url: null,
     playing: true,
@@ -24,6 +42,22 @@ class Player extends Component {
     playbackRate: 1.0,
     loop: false
   }
+  */
+
+  componentWillReceiveProps(nextProps) {
+    //debugger 
+    console.log("nextProps")
+    console.log(nextProps)
+
+    if (nextProps.activeTrack !== null) {
+      this.setState({
+        activeTrack: nextProps.activeTrack,
+        url: nextProps.activeTrack,
+        playing: true,
+      })
+    }
+  }
+
   load = url => {
     this.setState({
       url,
@@ -31,6 +65,17 @@ class Player extends Component {
       loaded: 0
     })
   }
+
+ /* for when we're loading from a file
+ load = activeTrack => {
+    this.setState({
+      activeTrack,
+      played: 0,
+      loaded: 0
+    })
+  }
+  */
+
   playPause = () => {
     this.setState({ playing: !this.state.playing })
   }
@@ -94,8 +139,10 @@ class Player extends Component {
     this.player = player
   }
   render () {
-    const { url, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
+    const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
     const SEPARATOR = ' · '
+    console.log("this.state")
+    console.log(this.state)
 
     return (
       <div className='app'>

@@ -122,10 +122,11 @@ export default class MyFancyComponent extends React.PureComponent {
   componentDidUpdate(prevState, props) {
     //debugger
     //console.log(prevState)
-    console.log(props)
+    //console.log(props)
   }
 
   componentWillReceiveProps(nextProps){
+    console.log(this)
     console.log(nextProps)
     this.setState({
       geoLoc: nextProps.geoLoc
@@ -146,18 +147,14 @@ export default class MyFancyComponent extends React.PureComponent {
       let createTestMarker;
       let actualMarker; 
       //debugger
+      
       if (this.state.testMarker.position !== "" ) {
         console.log("this one")
-        createTestMarker = {position: {lat: nextProps.testMarker.position.lat - .0000005, lng: nextProps.testMarker.position.lng - .0000005}, 
-          marker: "", show: false}
-
-        actualMarker = <Marker 
-            position= {{lat: nextProps.testMarker.position.lat  - .0000005, lng: nextProps.testMarker.position.lng - .0000005}}/>
-
         //debugger 
-        createTestMarker.marker = actualMarker
+        createTestMarker = this.state.testMarker
         console.log(createTestMarker)
-      } else {
+      } else { 
+        //(this.state.testMarker.position === "") 
         console.log("should only happen once")
 
         createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
@@ -171,22 +168,48 @@ export default class MyFancyComponent extends React.PureComponent {
         //debugger 
         //const testLatLng = props.google.maps.geometry.poly.containsLocation( actualMarker.latLng, this.state.markers[0].polygonObject.props.getPath())
         //const thisWork = actualMarker.props.lat(actualMarker.props.position.lat)
+        let markerListHere = []
+        for (let i = 1; i<5; i++) {
+          let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
+          let newMarker = []
+          let newPosition = i * .0007
+          newMarker[0] = nextProps.geoLoc.lat + newPosition;
+          newMarker[1] = nextProps.geoLoc.lng + newPosition;
+          markerObject.position = newMarker 
+          let polygonCoordsSketch = [
+            {lat: newMarker[0] + .0003, lng: newMarker[1] + .0003},
+            {lat: newMarker[0] - .0003, lng: newMarker[1] - .0003},
+            {lat: newMarker[0] - .0002, lng: newMarker[1] + .0002},
+          ];
 
+          markerObject.polygonCoords = polygonCoordsSketch
+          markerListHere.push(markerObject)
+        }
+
+        const geoLoc = nextProps.geoLoc
+        //debugger 
+        const testPolyLine = [ //HAVENT DONE ANYTHING WITH THIS YET
+          {lat: geoLoc.lat, lng: geoLoc.lng },
+          {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+          {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+        ]
+        //console.log(testPolyLine)
+        //console.log(createTestMarker)
+
+
+        this.setState ({
+          markers: markerListHere,
+          testPolyLine: testPolyLine,
+          testMarker: createTestMarker
+        })
 
       }
-
-
-      //const createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
-      //    polygon: "", show: false}
-
-      //const actualMarker = <Marker 
-      //    position= {{lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}}/>
-      
+      /*
       let markerListHere = []
       for (let i = 1; i<5; i++) {
         let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
         let newMarker = []
-        let newPosition = i * .001
+        let newPosition = i * .0007
         newMarker[0] = nextProps.geoLoc.lat + newPosition;
         newMarker[1] = nextProps.geoLoc.lng + newPosition;
         markerObject.position = newMarker 
@@ -208,32 +231,16 @@ export default class MyFancyComponent extends React.PureComponent {
         {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
       ]
       //console.log(testPolyLine)
-      console.log(createTestMarker)
+      //console.log(createTestMarker)
+
+
       this.setState ({
         markers: markerListHere,
         testPolyLine: testPolyLine,
         testMarker: createTestMarker
-      })
+      }) */
     }
   }
-
-  /*
-  latLng(position) {
-    //debugger 
-    //this.lat(position.lat)
-    return position 
-  }
-
-  lat() {
-    debugger 
-    //return testMarker //.position.lat 
-  }
-
-  lng() {
-    //debugger
-    //return testMarker
-  }
-  */
 
   /*
   handleDrawingComplete(props) {
@@ -397,20 +404,14 @@ export default class MyFancyComponent extends React.PureComponent {
 
   onMouseOver(key, type, props) {
     //debugger 
-    //console.log(key)
-    //console.log(type)
-
-    //not sure i need this... but right now i am using it i think
 
     let shapeSelected
     switch(type) {
       case("polygons"):
           shapeSelected = this.state.polygons
           const shape = shapeSelected[key]
-          //console.log(shape)
-          //return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
           console.log("polygon mouse over")
-          console.log(shape)
+          //console.log(shape)
           //debugger 
           this.setState({
             shapeMenu: { menu: <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>, shape: shape, key: key}
@@ -696,38 +697,8 @@ export default class MyFancyComponent extends React.PureComponent {
         //console.log(shape)
         break
     }
-
     //debugger 
   }
-
-  /*
-  showDeets = () => {
-    
-    const type = this.state.polyMenu.type 
-    const key = this.state.polyMenu.key
-    let shapeSelected
-    switch(this.state.polyMenu.type) {
-      case("polygons"):
-          shapeSelected = this.state.polygons
-          const shape = shapeSelected[key]
-          //console.log(shape)
-          return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
-      case("circles"):
-          shapeSelected = this.state.circles
-      case ("polylines"):
-          shapeSelected = this.state.polylines 
-      case ("rectangles"):
-          shapeSelected = this.state.rectangles
-      case ("markers"):
-          shapeSelected = this.state.markers 
-      default:
-          break 
-      }
-
-    //debugger
-    
-  }
-  */
 
   setPolygonState(polygonList){
     if (this.state.polygons.length === 0) {
@@ -753,11 +724,8 @@ export default class MyFancyComponent extends React.PureComponent {
 
     const listOfPaths = this.state.polygons.map(polygon => {
       const arrayOfCoords = polygon.polygon.props.path
-      //debugger 
       return arrayOfCoords
     })
-
-    //debugger 
 
     for (let i =0; i<listOfPaths.length -1; i++) {
       //console.log(this.state.testMarker.marker.props.position)
@@ -765,7 +733,6 @@ export default class MyFancyComponent extends React.PureComponent {
         {latitude: latNow, longitude: lngNow},
         listOfPaths[i]
       ); // -> true 
-      //console.log(inPolygonCheck)
       if (inPolygonCheck === true ) {
         //debugger 
         const polygonActive = this.state.polygons[i] 
@@ -774,21 +741,6 @@ export default class MyFancyComponent extends React.PureComponent {
         
       }
     }
-    
-
-    /*
-
-    geolib.isPointInside(
-      {latitude: latNow, longitude: lngNow},
-      [
-          {latitude: 51.50, longitude: 7.40},
-          {latitude: 51.555, longitude: 7.40},
-          {latitude: 51.555, longitude: 7.625},
-          {latitude: 51.5125, longitude: 7.625}
-      ]
-    ); // -> true 
-    */
-  
   }
 
   returnFunction = () => {
@@ -842,13 +794,6 @@ export default class MyFancyComponent extends React.PureComponent {
 
     
     const showingDeets = this.showShapeMenuDeets() //this.state.shapeMenu ///////still not changing when mouse over
-    //console.log(showingDeets) // these console logs both work...
-    //console.log(this.state.polyMenu)
-    /*
-    if (this.state.polyMenu.type !== '') {
-      showingDeets = this.showDeets()
-    }
-    */
 
     return (
         <div>
@@ -869,8 +814,6 @@ export default class MyFancyComponent extends React.PureComponent {
             <h3>menu</h3>
             {this.state.polyMenu.type !== '' &&
               <div>
-                {console.log(this.state)}
-                {/*showingDeets*/}
                 { <ShapeMenu shape={this.state.shapeMenu.shape} keyID={this.state.shapeMenu.key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>}
               </div>
             }
@@ -910,3 +853,67 @@ const mapStateToProps = (state) => {
 
 export default connect()
 */
+
+///// SCRAPS //////
+
+/*
+
+    geolib.isPointInside(
+      {latitude: latNow, longitude: lngNow},
+      [
+          {latitude: 51.50, longitude: 7.40},
+          {latitude: 51.555, longitude: 7.40},
+          {latitude: 51.555, longitude: 7.625},
+          {latitude: 51.5125, longitude: 7.625}
+      ]
+    ); // -> true 
+    */
+
+
+  /*
+  showDeets = () => {
+    
+    const type = this.state.polyMenu.type 
+    const key = this.state.polyMenu.key
+    let shapeSelected
+    switch(this.state.polyMenu.type) {
+      case("polygons"):
+          shapeSelected = this.state.polygons
+          const shape = shapeSelected[key]
+          //console.log(shape)
+          return <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>
+      case("circles"):
+          shapeSelected = this.state.circles
+      case ("polylines"):
+          shapeSelected = this.state.polylines 
+      case ("rectangles"):
+          shapeSelected = this.state.rectangles
+      case ("markers"):
+          shapeSelected = this.state.markers 
+      default:
+          break 
+      }
+
+    //debugger
+    
+  }
+  */
+
+
+  /*
+  latLng(position) {
+    //debugger 
+    //this.lat(position.lat)
+    return position 
+  }
+
+  lat() {
+    debugger 
+    //return testMarker //.position.lat 
+  }
+
+  lng() {
+    //debugger
+    //return testMarker
+  }
+  */
