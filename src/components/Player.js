@@ -11,6 +11,10 @@ import '../App.css'
 //import { version } from '../../package.json'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
 import Duration from './Duration'
+import track1 from '../jams/track1.mp3' ///  file:///home/munger/coding/gmaptest3/src/jams
+import track2 from '../jams/track2.mp3'
+import track3 from '../jams/track3.wav'
+import track4 from '../jams/track4.wav'
 
 class Player extends Component {
   constructor(props) {
@@ -30,26 +34,13 @@ class Player extends Component {
     }
   }
   
-  /*
-  state = {
-    url: null,
-    playing: true,
-    volume: 0.8,
-    muted: false,
-    played: 0,
-    loaded: 0,
-    duration: 0,
-    playbackRate: 1.0,
-    loop: false
-  }
-  */
 
   componentWillReceiveProps(nextProps) {
     //debugger 
     console.log("nextProps")
     console.log(nextProps)
 
-    if (nextProps.activeTrack !== null) {
+    if (nextProps.activeTrack !== null && nextProps.activeTrack !== this.state.activeTrack) {
       this.setState({
         activeTrack: nextProps.activeTrack,
         url: nextProps.activeTrack,
@@ -234,23 +225,10 @@ class Player extends Component {
             <tr>
               <th>Files</th>
               <td>
-                {this.renderLoadButton('/home/munger/coding/jams/track1.mp3', 'mp3')}
-              </td>
-            </tr>
-            <tr>
-              <th>SoundCloud</th>
-              <td>
-                {this.renderLoadButton('https://soundcloud.com/failed2012/march-8th-2017', 'Test A')}
-                {this.renderLoadButton('https://soundcloud.com/failed2012/march-7th-2017', 'Test B')}
-                {this.renderLoadButton('https://soundcloud.com/failed2012/march-4th-2017', 'Test C')}
-                {this.renderLoadButton('https://soundcloud.com/failed2012/march-2nd-2017', 'Test D')}
-              </td>
-            </tr>
-            <tr>
-              <th>Custom URL</th>
-              <td>
-                <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
-                <button onClick={() => this.setState({ url: this.urlInput.value })}>Load</button>
+                {this.renderLoadButton(track1, 'mp3')}
+                {this.renderLoadButton(track2, 'mp3')}
+                {this.renderLoadButton(track3, 'wav')}
+                {this.renderLoadButton(track4, 'wav')}
               </td>
             </tr>
           </tbody></table>
@@ -299,6 +277,26 @@ export default hot(module)(Player)
 
 /*
 
+
+/// stuff i took out 
+
+<tr>
+              <th>SoundCloud</th>
+              <td>
+                {this.renderLoadButton('https://soundcloud.com/failed2012/march-8th-2017', 'Test A')}
+                {this.renderLoadButton('https://soundcloud.com/failed2012/march-7th-2017', 'Test B')}
+                {this.renderLoadButton('https://soundcloud.com/failed2012/march-4th-2017', 'Test C')}
+                {this.renderLoadButton('https://soundcloud.com/failed2012/march-2nd-2017', 'Test D')}
+              </td>
+            </tr>
+            <tr>
+              <th>Custom URL</th>
+              <td>
+                <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
+                <button onClick={() => this.setState({ url: this.urlInput.value })}>Load</button>
+              </td>
+            </tr>
+            
 <tr>
               <th>YouTube</th>
               <td>
@@ -380,5 +378,23 @@ export default hot(module)(Player)
                 {this.renderLoadButton(MULTIPLE_SOURCES, 'Multiple')}
                 {this.renderLoadButton('https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8', 'HLS (m3u8)')}
                 {this.renderLoadButton('http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd', 'DASH (mpd)')}
+
+
+///
+
+
+  /*
+  state = {
+    url: null,
+    playing: true,
+    volume: 0.8,
+    muted: false,
+    played: 0,
+    loaded: 0,
+    duration: 0,
+    playbackRate: 1.0,
+    loop: false
+  }
+
 
 */
