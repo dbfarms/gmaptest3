@@ -657,11 +657,9 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //randomly assigns track to polygon, eventually this will be thought out
     polygonsDrawn.map(polygon => {
-      let preloadedTracks = ['https://soundcloud.com/failed2012/march-8th-2017', 
-                       'https://soundcloud.com/failed2012/march-7th-2017', 
-                       'https://soundcloud.com/failed2012/march-4th-2017', 
-                       'https://soundcloud.com/failed2012/march-2nd-2017']
-      const i = Math.floor(Math.random() * 5)
+      let preloadedTracks = ['track1', 'track2', 'track3', 'track4']
+      
+      const i = Math.floor(Math.random() * 4)
 
       polygon.track = preloadedTracks[i]
     })

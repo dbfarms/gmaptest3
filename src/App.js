@@ -11,10 +11,10 @@ class App extends Component {
 
     this.state = {
       geoLoc: '',
-      preloadedTracks: ['https://soundcloud.com/failed2012/march-8th-2017', 
-                       'https://soundcloud.com/failed2012/march-7th-2017', 
-                       'https://soundcloud.com/failed2012/march-4th-2017', 
-                       'https://soundcloud.com/failed2012/march-2nd-2017'],
+      preloadedTracks: ['track1', 
+                       'track2', 
+                       'track3', 
+                       'track4'],
       activeTrack: null,
     }
 
@@ -54,7 +54,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className='player-wrapper'>
-          <Player activeTrack={this.state.activeTrack}/>
+          <Player activeTrack={this.state.activeTrack} allTracks={this.state.preloadedTracks}/>
         </div>
         <div>
           <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks} nowPlaying={this.nowPlaying}/>

@@ -31,6 +31,7 @@ class Player extends Component {
       playbackRate: 1.0,
       loop: false,
       activeTrack: this.props.activeTrack,
+      allTracks: this.props.allTracks, //
     }
   }
   
@@ -40,13 +41,46 @@ class Player extends Component {
     console.log("nextProps")
     console.log(nextProps)
 
-    if (nextProps.activeTrack !== null && nextProps.activeTrack !== this.state.activeTrack) {
-      this.setState({
-        activeTrack: nextProps.activeTrack,
-        url: nextProps.activeTrack,
-        playing: true,
-      })
+    if (nextProps.activeTrack !== null) {
+
+      console.log(track1)
+      console.log(track2)
+      console.log(track3)
+      console.log(track4)
+      const trackPath = this.setTrackPath(nextProps.activeTrack);
+
+      if (trackPath !== this.state.activeTrack) {
+        this.setState({
+          activeTrack: trackPath,
+          url: trackPath,
+          playing: true,
+        })
+      }
     }
+  }
+
+  setTrackPath(activeTrack) {
+    //console.log(track1)
+
+    switch(activeTrack) {
+      case("track1"): 
+        return "/static/media/track1.a468fde2.mp3"
+      case("track2"):
+        return "/static/media/track2.0334ef3d.mp3"
+      case("track3"):
+        return "/static/media/track3.db9366ce.wav"
+      case("track2"):
+        return "/static/media/track4.44d8193b.wav"
+      default: 
+        break 
+    }
+    debugger 
+    this.state.allTracks.map(track => {
+      if (track === activeTrack) {
+        return 
+      }
+    })
+      
   }
 
   load = url => {
@@ -129,11 +163,13 @@ class Player extends Component {
   ref = player => {
     this.player = player
   }
+
   render () {
     const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
     const SEPARATOR = ' · '
     console.log("this.state")
     console.log(this.state)
+    //debugger
 
     return (
       <div className='app'>
