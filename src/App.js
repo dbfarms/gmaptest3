@@ -4,6 +4,7 @@ import MyMapComponent from './components/MyMapComponent';
 import './App.css';
 import MyFancyComponent from './components/MyMapComponent';
 import Player from './components/Player';
+import Player2 from './components/Player2';
 
 class App extends Component {
   constructor() {
@@ -53,10 +54,21 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className='player-wrapper'>
-          <Player activeTrack={this.state.activeTrack} allTracks={this.state.preloadedTracks}/>
+        <div className="container">
+          <div className="row">
+            <div className="col">
+            <div className='player-wrapper'>
+              <Player activeTrack={this.state.activeTrack} allTracks={this.state.preloadedTracks}/>
+            </div>
+            </div>
+            <div className="col">
+              <div className='player-wrapper2'>
+                <Player2 sounds={this.state.sounds} />
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
+        <div className="map">
           <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks} nowPlaying={this.nowPlaying}/>
         </div>
       </div>

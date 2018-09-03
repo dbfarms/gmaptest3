@@ -16,7 +16,7 @@ import track2 from '../jams/track2.mp3'
 import track3 from '../jams/track3.wav'
 import track4 from '../jams/track4.wav'
 
-class Player extends Component {
+class Player2 extends Component {
   constructor(props) {
     super(props)
 
@@ -61,7 +61,7 @@ class Player extends Component {
 
   setTrackPath(activeTrack) {
     //console.log(track1)
-
+    /*
     switch(activeTrack) {
       case("track1"): 
         return "/static/media/track1.a468fde2.mp3"
@@ -80,6 +80,7 @@ class Player extends Component {
         return 
       }
     })
+    */
       
   }
 
@@ -309,7 +310,7 @@ class Player extends Component {
   }
 }
 
-export default hot(module)(Player)
+export default hot(module)(Player2)
 
 /*
 
