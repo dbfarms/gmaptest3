@@ -41,12 +41,14 @@ export default class LocationChcker extends Component {
         console.log(nextProps)
         //debugger 
         this.setState({
-            marker: nextProps.marker 
+            marker: nextProps.marker,
+            polygons: nextProps.polygons, 
         })
     }
 
     checkLocation = () => {
     
+        //console.log(" im ade it this far")
         const latNow = this.state.marker.position.lat
         const lngNow = this.state.marker.position.lng 
     
@@ -54,7 +56,8 @@ export default class LocationChcker extends Component {
           const arrayOfCoords = polygon.polygon.props.path
           return arrayOfCoords
         })
-    
+        
+        //debugger 
         for (let i =0; i<listOfPaths.length -1; i++) {
           //console.log(this.state.testMarker.marker.props.position)
           const inPolygonCheck = geolib.isPointInside(
@@ -63,6 +66,7 @@ export default class LocationChcker extends Component {
           ); // -> true 
           if (inPolygonCheck === true ) {
             //debugger 
+            console.log("checking location correctly")
             const polygonActive = this.state.polygons[i] 
             console.log(polygonActive)
             this.state.nowPlaying(polygonActive, i)
@@ -83,7 +87,7 @@ export default class LocationChcker extends Component {
         newMarkerLocation.show = true; 
     
         this.checkLocation()
-        
+
         this.state.updateMap(newMarkerLocation)
 
         this.setState({
