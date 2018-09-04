@@ -31,8 +31,9 @@ import { willHandleDrawingComplete } from './DrawingFunctions';
 import geolib from 'geolib'
 //still to make or maybe not i dunno
 import {onTestPolygonChange} from './PolygonFunctions'
-import checkLocation from './TestFunctions';
+//import checkLocation from './TestFunctions';
 import PolylinenFunctions from './PolylineFunctions';
+import LocationChecker from "./LocationChecker";
 
 const google = window.google;
 
@@ -61,6 +62,12 @@ const MyMapComponent = compose(
             })}
 
             {props.polygonToDraw}
+            <Polyline
+                  path={props.polylines}
+                  strokeColor="#0000FF"
+                  strokeOpacity={0.8}
+                  strokeWeight={2} 
+                />
 
             {props.testMarker.show === true &&
               <div>
@@ -72,7 +79,7 @@ const MyMapComponent = compose(
               </div>
             }
 
-            {props.runnin !== false &&
+            {props.running !== false &&
               <DrawingManager
                 onCircleComplete={props.onDrawingComplete} 
                 onMarkerComplete={props.onDrawingComplete}
@@ -82,6 +89,7 @@ const MyMapComponent = compose(
                 onRectangleComplete={props.onDrawingComplete}
               />
             }
+
         </GoogleMap>
     </div>
   
@@ -188,7 +196,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
         const geoLoc = nextProps.geoLoc
         //debugger 
-        const testPolyLine = [ //HAVENT DONE ANYTHING WITH THIS YET
+        const testPolyLine = [ 
           {lat: geoLoc.lat, lng: geoLoc.lng },
           {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
           {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
@@ -199,46 +207,11 @@ export default class MyFancyComponent extends React.PureComponent {
 
         this.setState ({
           markers: markerListHere,
-          testPolyLine: testPolyLine,
+          polylines: testPolyLine,
           testMarker: createTestMarker
         })
 
       }
-      /*
-      let markerListHere = []
-      for (let i = 1; i<5; i++) {
-        let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
-        let newMarker = []
-        let newPosition = i * .0007
-        newMarker[0] = nextProps.geoLoc.lat + newPosition;
-        newMarker[1] = nextProps.geoLoc.lng + newPosition;
-        markerObject.position = newMarker 
-        let polygonCoordsSketch = [
-          {lat: newMarker[0] + .0003, lng: newMarker[1] + .0003},
-          {lat: newMarker[0] - .0003, lng: newMarker[1] - .0003},
-          {lat: newMarker[0] - .0002, lng: newMarker[1] + .0002},
-        ];
-
-        markerObject.polygonCoords = polygonCoordsSketch
-        markerListHere.push(markerObject)
-      }
-
-      const geoLoc = nextProps.geoLoc
-      //debugger 
-      const testPolyLine = [ //HAVENT DONE ANYTHING WITH THIS YET
-        {lat: geoLoc.lat, lng: geoLoc.lng },
-        {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
-        {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
-      ]
-      //console.log(testPolyLine)
-      //console.log(createTestMarker)
-
-
-      this.setState ({
-        markers: markerListHere,
-        testPolyLine: testPolyLine,
-        testMarker: createTestMarker
-      }) */
     }
   }
 
@@ -740,22 +713,10 @@ export default class MyFancyComponent extends React.PureComponent {
       }
     }
   }
-
-  returnFunction = () => {
-    console.log("running")
-
-    const newMarkerLocation = Object.assign({}, this.state.testMarker)
-
-    newMarkerLocation.position.lat = this.state.testMarker.position.lat + .00004
-    newMarkerLocation.position.lng = this.state.testMarker.position.lng + .00005
-
-    newMarkerLocation.show = true; 
-
-    //debugger 
-    this.checkLocation() //(); 
-
+  updateMap = (marker) => {
+    //console.log(marker)
     this.setState({
-      testMarker: newMarkerLocation
+      testMarker: marker
     })
   }
 
@@ -791,22 +752,29 @@ export default class MyFancyComponent extends React.PureComponent {
     }
 
     
-    const showingDeets = this.showShapeMenuDeets() //this.state.shapeMenu ///////still not changing when mouse over
+    const showingDeets = this.showShapeMenuDeets() //apparently this isn't being used?
 
     return (
         <div>
-            <div>
-              {<Pulse 
-                pulseTime={1} // In Seconds
-                pulseFunction={this.returnFunction}
-              />}
-            </div>
-            <div>
-              <button
-                onClick={this.savesChanges.bind(this)}
-              >
-                save changes
-              </button>
+            <div className="Grid-to-be-defined-later">
+              <div>
+                <LocationChecker 
+                  marker={this.state.testMarker} 
+                  polygons={this.state.polygons} 
+                  nowPlaying={this.state.nowPlaying} 
+                  updateMap={this.updateMap}/>
+                {/*<Pulse 
+                  pulseTime={1} // In Seconds
+                  pulseFunction={this.returnFunction}
+                />*/}
+              </div>
+              <div>
+                <button
+                  onClick={this.savesChanges.bind(this)}
+                >
+                  save changes
+                </button>
+              </div>
             </div>
             <div className="menu">
             <h3>menu</h3>
@@ -828,6 +796,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     circleList={this.state.circles}
                     testMarker={this.state.testMarker}
                     thisTestMarker={this.state.thisTestMarker}
+                    polylines={this.state.polylines}
                 />
             }
         </div>
@@ -854,6 +823,28 @@ export default connect()
 
 ///// SCRAPS //////
 
+  /*
+  returnFunction = () => {
+    console.log("running")
+
+    const newMarkerLocation = Object.assign({}, this.state.testMarker)
+
+    //MOVES MARKER AS FOLLOWS, EVENTUALLY THIS SHOULD BE MORE MEANINGFUL 
+    newMarkerLocation.position.lat = this.state.testMarker.position.lat + .00004
+    newMarkerLocation.position.lng = this.state.testMarker.position.lng + .00005
+
+    newMarkerLocation.show = true; 
+
+    //debugger 
+    //this.checkLocation() //(); 
+    //<LocationChecker marker={newMarkerLocation} polygons={this.state.polygons} nowPlaying={this.state.nowPlaying}/>
+    //CheckLocation1()
+
+    this.setState({
+      testMarker: newMarkerLocation
+    })
+  }
+  */
 /*
 
     geolib.isPointInside(
@@ -915,3 +906,39 @@ export default connect()
     //return testMarker
   }
   */
+
+  /*
+      let markerListHere = []
+      for (let i = 1; i<5; i++) {
+        let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
+        let newMarker = []
+        let newPosition = i * .0007
+        newMarker[0] = nextProps.geoLoc.lat + newPosition;
+        newMarker[1] = nextProps.geoLoc.lng + newPosition;
+        markerObject.position = newMarker 
+        let polygonCoordsSketch = [
+          {lat: newMarker[0] + .0003, lng: newMarker[1] + .0003},
+          {lat: newMarker[0] - .0003, lng: newMarker[1] - .0003},
+          {lat: newMarker[0] - .0002, lng: newMarker[1] + .0002},
+        ];
+
+        markerObject.polygonCoords = polygonCoordsSketch
+        markerListHere.push(markerObject)
+      }
+
+      const geoLoc = nextProps.geoLoc
+      //debugger 
+      const testPolyLine = [ //HAVENT DONE ANYTHING WITH THIS YET
+        {lat: geoLoc.lat, lng: geoLoc.lng },
+        {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+        {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+      ]
+      //console.log(testPolyLine)
+      //console.log(createTestMarker)
+
+
+      this.setState ({
+        markers: markerListHere,
+        testPolyLine: testPolyLine,
+        testMarker: createTestMarker
+      }) */

@@ -269,8 +269,6 @@ class Player extends Component {
             </tr>
           </tbody></table>
 
-          <h2>State</h2>
-
           <table><tbody>
             
             <tr>

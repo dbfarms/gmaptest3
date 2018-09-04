@@ -175,7 +175,7 @@ class Player2 extends Component {
     return (
       <div className='app'>
         <section className='section'>
-          <h3>Player</h3>
+          <h3>Player2</h3>
           <div className='player-wrapper'>
             <ReactPlayer
               ref={this.ref}
@@ -260,17 +260,12 @@ class Player2 extends Component {
         <section className='section'>
           <table><tbody>
             <tr>
-              <th>Files</th>
+              <th>Effects Or Something</th>
               <td>
-                {this.renderLoadButton(track1, 'mp3')}
-                {this.renderLoadButton(track2, 'mp3')}
-                {this.renderLoadButton(track3, 'wav')}
                 {this.renderLoadButton(track4, 'wav')}
               </td>
             </tr>
           </tbody></table>
-
-          <h2>State</h2>
 
           <table><tbody>
             
