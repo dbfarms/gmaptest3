@@ -119,6 +119,7 @@ export default class MyFancyComponent extends React.PureComponent {
       running: false,
       nowPlaying: this.props.nowPlaying,
       shapeMenu: null,
+      effects: this.props.effects,
     }
   }
 
@@ -688,31 +689,6 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  checkLocation = () => {
-    
-    const latNow = this.state.testMarker.position.lat
-    const lngNow = this.state.testMarker.position.lng 
-
-    const listOfPaths = this.state.polygons.map(polygon => {
-      const arrayOfCoords = polygon.polygon.props.path
-      return arrayOfCoords
-    })
-
-    for (let i =0; i<listOfPaths.length -1; i++) {
-      //console.log(this.state.testMarker.marker.props.position)
-      const inPolygonCheck = geolib.isPointInside(
-        {latitude: latNow, longitude: lngNow},
-        listOfPaths[i]
-      ); // -> true 
-      if (inPolygonCheck === true ) {
-        //debugger 
-        const polygonActive = this.state.polygons[i] 
-
-        this.state.nowPlaying(polygonActive, i)
-        
-      }
-    }
-  }
   updateMap = (marker) => {
     //console.log(marker)
     this.setState({
@@ -762,7 +738,9 @@ export default class MyFancyComponent extends React.PureComponent {
                   marker={this.state.testMarker} 
                   polygons={this.state.polygons} 
                   nowPlaying={this.state.nowPlaying} 
-                  updateMap={this.updateMap}/>
+                  updateMap={this.updateMap}
+                  effects={this.state.effects}
+                />
                 {/*<Pulse 
                   pulseTime={1} // In Seconds
                   pulseFunction={this.returnFunction}

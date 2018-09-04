@@ -17,6 +17,7 @@ class App extends Component {
                        'track3', 
                        'track4'],
       activeTrack: null,
+      effects: {volume: 0.5, playbackRate: 1, loop: false}
     }
 
     this.nowPlaying = this.nowPlaying.bind(this)
@@ -33,11 +34,11 @@ class App extends Component {
     });
   }
 
-  nowPlaying = (polygonActive, i) => {
+  nowPlaying = (polygonActive, i, effects) => {
     //debugger 
 
-    //return polygonActive.track 
-    this.setsTrack(polygonActive.track)
+    this.setsTrack(polygonActive.track, effects)
+
     /*
     this.setState({
       activeTrack: polygonActive.track  
@@ -45,9 +46,10 @@ class App extends Component {
     */
   }
 
-  setsTrack(track) {
+  setsTrack(track, effects) {
     this.setState({
-      activeTrack: track
+      activeTrack: track,
+      effects: effects
     })
   }
 
@@ -58,7 +60,11 @@ class App extends Component {
           <div className="row">
             <div className="col">
             <div className='player-wrapper'>
-              <Player activeTrack={this.state.activeTrack} allTracks={this.state.preloadedTracks}/>
+              <Player 
+                activeTrack={this.state.activeTrack} 
+                allTracks={this.state.preloadedTracks} 
+                effects={this.state.effects}
+              />
             </div>
             </div>
             <div className="col">
@@ -69,7 +75,12 @@ class App extends Component {
           </div>
         </div>
         <div className="map">
-          <MyFancyComponent geoLoc={this.state.geoLoc} tracks={this.state.preloadedTracks} nowPlaying={this.nowPlaying}/>
+          <MyFancyComponent 
+            geoLoc={this.state.geoLoc} 
+            tracks={this.state.preloadedTracks} 
+            nowPlaying={this.nowPlaying}
+            effects={this.state.effects}
+          />
         </div>
       </div>
     );

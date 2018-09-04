@@ -23,13 +23,13 @@ class Player extends Component {
     this.state = {
       url: this.props.activeTrack,
       playing: true,
-      volume: 0.8,
+      volume: this.props.effects.volume,
       muted: false,
       played: 0,
       loaded: 0,
       duration: 0,
-      playbackRate: 1.0,
-      loop: false,
+      playbackRate: this.props.effects.playbackRate, //1.0,
+      loop: this.props.effects.loop, //false,
       activeTrack: this.props.activeTrack,
       allTracks: this.props.allTracks, //
     }
@@ -54,6 +54,7 @@ class Player extends Component {
           activeTrack: trackPath,
           url: trackPath,
           playing: true,
+          volume: nextProps.effects.volume
         })
       }
     }

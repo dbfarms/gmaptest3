@@ -1,19 +1,4 @@
 
-/*
-
-    -will receive a shape props on testmarker entry
-    -will check center, then check distance to?
-    -when x-percentage from center volume increases
-    -cool 
-
-geolib.getCenter([
-  {latitude: 52.516272, longitude: 13.377722},
-  {latitude: 51.515, longitude: 7.453619},
-  {latitude: 51.503333, longitude: -0.119722}
-]);
-
-    */
-
 import React, { Component } from 'react';
 
 import Pulse from './Pulse';
@@ -32,6 +17,7 @@ export default class LocationChcker extends Component {
             nowPlaying: this.props.nowPlaying,
             //returnFunction: this.props.returnFunction,
             updateMap: this.props.updateMap,
+            effects: this.props.effects,
         }
 
     }
@@ -45,6 +31,8 @@ export default class LocationChcker extends Component {
             polygons: nextProps.polygons, 
         })
     }
+
+
 
     checkLocation = () => {
     
@@ -66,34 +54,74 @@ export default class LocationChcker extends Component {
           ); // -> true 
           if (inPolygonCheck === true ) {
             //debugger 
-            console.log("checking location correctly")
             const polygonActive = this.state.polygons[i] 
             console.log(polygonActive)
-            this.state.nowPlaying(polygonActive, i)
+            const effects = this.checkEffects(polygonActive);
+            
+            if (effects !== this.state.effects) {
+                this.setState({
+                    effects: effects
+                })
+            }
+            
+            console.log(effects)
+            this.state.nowPlaying(polygonActive, i, effects)
             
           }
         }
-      }
+    }
 
-      returnFunction = () => {
+    checkEffects(polygon) {
+        //volume
+        //speed?
+        //something else?
+
+        //gets center
+        //proximity to center and if it's getting more or less close?
+        //triggers hit, which would be.. shapes inside of shapes?
+
+        const center = geolib.getCenter(polygon.polygon.props.path)
+        const distanceFromCenter = geolib.getDistance(
+            this.state.marker.position,
+            center
+        );
+
+        const bounds = geolib.getBounds(polygon.polygon.props.path)
+        let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
+        //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
+        //accordingly?
+
+        if (distanceFromCenter <= 10) {
+            effectsSet.volume = 0.8 //not sure about what max should be, so I made it .8 out of 1
+        } else if (distanceFromCenter <= 20 && distanceFromCenter > 10) {
+            effectsSet.volume = 0.5
+        } else if (distanceFromCenter > 20) {
+            effectsSet.volume = 0.3 //again, probably too low? not sure how to make the swell meaningful yet
+        }
+        //debugger 
+
+        return effectsSet //{volume: , speed: , }
+    }
+
+    returnFunction = () => {
         console.log("running")
-    
+
         const newMarkerLocation = Object.assign({}, this.state.marker)
-    
+
         //MOVES MARKER AS FOLLOWS, EVENTUALLY THIS SHOULD BE MORE MEANINGFUL 
         newMarkerLocation.position.lat = this.state.marker.position.lat + .00004
         newMarkerLocation.position.lng = this.state.marker.position.lng + .00005
-    
+
         newMarkerLocation.show = true; 
-    
+
         this.checkLocation()
 
         this.state.updateMap(newMarkerLocation)
 
         this.setState({
-          marker: newMarkerLocation
+            marker: newMarkerLocation
         })
-      }
+    }
 
 
     render(){
