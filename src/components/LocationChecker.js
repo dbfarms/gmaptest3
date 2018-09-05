@@ -72,13 +72,8 @@ export default class LocationChcker extends Component {
     }
 
     checkEffects(polygon) {
-        //volume
         //speed?
         //something else?
-
-        //gets center
-        //proximity to center and if it's getting more or less close?
-        //triggers hit, which would be.. shapes inside of shapes?
 
         const center = geolib.getCenter(polygon.polygon.props.path)
         const distanceFromCenter = geolib.getDistance(
@@ -90,10 +85,12 @@ export default class LocationChcker extends Component {
         let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
         //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
         //accordingly?
-
+        //console.log(distanceFromCenter)
         if (distanceFromCenter <= 10) {
+            console.log("do i get here?")
             effectsSet.volume = 0.8 //not sure about what max should be, so I made it .8 out of 1
         } else if (distanceFromCenter <= 20 && distanceFromCenter > 10) {
+            console.log("what about here?")
             effectsSet.volume = 0.5
         } else if (distanceFromCenter > 20) {
             effectsSet.volume = 0.3 //again, probably too low? not sure how to make the swell meaningful yet
@@ -132,6 +129,7 @@ export default class LocationChcker extends Component {
                 {<Pulse 
                   pulseTime={1} // In Seconds
                   pulseFunction={this.returnFunction}
+                  stopPlayingTest={this.props.stopPlayingTest}
                 />}
             </div>
             

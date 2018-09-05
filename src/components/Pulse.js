@@ -7,7 +7,8 @@ export default class Pulse extends React.Component {
     super(props);
 
     this.state = {
-      active: false
+      active: false,
+      stopPlayingTest: this.props.stopPlayingTest,
     };
 
     this.preparePulse = this.preparePulse.bind(this);
@@ -22,6 +23,7 @@ export default class Pulse extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    //console.log(nextProps)
     this.setState({
       active: nextProps.defaultActive || global.pulse != null ? true : false,
     });
@@ -53,6 +55,7 @@ export default class Pulse extends React.Component {
   stopPulse() {
     clearInterval(global.pulse);
     global.pulse = null;
+    this.state.stopPlayingTest()// = !this.state.stopPlayingTest //()
   }
 
   render() {

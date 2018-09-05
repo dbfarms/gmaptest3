@@ -114,12 +114,13 @@ export default class MyFancyComponent extends React.PureComponent {
       rectangles: [],
       polylines: [],
       circles: [],
-      tracks: this.props.tracks,
-      timer: 0,
+      //timer: 0,
       running: false,
-      nowPlaying: this.props.nowPlaying,
       shapeMenu: null,
+      nowPlaying: this.props.nowPlaying,
+      tracks: this.props.tracks,
       effects: this.props.effects,
+      stopPlayingTest: this.props.stopPlayingTest
     }
   }
 
@@ -740,11 +741,8 @@ export default class MyFancyComponent extends React.PureComponent {
                   nowPlaying={this.state.nowPlaying} 
                   updateMap={this.updateMap}
                   effects={this.state.effects}
+                  stopPlayingTest={this.state.stopPlayingTest}
                 />
-                {/*<Pulse 
-                  pulseTime={1} // In Seconds
-                  pulseFunction={this.returnFunction}
-                />*/}
               </div>
               <div>
                 <button

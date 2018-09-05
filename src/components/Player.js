@@ -32,6 +32,7 @@ class Player extends Component {
       loop: this.props.effects.loop, //false,
       activeTrack: this.props.activeTrack,
       allTracks: this.props.allTracks, //
+      stopPlayingTest: this.props.stopPlayingTest
     }
   }
   
@@ -43,13 +44,13 @@ class Player extends Component {
 
     if (nextProps.activeTrack !== null) {
 
-      console.log(track1)
-      console.log(track2)
-      console.log(track3)
-      console.log(track4)
+      //console.log(track1)
+      //console.log(track2)
+      //console.log(track3)
+      //console.log(track4)
       const trackPath = this.setTrackPath(nextProps.activeTrack);
 
-      if (trackPath !== this.state.activeTrack) {
+      if (trackPath !== this.state.activeTrack || this.state.playing === false) {
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
@@ -57,6 +58,12 @@ class Player extends Component {
           volume: nextProps.effects.volume
         })
       }
+    }
+
+    if (nextProps.playing === false) {
+      this.setState({
+        playing: false
+      })
     }
   }
 

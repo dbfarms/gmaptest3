@@ -17,10 +17,12 @@ class App extends Component {
                        'track3', 
                        'track4'],
       activeTrack: null,
-      effects: {volume: 0.5, playbackRate: 1, loop: false}
+      effects: {volume: 0.5, playbackRate: 1, loop: false},
+      playing: true,
     }
 
     this.nowPlaying = this.nowPlaying.bind(this)
+    this.stopPlayingTest = this.stopPlayingTest.bind(this)
 
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
@@ -32,6 +34,10 @@ class App extends Component {
       })
       
     });
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps)
   }
 
   nowPlaying = (polygonActive, i, effects) => {
@@ -49,7 +55,15 @@ class App extends Component {
   setsTrack(track, effects) {
     this.setState({
       activeTrack: track,
-      effects: effects
+      effects: effects,
+      playing: true,
+    })
+  }
+
+  stopPlayingTest(){
+    //debugger 
+    this.setState({
+      playing: false,
     })
   }
 
@@ -64,6 +78,7 @@ class App extends Component {
                 activeTrack={this.state.activeTrack} 
                 allTracks={this.state.preloadedTracks} 
                 effects={this.state.effects}
+                playing={this.state.playing}
               />
             </div>
             </div>
@@ -78,8 +93,9 @@ class App extends Component {
           <MyFancyComponent 
             geoLoc={this.state.geoLoc} 
             tracks={this.state.preloadedTracks} 
-            nowPlaying={this.nowPlaying}
             effects={this.state.effects}
+            nowPlaying={this.nowPlaying}
+            stopPlayingTest={this.stopPlayingTest}
           />
         </div>
       </div>
