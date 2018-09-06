@@ -131,15 +131,14 @@ export default class LocationChcker extends Component {
         })
     }
 
+    //{//this.state.timer &&
     render(){
         
         return (
             <div>
                 <div>run scheme</div>
-                {this.state.timer &&
-                    <Timer timer={this.state.timer}/>
-                }
                 
+                <Timer isRunning={this.state.timer}/>
                 
                 {<Pulse 
                   pulseTime={1} // In Seconds

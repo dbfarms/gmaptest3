@@ -1,74 +1,54 @@
 import React from 'react';
 
-import TimerComponent from './TimerComponent';
-import { millisecondsToHuman } from '../utils/TimerUtils';
+export default class TimerComponent extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            elapsed: this.props.elapsed === undefined? 0 : this.props.elapsed, //this.props.elapsed,
+            isRunning: this.props.isRunning,
+            elapsedTime: this.props.elapsedTime,
+          };
+    }
 
-export default class Timer extends React.Component {
-  state = {
-    elapsed: 0,
-    isRunning: this.props.isRunning
-  };
+    timerPassThrough = () => {
+        //() => {
+        const TIME_INTERVAL = 1000;
+        const elapsed = this.state.elapsed
+        //console.log("here now in timer pass through")
+    
+        if (this.state.isRunning) {
+            //debugger 
+            console.log(elapsed)
+            //this.state.elapsed(elapsed + TIME_INTERVAL)
 
-  /*
+            this.state.elapsedTime(elapsed + TIME_INTERVAL)
+            this.setState({
+                elapsed: elapsed + TIME_INTERVAL
+            })
+        } else {
+            this.setState({
+                elapsed: elapsed 
+            })
+        }
+        //}
+    }
+
   componentDidMount() {
-      console.log("timer comp did mount")
-      console.log(this.state)
+    //console.log("timer comp did mount")
+    console.log(this.state)
     const TIME_INTERVAL = 1000;
-
-    this.intervalId = setInterval(() => {
-
-      const { elapsed, isRunning } = this.state //this.state.timer;
-
-      //debugger 
-      if (isRunning) {
-          //debugger 
-          console.log(elapsed)
-          this.setState({
-              elapsed: elapsed + TIME_INTERVAL
-          })
-      } else {
-          this.setState({
-              elapsed: elapsed 
-          })
-      }
-    }, TIME_INTERVAL);
+    this.intervalId = setInterval(this.timerPassThrough.bind(this), TIME_INTERVAL);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
   }
-  */
-
-  componentWillReceiveProps(nextProps) {
-      this.setState({
-          isRunning: nextProps.isRunning
-      })
-  }
-
-  elapsedTime = (elapsed) =>{
-      //const elapsed = this.state.elapsed 
-      console.log(elapsed)
-      this.setState({
-          elapsed: elapsed
-      })
-  }
 
   render() {
-    console.log(this.state)
-
-    const elapsed = millisecondsToHuman(this.state.elapsed)
+    
     return (
         <div>
-            <div>
-                <h3>timer</h3>
-            </div>
-            <label>elapsed: {elapsed}</label>
-            {this.state.isRunning &&
-                <div>
-                    <TimerComponent elapsedTime={this.elapsedTime} isRunning={this.state.isRunning} elapsed={this.state.elapsed}/>
-                </div>
-            }
-            <br />            
+            <h3>timer on</h3>
         </div>
         
     );
