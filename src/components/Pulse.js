@@ -9,6 +9,8 @@ export default class Pulse extends React.Component {
     this.state = {
       active: false,
       stopPlayingTest: this.props.stopPlayingTest,
+      timerFunction: this.props.timerFunction,
+      //elapsed: this.props
     };
 
     this.preparePulse = this.preparePulse.bind(this);
@@ -50,12 +52,15 @@ export default class Pulse extends React.Component {
       const date = new Date();
       this.props.pulseFunction && this.props.pulseFunction({ state: "active", time: date.getTime() })
     }, (this.props.pulseTime * 1000));
+    //debugger 
+    this.state.timerFunction();
   }
 
   stopPulse() {
     clearInterval(global.pulse);
     global.pulse = null;
     this.state.stopPlayingTest()// = !this.state.stopPlayingTest //()
+    this.state.timerFunction();
   }
 
   render() {

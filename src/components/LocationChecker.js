@@ -4,6 +4,9 @@ import React, { Component } from 'react';
 import Pulse from './Pulse';
 import geolib from 'geolib'
 
+import Timer from './Timer';
+import { millisecondsToHuman } from '../utils/TimerUtils';
+
 export default class LocationChcker extends Component {
     constructor(props) {
         super(props)
@@ -18,6 +21,7 @@ export default class LocationChcker extends Component {
             //returnFunction: this.props.returnFunction,
             updateMap: this.props.updateMap,
             effects: this.props.effects,
+            timer: false,
         }
 
     }
@@ -120,16 +124,28 @@ export default class LocationChcker extends Component {
         })
     }
 
+    timerFunction = () => {
+        //debugger 
+        this.setState({
+            timer: !this.state.timer 
+        })
+    }
 
     render(){
         
         return (
             <div>
                 <div>run scheme</div>
+                {this.state.timer &&
+                    <Timer timer={this.state.timer}/>
+                }
+                
+                
                 {<Pulse 
                   pulseTime={1} // In Seconds
                   pulseFunction={this.returnFunction}
                   stopPlayingTest={this.props.stopPlayingTest}
+                  timerFunction={this.timerFunction}
                 />}
             </div>
             
