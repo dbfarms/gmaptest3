@@ -40,7 +40,7 @@ class App extends Component {
     console.log(nextProps)
   }
 
-  nowPlaying = (polygonActive, i, effects) => {
+  nowPlaying = (polygonActive, effects) => {
     //debugger 
 
     this.setsTrack(polygonActive.track, effects)

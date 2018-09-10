@@ -18,7 +18,7 @@ export default class TimerComponent extends React.Component {
     
         if (this.state.isRunning) {
             //debugger 
-            console.log(elapsed)
+            //console.log(elapsed)
             //this.state.elapsed(elapsed + TIME_INTERVAL)
 
             this.state.elapsedTime(elapsed + TIME_INTERVAL)

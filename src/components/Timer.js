@@ -6,8 +6,101 @@ import { millisecondsToHuman } from '../utils/TimerUtils';
 export default class Timer extends React.Component {
   state = {
     elapsed: 0,
-    isRunning: this.props.isRunning
+    durationStart: 0,
+    isRunning: this.props.isRunning,
+    getDuration: this.props.getDuration,
+    inShape: this.props.inShape,
+    latestShape: undefined, 
   };
+
+  componentWillReceiveProps(nextProps) {
+      //console.log(nextProps)
+      if (nextProps.isRunning !== this.state.isRunning || nextProps.inShape !== this.state.inShape) {
+        this.setState({
+            isRunning: nextProps.isRunning,
+            inShape: nextProps.inShape, //.polygon,
+        })
+      }
+  }
+
+  elapsedTime = (elapsed) => {
+      //console.log("hits elapsedTime") this works
+      this.setState({
+          elapsed: elapsed
+      })
+  }
+
+  render() {
+
+    const elapsed = millisecondsToHuman(this.state.elapsed)
+
+    const duration = this.elapsedTime
+    const latestShape = this.state.latestShape
+    const inShape = this.state.inShape
+
+    //if in a shape return true for the first time, mark down elapsed time for the start
+    //if no longer in a shape or in a different shape, reset
+    //hoist info to LocationChecker 
+
+    //im keeping this here because this is a function of timer itself and this way i dont have to keep setting state 
+    //re: timer in multiple locations
+    console.log("inShape")
+    console.log(inShape)
+    console.log("latestShape")
+    console.log(latestShape)
+    
+    if (inShape !== undefined) {
+        if (latestShape !== inShape) {
+          //// this will check if the latestShape you're in is no longer the same shape you had been in
+          //debugger
+          console.log("new shape, resetting (allegedly) durationStart")
+         
+          this.setState({
+            durationStart: this.state.elapsed,
+            latestShape: inShape 
+          })
+
+          
+        } else {
+          //still in shape... checks and hoists
+          console.log("same shape")
+          const duration = this.state.elapsed - this.state.durationStart 
+          //debugger 
+          console.log(duration)
+          if (duration > 1) {
+
+            this.state.getDuration(latestShape, duration)
+          }
+          
+        }
+    } /*else {
+        //
+
+        this.setState({
+          durationStart: 0,
+          latestShape: null //??
+        })
+    } */
+      
+
+    return (
+        <div>
+            <div>
+                <h3>timer</h3>
+            </div>
+            <label>elapsed: {elapsed}</label>
+            {this.state.isRunning &&
+                <div>
+                    <TimerComponent elapsedTime={this.elapsedTime} isRunning={this.state.isRunning} elapsed={this.state.elapsed}/>
+                </div>
+            }
+            <br />            
+        </div>
+        
+    );
+  }
+}
+
 
   /*
   componentDidMount() {
@@ -38,43 +131,6 @@ export default class Timer extends React.Component {
     clearInterval(this.intervalId);
   }
   */
-
-  componentWillReceiveProps(nextProps) {
-      this.setState({
-          isRunning: nextProps.isRunning
-      })
-  }
-
-  elapsedTime = (elapsed) =>{
-      //const elapsed = this.state.elapsed 
-      console.log(elapsed)
-      this.setState({
-          elapsed: elapsed
-      })
-  }
-
-  render() {
-    console.log(this.state)
-
-    const elapsed = millisecondsToHuman(this.state.elapsed)
-    return (
-        <div>
-            <div>
-                <h3>timer</h3>
-            </div>
-            <label>elapsed: {elapsed}</label>
-            {this.state.isRunning &&
-                <div>
-                    <TimerComponent elapsedTime={this.elapsedTime} isRunning={this.state.isRunning} elapsed={this.state.elapsed}/>
-                </div>
-            }
-            <br />            
-        </div>
-        
-    );
-  }
-}
-
 
   /*
   componentWillReceiveProps(nextProps) {

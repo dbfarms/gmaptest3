@@ -39,8 +39,8 @@ class Player extends Component {
 
   componentWillReceiveProps(nextProps) {
     //debugger 
-    console.log("nextProps")
-    console.log(nextProps)
+    //console.log("nextProps")
+    //console.log(nextProps)
 
     if (nextProps.activeTrack !== null) {
 
@@ -175,8 +175,8 @@ class Player extends Component {
   render () {
     const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
     const SEPARATOR = ' · '
-    console.log("this.state")
-    console.log(this.state)
+    //console.log("this.state")
+    //console.log(this.state)
     //debugger
 
     return (

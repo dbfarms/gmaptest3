@@ -71,7 +71,7 @@ const MyMapComponent = compose(
 
             {props.testMarker.show === true &&
               <div>
-                {console.log(props.testMarker)}
+                {/*console.log(props.testMarker)*/}
                 <Marker position={{lat: props.testMarker.position.lat, lng: props.testMarker.position.lng}} />
                 
                 {props.thisTestMarker}
@@ -136,8 +136,8 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps){
-    console.log(this)
-    console.log(nextProps)
+    //console.log(this)
+    //console.log(nextProps)
     this.setState({
       geoLoc: nextProps.geoLoc
     })
@@ -162,10 +162,10 @@ export default class MyFancyComponent extends React.PureComponent {
         console.log("this one")
         //debugger 
         createTestMarker = this.state.testMarker
-        console.log(createTestMarker)
+       // console.log(createTestMarker)
       } else { 
         //(this.state.testMarker.position === "") 
-        console.log("should only happen once")
+        //console.log("should only happen once")
 
         createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
         marker: "", show: false}
@@ -733,32 +733,36 @@ export default class MyFancyComponent extends React.PureComponent {
 
     return (
         <div>
-            <div className="Grid-to-be-defined-later">
-              <div>
-                <LocationChecker 
-                  marker={this.state.testMarker} 
-                  polygons={this.state.polygons} 
-                  nowPlaying={this.state.nowPlaying} 
-                  updateMap={this.updateMap}
-                  effects={this.state.effects}
-                  stopPlayingTest={this.state.stopPlayingTest}
-                />
+            <br />
+            <div className="container">
+              <div className="row">
+                <div className="col">
+
+                  <LocationChecker 
+                    marker={this.state.testMarker} 
+                    polygons={this.state.polygons} 
+                    nowPlaying={this.state.nowPlaying} 
+                    updateMap={this.updateMap}
+                    effects={this.state.effects}
+                    stopPlayingTest={this.state.stopPlayingTest}
+                  />
+                </div>
+                <div className="col-sm-">
+                  <button
+                    onClick={this.savesChanges.bind(this)}
+                  >
+                    save changes
+                  </button>
+                </div>
+                <div className="col">
+                  <h3>menu</h3>
+                  {this.state.polyMenu.type !== '' &&
+                    <div>
+                      { <ShapeMenu shape={this.state.shapeMenu.shape} keyID={this.state.shapeMenu.key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>}
+                    </div>
+                  }
+                </div>
               </div>
-              <div>
-                <button
-                  onClick={this.savesChanges.bind(this)}
-                >
-                  save changes
-                </button>
-              </div>
-            </div>
-            <div className="menu">
-            <h3>menu</h3>
-            {this.state.polyMenu.type !== '' &&
-              <div>
-                { <ShapeMenu shape={this.state.shapeMenu.shape} keyID={this.state.shapeMenu.key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>}
-              </div>
-            }
             </div>
             {this.props.geoLoc !== '' && 
                 <MyMapComponent

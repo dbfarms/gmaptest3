@@ -38,15 +38,15 @@ class Player2 extends Component {
 
   componentWillReceiveProps(nextProps) {
     //debugger 
-    console.log("nextProps")
-    console.log(nextProps)
+    //console.log("nextProps")
+    //console.log(nextProps)
 
     if (nextProps.activeTrack !== null) {
 
-      console.log(track1)
-      console.log(track2)
-      console.log(track3)
-      console.log(track4)
+      //console.log(track1)
+      //console.log(track2)
+      //console.log(track3)
+      //console.log(track4)
       const trackPath = this.setTrackPath(nextProps.activeTrack);
 
       if (trackPath !== this.state.activeTrack) {
@@ -168,8 +168,8 @@ class Player2 extends Component {
   render () {
     const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
     const SEPARATOR = ' · '
-    console.log("this.state")
-    console.log(this.state)
+    //console.log("this.state")
+    //console.log(this.state)
     //debugger
 
     return (

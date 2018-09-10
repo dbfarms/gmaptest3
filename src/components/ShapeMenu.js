@@ -48,9 +48,9 @@ export default class ShapeMenu extends Component {
                 <table className="table table-hover">
                 <thead>
                     <tr>
-                    <th>Vertex</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
+                        <th>Vertex</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
                     </tr>
                 </thead>
                     {shape !== undefined && 
@@ -70,8 +70,6 @@ export default class ShapeMenu extends Component {
                 </table>
 
                 <div className="d-flex flex-wrap justify-content-center position-relative w-100 h-100 align-items-center align-content-center">
-                    <span className={`h1 mb-4 w-100 text-center text-Primary`}>Select Sounds</span>
-                    
                     <ButtonDropdown isOpen={dropdownOpen} toggle={this.toggleDropdown}>
                         <Button id="caret" color="Primary">{shape.track || 'Custom'} track</Button>
                         <DropdownToggle caret size="lg" color="Danger" />
