@@ -24,7 +24,7 @@ export default class LocationChcker extends Component {
             timer: false,
             elapsed: undefined, //if the below works do i need this?
             inShape: undefined, 
-            durationStats: {shape: undefined, duration: undefined}, //this will affect this.state.effects so it doesn't need to be hoisted... i think 
+            durationStats: {shape: undefined, duration: undefined}, //don't know if i'm gonna use this one
         }
 
     }
@@ -54,19 +54,6 @@ export default class LocationChcker extends Component {
         
         //debugger 
 
-        ///////
-        //
-        //
-        /*
-            separate out the for loop check for which polygon and the logic of what happens after
-            so:
-            -check which one it's in.
-            -continue to check for THAT polygon only until it's no longer true
-            -once no longer true check for other polygon
-            -if no polygon or if other polygon reset durationStats
-            -easy!
-        */
-
         let polygonActive = undefined; 
 
         for (let i=0; i<listOfPaths.length -1; i++) {
@@ -80,7 +67,7 @@ export default class LocationChcker extends Component {
             if (inPolygonCheck === true ) {
                 //debugger 
                 polygonActive = this.state.polygons[i] 
-                //console.log(polygonActive)
+                console.log(polygonActive)
                 console.log("in polygon check")
                 console.log(inPolygonCheck)
             } 
@@ -99,32 +86,13 @@ export default class LocationChcker extends Component {
                     effects: effects,
                 })
             }
-
-            /*
-            if (this.state.durationStats.shape !== polygonActive) {
-
-                this.setState({
-                    durationStats: {
-                        shape: polygonActive
-                    }
-                })
-            }
-            */
-
-            //sets state for polygonActive to send down to Timer 
+ 
             //console.log("sets polygonActive: ")
             //console.log(polygonActive)
             this.setState({
-                inShape: polygonActive.polygon
+                inShape: polygonActive
             })
 
-            if (durationStats.du) { ////////////////////////////// 
-                this.setState({
-                    durationStats: {shape: polygonActive, duration: this.state.elapsed}  //see this.state.inShape 
-                })
-                
-            }
-            
             //console.log(effects)
             this.state.nowPlaying(polygonActive, effects)
         } else {
@@ -133,7 +101,7 @@ export default class LocationChcker extends Component {
             console.log(polygonActive)
             if (this.state.durationStats.shape !== undefined) {
             this.setState({
-                durationStats: {shape: undefined, duration: undefined}
+                durationStats: {shape: undefined, duration: undefined} //likely i'll be deleting this... 
             })
             }
         }
@@ -142,6 +110,7 @@ export default class LocationChcker extends Component {
     checkEffects(polygon) {
         //speed?
         //something else?
+        //THIS MIGHT BE MOVED TO EFFECTSLIST FOR POLYGON SOMEHOW...
 
         const center = geolib.getCenter(polygon.polygon.props.path)
         const distanceFromCenter = geolib.getDistance(
@@ -198,12 +167,23 @@ export default class LocationChcker extends Component {
     getDurationInShape = (latestShape, duration) => {
 
         //debugger 
+
+        //just an example of how it would work
+        //eventually the duration would be meaningfully determined by track and polygon
         //
+        const durationToSeconds = duration/1000
+        if (durationToSeconds >= latestShape.effectsList.duration) {
+
+            debugger 
+        }
+
+        /* i don't need to set state here, just hoist the consquences to player
         if (latestShape !== this.state.durationStats.shape || duration !== this.state.durationStats.duration) {
             this.setState({
                 durationStats: {shape: latestShape, duration: duration} //see this.state.inShape
             })
         }
+        */
     }
 
     //{//this.state.timer &&

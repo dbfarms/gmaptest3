@@ -623,7 +623,14 @@ export default class MyFancyComponent extends React.PureComponent {
           editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
           draggable: true 
         }}
-      />, track: "empty"}
+      />, track: "empty", effectsList: {duration: 3, visits: 2, sequence: 1}}
+      // how should effectsList operate? 
+      //check for the following
+      //number of times in polygon(?) 
+      //duration in polygon
+      //sequence(?)
+      //then have in Player(#?) what will happen 
+      
 
       //debugger 
 
