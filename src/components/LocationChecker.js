@@ -173,7 +173,7 @@ export default class LocationChcker extends Component {
         //
         const durationToSeconds = duration/1000
         if (durationToSeconds >= latestShape.effectsList.duration) {
-
+            //hoist to Player
             debugger 
         }
 
