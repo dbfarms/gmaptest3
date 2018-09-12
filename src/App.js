@@ -1,10 +1,19 @@
+/*
+  notes: 
+  polygons change track? trigger next sequence?
+  rectanges add to sequence?
+  circles do what?
+
+*/
+
 import React, { Component } from 'react';
 
-import MyMapComponent from './components/MyMapComponent';
+//import MyMapComponent from './components/MyMapComponent';
 import './App.css';
 import MyFancyComponent from './components/MyMapComponent';
-import Player from './components/Player';
-import Player2 from './components/Player2';
+import Sequencer from './components/Sequencer';
+//import Player from './components/Player';
+//import Player2 from './components/Player2';
 
 class App extends Component {
   constructor() {
@@ -23,6 +32,7 @@ class App extends Component {
 
     this.nowPlaying = this.nowPlaying.bind(this)
     this.stopPlayingTest = this.stopPlayingTest.bind(this)
+    this.startPlayer1 = this.startPlayer1.bind(this)
 
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
@@ -42,22 +52,21 @@ class App extends Component {
 
   nowPlaying = (polygonActive, effects) => {
     //debugger 
-
     this.setsTrack(polygonActive.track, effects)
-
-    /*
-    this.setState({
-      activeTrack: polygonActive.track  
-    })
-    */
   }
 
   setsTrack(track, effects) {
+
+    //THIS IS WHERE I LEFT OFF
+    //will this change track or add to sequence? different shapes do different things i guess?
+    //see top for notes 
+    /*
     this.setState({
       activeTrack: track,
       effects: effects,
       playing: true,
     })
+    */
   }
 
   stopPlayingTest(){
@@ -67,27 +76,24 @@ class App extends Component {
     })
   }
 
+  startPlayer1(){
+    //debugger 
+    this.setState({
+      playing: true,
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <div className="container">
-          <div className="row">
-            <div className="col">
-            <div className='player-wrapper'>
-              <Player 
-                activeTrack={this.state.activeTrack} 
-                allTracks={this.state.preloadedTracks} 
-                effects={this.state.effects}
-                playing={this.state.playing}
-              />
-            </div>
-            </div>
-            <div className="col">
-              <div className='player-wrapper2'>
-                <Player2 sounds={this.state.sounds} />
-              </div>
-            </div>
-          </div>
+        <div>
+          <Sequencer 
+            activeTrack={this.state.activeTrack} 
+            allTracks={this.state.preloadedTracks} 
+            effects={this.state.effects}
+            playing={this.state.playing}
+            sounds={this.state.sounds}
+          />
         </div>
         <div className="map">
           <MyFancyComponent 
@@ -96,6 +102,7 @@ class App extends Component {
             effects={this.state.effects}
             nowPlaying={this.nowPlaying}
             stopPlayingTest={this.stopPlayingTest}
+            startPlayer1={this.startPlayer1}
           />
         </div>
       </div>

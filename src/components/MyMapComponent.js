@@ -120,7 +120,8 @@ export default class MyFancyComponent extends React.PureComponent {
       nowPlaying: this.props.nowPlaying,
       tracks: this.props.tracks,
       effects: this.props.effects,
-      stopPlayingTest: this.props.stopPlayingTest
+      stopPlayingTest: this.props.stopPlayingTest,
+      startPlayer1: this.props.startPlayer1,
     }
   }
 
@@ -639,7 +640,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //randomly assigns track to polygon, eventually this will be thought out
     polygonsDrawn.map(polygon => {
-      let preloadedTracks = ['track1', 'track2', 'track3', 'track4']
+      let preloadedTracks = ['track1', 'track2', 'track3', 'track4'] 
       
       const i = Math.floor(Math.random() * 4)
 
@@ -752,6 +753,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     updateMap={this.updateMap}
                     effects={this.state.effects}
                     stopPlayingTest={this.state.stopPlayingTest}
+                    startPlayer1={this.state.startPlayer1}
                   />
                 </div>
                 <div className="col-sm-">

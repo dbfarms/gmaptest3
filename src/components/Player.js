@@ -11,7 +11,7 @@ import '../App.css'
 //import { version } from '../../package.json'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
 import Duration from './Duration'
-import track1 from '../jams/track1.mp3' ///  file:///home/munger/coding/gmaptest3/src/jams
+import track1 from '../jams/track1.mp3' ///  
 import track2 from '../jams/track2.mp3'
 import track3 from '../jams/track3.wav'
 import track4 from '../jams/track4.wav'
@@ -31,16 +31,31 @@ class Player extends Component {
       playbackRate: this.props.effects.playbackRate, //1.0,
       loop: this.props.effects.loop, //false,
       activeTrack: this.props.activeTrack,
-      allTracks: this.props.allTracks, //
-      stopPlayingTest: this.props.stopPlayingTest
+      //allTracks: this.props.allTracks, //
+      stopPlayingTest: this.props.stopPlayingTest,
+      sequence: this.props.sequence,
+      playIndex: null,
+      effects: this.props.effects
     }
   }
+
+  /*  to do:
+    -start: basic track plays when you start, maybe a wash or something
+    -sequence is built, but how?
+      -hit polygons on map (in preloaded map... what about dynamic map?)
+    -
+
+
+  */
   
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(prevState, nextProps) {
     //debugger 
     //console.log("nextProps")
     //console.log(nextProps)
+    console.log("prevState")
+    console.log(prevState)
+    //NEED TO ACCEPT NEW SEQUENCE FROM NEXTPROPS AT SOME POINT JUST NEED TO FIX BELOW FIRST I GUESS
 
     if (nextProps.activeTrack !== null) {
 
@@ -55,7 +70,7 @@ class Player extends Component {
           activeTrack: trackPath,
           url: trackPath,
           playing: true,
-          volume: nextProps.effects.volume
+          //volume: nextProps.effects.volume //this ain't working but prob changing how it's done anyway so fine
         })
       }
     }
@@ -83,12 +98,13 @@ class Player extends Component {
         break 
     }
     //debugger 
+    /*
     this.state.allTracks.map(track => {
       if (track === activeTrack) {
         return 
       }
     })
-      
+    */
   }
 
   load = url => {
@@ -98,17 +114,6 @@ class Player extends Component {
       loaded: 0
     })
   }
-
- /* for when we're loading from a file
- load = activeTrack => {
-    this.setState({
-      activeTrack,
-      played: 0,
-      loaded: 0
-    })
-  }
-  */
-
   playPause = () => {
     this.setState({ playing: !this.state.playing })
   }
@@ -154,7 +159,21 @@ class Player extends Component {
   }
   onEnded = () => {
     console.log('onEnded')
-    this.setState({ playing: this.state.loop })
+
+    if (this.state.loop) {
+      this.setState({ playing: this.state.loop })
+    } else if (this.state.sequence) {
+      const index = this.state.playIndex 
+      const url = this.state.sequence[index]
+      this.setState({
+        url,
+        played: 0,
+        loaded: 0
+      })
+    } else {
+      this.setState({ playing: false })
+    }
+    
   }
   onDuration = (duration) => {
     console.log('onDuration', duration)

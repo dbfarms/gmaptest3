@@ -18,9 +18,9 @@ export default class LocationChcker extends Component {
             //location: this.props.location,
             polygons: this.props.polygons, // combine all shapes together in one object?
             nowPlaying: this.props.nowPlaying,
-            //returnFunction: this.props.returnFunction,
             updateMap: this.props.updateMap,
             effects: this.props.effects,
+            startPlayer1: this.props.startPlayer1,
             timer: false,
             elapsed: undefined, //if the below works do i need this?
             inShape: undefined, 
@@ -137,7 +137,7 @@ export default class LocationChcker extends Component {
         return effectsSet //{volume: , speed: , }
     }
 
-    returnFunction = () => {
+    startTestRun = () => {
         //console.log("running")
 
         const newMarkerLocation = Object.assign({}, this.state.marker)
@@ -148,8 +148,8 @@ export default class LocationChcker extends Component {
 
         newMarkerLocation.show = true; 
 
-        this.checkLocation()
-
+        this.state.startPlayer1()
+        this.checkLocation() //checks location for player update
         this.state.updateMap(newMarkerLocation)
 
         this.setState({
@@ -174,7 +174,8 @@ export default class LocationChcker extends Component {
         const durationToSeconds = duration/1000
         if (durationToSeconds >= latestShape.effectsList.duration) {
             //hoist to Player
-            debugger 
+            console.log("DURATION TRIGGERS BUT HAVENT DEFINED YET")
+            //debugger 
         }
 
         /* i don't need to set state here, just hoist the consquences to player
@@ -196,11 +197,12 @@ export default class LocationChcker extends Component {
                 <Timer isRunning={this.state.timer} getDuration={this.getDurationInShape} inShape={this.state.inShape}/>
                 
                 {<Pulse 
-                  pulseTime={1} // In Seconds
-                  pulseFunction={this.returnFunction}
-                  stopPlayingTest={this.props.stopPlayingTest}
-                  timerFunction={this.timerFunction}
-                />}
+                    pulseTime={1} // In Seconds
+                    pulseFunction={this.startTestRun}
+                    stopPlayingTest={this.props.stopPlayingTest}
+                    timerFunction={this.timerFunction}
+                 />
+                }
             </div>
             
 
