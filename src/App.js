@@ -3,6 +3,7 @@
   polygons change track? trigger next sequence?
   rectanges add to sequence?
   circles do what?
+  markers should be new songs altogether? mark of progress?
 
 */
 
@@ -50,23 +51,38 @@ class App extends Component {
     console.log(nextProps)
   }
 
-  nowPlaying = (polygonActive, effects) => {
+  nowPlaying = (polygonActive, effects) => { //poorly named, should be something like hitsCue and then determines what to do based on that
     //debugger 
+    debugger 
     this.setsTrack(polygonActive.track, effects)
   }
 
   setsTrack(track, effects) {
 
-    //THIS IS WHERE I LEFT OFF
     //will this change track or add to sequence? different shapes do different things i guess?
     //see top for notes 
-    /*
+
+
     this.setState({
-      activeTrack: track,
-      effects: effects,
+      activeTrack: track, //will also erase sequence but haven't done that yet
+      //effects: effects, //setting effects now its own function though not hooked up yet
       playing: true,
     })
-    */
+  }
+
+  /*
+
+  setsSequence(track){
+    this.setState({
+      addTrack: track,
+      //effects: effects, //I DON'T THINK EFFECTS SHOULD TRAVEL WITH THIS
+      playing: true,
+    })
+  }
+  */
+
+  setsEffects(effects){
+    //things that trigger effects go through hre
   }
 
   stopPlayingTest(){
@@ -88,7 +104,8 @@ class App extends Component {
       <div className="App">
         <div>
           <Sequencer 
-            activeTrack={this.state.activeTrack} 
+            activeTrack={this.state.activeTrack} //this will trigger only when a new track is loaded and clears(?) sequence
+            addTrack={this.state.addTrack} //this adds a track or whatever to sequence
             allTracks={this.state.preloadedTracks} 
             effects={this.state.effects}
             playing={this.state.playing}

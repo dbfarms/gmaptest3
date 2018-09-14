@@ -1,3 +1,38 @@
+notes:
+
+to-do:
+9.14.18
+  -rename things so they're more accurately named
+  -set polygon triggers in location checker to better reflect shape notes below
+  -
+
+eventually:
+-polygons need to check what track you're on, then be associated with a part of that track...?
+
+
+shapes:
+-POLYGONS 
+  add to the sequence, they CAN also contain effects 
+ (that only last as long as the sequence they're on / associated with?)
+-CIRCLES
+  resets sequence completely, starts new track
+-SQUARES
+  scrambles sequence? effects? i guess scrambling sequence could be effect...
+-MARKERS
+  triggers some kind of event i haven't thought up yet
+-POLYLINES
+  dunno either 
+
+actions-that-cause-effects:
+-DURATION
+  duration in any shape will trigger duration effect... right? maybe?
+
+ 
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

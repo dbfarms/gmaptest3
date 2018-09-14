@@ -42,8 +42,10 @@ export default class LocationChcker extends Component {
 
 
     checkLocation = () => {
+        //should it check what kind of polygon it is here? 
+        //reasons to: it'll know what state will be updated here and what variables to pass as a result
+        //reasons not to: it can pass that stuff and then just not use it later
     
-        //console.log(" im ade it this far")
         const latNow = this.state.marker.position.lat
         const lngNow = this.state.marker.position.lng 
     
@@ -52,8 +54,6 @@ export default class LocationChcker extends Component {
           return arrayOfCoords
         })
         
-        //debugger 
-
         let polygonActive = undefined; 
 
         for (let i=0; i<listOfPaths.length -1; i++) {
@@ -74,13 +74,19 @@ export default class LocationChcker extends Component {
         }
 
         if (polygonActive !== undefined ) {
+            
+            // this should only happen if it's a square? put that in
             const effects = this.checkEffects(polygonActive);
+            //
+
             const durationStats = this.state.durationStats
             
             console.log("elapsed time in location checker")
             console.log(this.state.elapsed)
             //debugger 
 
+            //how effects should operate here is unclear... right now polygons can trigger track part AND effect but maybe some 
+            //shapes should just be effects and some just track stuff
             if (effects !== this.state.effects) {
                 this.setState({
                     effects: effects,
@@ -122,6 +128,15 @@ export default class LocationChcker extends Component {
         let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
         //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
         //accordingly?
+
+        /// how should check effects work here?
+        // 1) squares
+        // 2) 
+        //
+        //
+
+        //
+
         //console.log(distanceFromCenter)
         if (distanceFromCenter <= 10) {
             //console.log("do i get here?")

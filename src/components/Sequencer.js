@@ -30,6 +30,7 @@ export default class Sequencer extends Component {
             effects: {volume: 0.5, playbackRate: 1, loop: false},
             playing: true,
             playIndex: 0,
+            addTrack: this.props.addTrack,
         }
     }
 
