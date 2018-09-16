@@ -1,4 +1,3 @@
-//app notes DO THIS NEXT STOP WHAT YOU'RE DOING GET SHIT IN ORDER  
     /*
     -maybe relearn redux...
       -will want to once i start on backend so maybe get going now?
@@ -11,10 +10,6 @@
         -separate out functions (but, how again?)
           -relearn how to do this, probably importing some way
         -move drawingfunction functions to file? etc
-
-      player 
-        -haven't really done anything here yet
-
       */ 
 
 import React from "react"
@@ -748,12 +743,16 @@ export default class MyFancyComponent extends React.PureComponent {
 
                   <LocationChecker 
                     marker={this.state.testMarker} 
-                    polygons={this.state.polygons} 
                     nowPlaying={this.state.nowPlaying} 
                     updateMap={this.updateMap}
                     effects={this.state.effects}
                     stopPlayingTest={this.state.stopPlayingTest}
                     startPlayer1={this.state.startPlayer1}
+                    markers={this.state.markers}
+                    polygons={this.state.polygons} 
+                    rectangles={this.state.rectangles}
+                    circles={this.state.circles}
+                    polylines={this.state.polylines}
                   />
                 </div>
                 <div className="col-sm-">

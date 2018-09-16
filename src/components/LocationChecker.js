@@ -14,9 +14,11 @@ export default class LocationChcker extends Component {
 
         this.state = {
             marker: this.props.marker,
-            //shape: this.props.shape,
-            //location: this.props.location,
-            polygons: this.props.polygons, // combine all shapes together in one object?
+            //polygons: this.props.polygons, 
+            //rectangles: this.props.rectangles,
+            //circles: this.props.circles,
+            markers: this.props.markers,
+            polylines: this.props.polylines,
             nowPlaying: this.props.nowPlaying,
             updateMap: this.props.updateMap,
             effects: this.props.effects,
@@ -25,21 +27,34 @@ export default class LocationChcker extends Component {
             elapsed: undefined, //if the below works do i need this?
             inShape: undefined, 
             durationStats: {shape: undefined, duration: undefined}, //don't know if i'm gonna use this one
+            shapesList: {polygons: this.props.polygons, circles: this.props.circles,   
+                 rectangles: this.props.rectangles},
+            shapeTypeLocation: undefined,
         }
 
     }
 
     componentWillReceiveProps(nextProps) {
-        //sets state of latest shape to be entered 
         //console.log(nextProps)
         //debugger 
+        const newShapesList = Object.assign({}, this.state.shapesList)
+        newShapesList.polygons = nextProps.polygons
+        newShapesList.rectangles = nextProps.rectangles
+        //newShapesList.polylines = this.props.polylines
+        //newShapesList.markers = this.props.markers
+        newShapesList.circles = nextProps.circles 
+
         this.setState({
             marker: nextProps.marker,
-            polygons: nextProps.polygons, 
+            shapesList: newShapesList,
+            markers: nextProps.markers,
+            polylines: nextProps.polylines,
+            shapesList: newShapesList,
+            //polygons: nextProps.polygons, 
+            //circles: nextProps.circles,
+            //rectangles: nextProps.rectangles,
         })
     }
-
-
 
     checkLocation = () => {
         //should it check what kind of polygon it is here? 
@@ -48,34 +63,44 @@ export default class LocationChcker extends Component {
     
         const latNow = this.state.marker.position.lat
         const lngNow = this.state.marker.position.lng 
-    
-        const listOfPaths = this.state.polygons.map(polygon => {
-          const arrayOfCoords = polygon.polygon.props.path
-          return arrayOfCoords
-        })
+        const listOfShapes = this.state.shapesList
+        console.log(listOfShapes)
+
+        //debugger 
+        //what if you can be in two shapes at once? for another day...
+
+        const shapeTypeAndCoords = []
+        let polygonActive = undefined 
+        for (const key of Object.keys(listOfShapes)) {
+
+            const shapeType = listOfShapes[key]
+            if (shapeType.length > 0) {
+                const shapeCoords = shapeType.map(shape => {
+                    
+                    const arrayOfCoords = shape.polygon.props.path //for now its shape.polygon but that'll 
+                                                                   //probably change when i actually use other shapes
+                    return arrayOfCoords
+                })
+                
+                for (let i=0; i<shapeCoords.length-1; i++) {
+                    const inPolygonCheck = geolib.isPointInside(
+                        {latitude: latNow, longitude: lngNow},
+                        shapeCoords[i]
+                    ); 
         
-        let polygonActive = undefined; 
-
-        for (let i=0; i<listOfPaths.length -1; i++) {
-            //console.log(this.state.testMarker.marker.props.position)
-
-            const inPolygonCheck = geolib.isPointInside(
-                {latitude: latNow, longitude: lngNow},
-                listOfPaths[i]
-            ); 
-
-            if (inPolygonCheck === true ) {
-                //debugger 
-                polygonActive = this.state.polygons[i] 
-                console.log(polygonActive)
-                console.log("in polygon check")
-                console.log(inPolygonCheck)
-            } 
+                    if (inPolygonCheck === true ) {
+                        //debugger 
+                        polygonActive = this.state.shapesList[key][i]
+                        //debugger 
+                    } 
+                }
+            }
         }
 
         if (polygonActive !== undefined ) {
             
             // this should only happen if it's a square? put that in
+
             const effects = this.checkEffects(polygonActive);
             //
 
@@ -227,6 +252,98 @@ export default class LocationChcker extends Component {
 
 //////////////////////////////scrap
 
+
+
+        /*
+        const pathsList = Object.entries(listOfShapes).forEach(
+           ([key, shapeType]) => {
+                if (shapeType.length > 0) {
+                    const shapeCoords = shapeType.map(shape => {
+                        
+                        const arrayOfCoords = shape.polygon.props.path //for now its shape.polygon but that'll 
+                                                                       //probably change when i actually use other shapes
+                        return arrayOfCoords
+                    })
+                    
+                    const shapeTypeAndCoords =[]
+                    for (let i=0; i<shapeCoords.length-1; i++) {
+                        const inPolygonCheck = geolib.isPointInside(
+                            {latitude: latNow, longitude: lngNow},
+                            shapeCoords[i]
+                        ); 
+            
+                        if (inPolygonCheck === true ) {
+                            return shapeTypeAndCoords.push(key, shapeCoords)
+                        } 
+                    }
+                    return shapeTypeAndCoords
+                }
+            }
+        )
+
+        console.log(pathsList)
+        if (pathsList !== undefined) {
+
+            debugger //can i concatenate this.state.___ below?
+            //polygonActive = this.state.polygons[i]  //no not necessarily polygons this has to change
+            console.log(polygonActive)
+        }
+        */
+        //debugger 
+
+        /* 
+            for (let i=0; i<pathsList.length-1; i++) {
+            //console.log(this.state.testMarker.marker.props.position)
+            //debugger 
+            const inPolygonCheck = geolib.isPointInside(
+                {latitude: latNow, longitude: lngNow},
+                pathsList[i]
+            ); 
+
+            if (inPolygonCheck === true ) {
+                //debugger 
+                debugger //can i concatenate this.state.___ below?
+                polygonActive = this.state.polygons[i]  //no not necessarily polygons this has to change
+                console.log(polygonActive)
+                console.log("in polygon check")
+                console.log(inPolygonCheck)
+
+            } 
+        }
+        */
+
+        //debugger 
+//////////////////////////////////////////////// need to fold the below into the above, specifically the for loops at line 91 
+        /*
+        const listOfPaths = this.state.polygons.map(polygon => {
+          const arrayOfCoords = polygon.polygon.props.path
+          return arrayOfCoords
+        })
+        
+        let polygonActive = undefined; 
+        */
+        
+        //const listOfPaths=["temporary holder of place"]
+        /*
+        for (let i=0; i<listOfPaths.length -1; i++) {
+            //console.log(this.state.testMarker.marker.props.position)
+
+            const inPolygonCheck = geolib.isPointInside(
+                {latitude: latNow, longitude: lngNow},
+                listOfPaths[i]
+            ); 
+
+            if (inPolygonCheck === true ) {
+                //debugger 
+
+                //how to check kind of polygon 
+                debugger 
+                polygonActive = this.state.polygons[i]  //no not necessarily polygons this has to change
+                console.log(polygonActive)
+                console.log("in polygon check")
+                console.log(inPolygonCheck)
+            } 
+        } */
         /*
         for (let i =0; i<listOfPaths.length -1; i++) {
           //console.log(this.state.testMarker.marker.props.position)
