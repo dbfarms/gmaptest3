@@ -155,7 +155,7 @@ export default class MyFancyComponent extends React.PureComponent {
       //debugger
       
       if (this.state.testMarker.position !== "" ) {
-        console.log("this one")
+        //console.log("this one")
         //debugger 
         createTestMarker = this.state.testMarker
        // console.log(createTestMarker)

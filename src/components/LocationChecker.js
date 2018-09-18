@@ -14,9 +14,6 @@ export default class LocationChcker extends Component {
 
         this.state = {
             marker: this.props.marker,
-            //polygons: this.props.polygons, 
-            //rectangles: this.props.rectangles,
-            //circles: this.props.circles,
             markers: this.props.markers,
             polylines: this.props.polylines,
             nowPlaying: this.props.nowPlaying,
@@ -40,8 +37,6 @@ export default class LocationChcker extends Component {
         const newShapesList = Object.assign({}, this.state.shapesList)
         newShapesList.polygons = nextProps.polygons
         newShapesList.rectangles = nextProps.rectangles
-        //newShapesList.polylines = this.props.polylines
-        //newShapesList.markers = this.props.markers
         newShapesList.circles = nextProps.circles 
 
         this.setState({
@@ -50,16 +45,10 @@ export default class LocationChcker extends Component {
             markers: nextProps.markers,
             polylines: nextProps.polylines,
             shapesList: newShapesList,
-            //polygons: nextProps.polygons, 
-            //circles: nextProps.circles,
-            //rectangles: nextProps.rectangles,
         })
     }
 
     checkLocation = () => {
-        //should it check what kind of polygon it is here? 
-        //reasons to: it'll know what state will be updated here and what variables to pass as a result
-        //reasons not to: it can pass that stuff and then just not use it later
     
         const latNow = this.state.marker.position.lat
         const lngNow = this.state.marker.position.lng 
@@ -68,15 +57,11 @@ export default class LocationChcker extends Component {
 
         //debugger 
         //what if you can be in two shapes at once? for another day...
-
-        const shapeTypeAndCoords = []
         let polygonActive = undefined 
         for (const key of Object.keys(listOfShapes)) {
-
             const shapeType = listOfShapes[key]
             if (shapeType.length > 0) {
                 const shapeCoords = shapeType.map(shape => {
-                    
                     const arrayOfCoords = shape.polygon.props.path //for now its shape.polygon but that'll 
                                                                    //probably change when i actually use other shapes
                     return arrayOfCoords
@@ -100,11 +85,10 @@ export default class LocationChcker extends Component {
         if (polygonActive !== undefined ) {
             
             // this should only happen if it's a square? put that in
-
             const effects = this.checkEffects(polygonActive);
-            //
 
-            const durationStats = this.state.durationStats
+            //debugger 
+            const durationStats = this.state.durationStats //unclear what i'm doing with this yet 
             
             console.log("elapsed time in location checker")
             console.log(this.state.elapsed)

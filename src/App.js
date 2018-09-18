@@ -26,7 +26,8 @@ class App extends Component {
                        'track2', 
                        'track3', 
                        'track4'],
-      activeTrack: null,
+      shapeType: undefined,
+      activeTrack: undefined,
       effects: {volume: 0.5, playbackRate: 1, loop: false},
       playing: true,
     }
@@ -53,18 +54,16 @@ class App extends Component {
 
   nowPlaying = (polygonActive, effects) => { //poorly named, should be something like hitsCue and then determines what to do based on that
     //debugger 
-    debugger 
-    this.setsTrack(polygonActive.track, effects)
+    this.setsTrack(polygonActive, effects)
   }
 
-  setsTrack(track, effects) {
-
-    //will this change track or add to sequence? different shapes do different things i guess?
-    //see top for notes 
-
+  setsTrack(polygonActive, effects) {
+    //will: erase sequence (right?), start new track-base 
+    //what if anything to do about effects
 
     this.setState({
-      activeTrack: track, //will also erase sequence but haven't done that yet
+      activeTrack: polygonActive.track, //will also erase sequence but haven't done that yet
+      shapeType: polygonActive,
       //effects: effects, //setting effects now its own function though not hooked up yet
       playing: true,
     })
@@ -105,6 +104,7 @@ class App extends Component {
         <div>
           <Sequencer 
             activeTrack={this.state.activeTrack} //this will trigger only when a new track is loaded and clears(?) sequence
+            shapeType={this.state.shapeType}
             addTrack={this.state.addTrack} //this adds a track or whatever to sequence
             allTracks={this.state.preloadedTracks} 
             effects={this.state.effects}

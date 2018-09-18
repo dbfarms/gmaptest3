@@ -44,10 +44,13 @@ export default class Timer extends React.Component {
 
     //im keeping this here because this is a function of timer itself and this way i dont have to keep setting state 
     //re: timer in multiple locations
-    console.log("inShape")
-    console.log(inShape)
-    console.log("latestShape")
-    console.log(latestShape)
+    if (inShape !== undefined ) {
+      console.log("inShape")
+      console.log(inShape)
+      console.log("latestShape")
+      console.log(latestShape)
+    }
+    
     
     if (inShape !== undefined) {
         if (latestShape !== inShape) {

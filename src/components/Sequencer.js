@@ -1,6 +1,6 @@
 /*
 
-9/12/
+still not done:
 -when start is hit on pulse, what plays?
 -
 
@@ -20,7 +20,7 @@ export default class Sequencer extends Component {
         super(props)
 
         this.state = {
-            trackSequence: [], //for player1? eventually it will be components of a track? or...? 
+            trackSequence: {baseTrack: undefined, sequence: []}, //for player1? when circle is hit, it adds a sequence from the track
             effectsSequence: [], //for player2? is this a sequence?
             activeTrack: null, //this will be from sequence, not from state unless i want to set state... ?
             preloadedTracks: ['track1', 
@@ -31,22 +31,46 @@ export default class Sequencer extends Component {
             playing: true,
             playIndex: 0,
             addTrack: this.props.addTrack,
+            shapeType: undefined,
         }
     }
 
-    componentWillReceiveProps(prevState, nextProps){
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps)
+
+        /*
+
+        how this should work:
+        -receives updated location information
+            -sequencing function checks shape
+                -if different shape (but same kind of shape), react accordingly
+                -if new kind of shape, etc
+                -if in same sahpe (duration? or should that remain where it was)
+
+        */
+
+        //determines shape you're in, if you're in a shape, and sets this.state.trackSequence accordingly
+        this.sequencing(nextProps); 
+
         const newTrackSequence = Object.assign([], this.state.trackSequence)
-        console.log(prevState) // for in-line if statement for setting state... 
-        if (nextProps.newThing) {
-            newTrackSequence.push(nextProps.newThing)
-            this.setState({
-                sequence: newTrackSequence
+       // console.log(prevState) // for in-line if statement for setting state... 
+        
+        if (nextProps.addTrack) {
+            console.log(nextProps.addTrack)
+            newTrackSequence.push(nextProps.addTrack)
+            this.setState({ sequence: newTrackSequence })
+        }
+        if (nextProps.activeTrack !== this.state.activeTrack) {
+            //debugger
+            this.setState({ 
+                activeTrack: nextProps.activeTrack,
+                shapeType: nextProps.shapeType 
             })
         }
 
     }
 
-    sequencing(){
+    sequencing(nextProps){
         //debugger 
         /*
         will need to parse sequence into player(s)
@@ -55,12 +79,75 @@ export default class Sequencer extends Component {
         -ok, so i need to check playing status in player from sequencer, and if it returns not-playing,
         -we get to the next in the list
         */
-       if (this.state.trackSequence.length > 0 ) {
-           
-       } else {
-           return null
-       }
 
+        //need base track that starts when you hit start , will be what?? i don't know
+        //
+
+        //checks to see if location is already in shape
+        if (this.state.shapeType !== undefined ) {
+            //debugger 
+            const shape = this.state.shapeType.polygon.props.type //check on this
+            this.typeOfShape(shape)
+            //debugger 
+        } else {
+        // checks to see if will be entering location
+            if (nextProps.shapeType !== undefined) {
+                this.typeOfShape(nextProps.shapeType)
+                this.setState({
+                    shapeType: nextProps.shapeType,
+                })
+            }
+            return this.state.trackSequence
+        }
+    }
+
+    typeOfShape(shape){
+        //debugger 
+        switch(shape) {
+            case("polygons"):
+                //polygons, right now, reset sequence altogether
+                // looks to see if currently playing track is teh same as the track hit by location
+                //if not, it adds it
+                console.log("in polygon case statement")
+                if (this.state.trackSequence.baseTrack !== this.state.activeTrack) {
+                    const newSequence = Object.assign({}, this.state.trackSequence)
+                    newSequence.baseTrack = this.state.activeTrack
+                    newSequence.sequence = [] //yes, the [] will be the layers
+                    
+                    this.setState({
+                        trackSequence: newSequence
+                    })
+                    //debugger 
+                    //console.log(newSequence.baseTrack)
+
+                    //return newSequence
+                    
+                } else {
+                    //debugger 
+                    //break
+                    return this.state.trackSequence
+                }
+                    //return newSequence
+                //debugger 
+            case("circles"):
+                //
+                // looks to see if currently playing track is teh same as the track hit by location
+                //if not, it adds it
+                if (this.state.trackSequence[this.state.playIndex] !== this.state.activeTrack) {
+                    const newSequence = Object.assign([], this.state.trackSequence)
+                    newSequence.push(this.state.activeTrack)
+                    //debugger 
+                    this.setState({
+                        trackSequence: newSequence
+                    })
+                }
+                
+            default:
+                //debugger
+                console.log("not in shape")
+                console.log(this.state.trackSequence)
+                return this.state.trackSequence 
+        }
     }
 
     render() {
@@ -69,8 +156,9 @@ export default class Sequencer extends Component {
         // should know where in sequence is playing
         // will update sequence as per map
         // 
-        const activeTrack = this.sequencing()  //no not really this though
-
+        //const activeTrack = this.sequencing()  //moved to will receive props
+        //console.log(activeTrack)
+        //console.log(this.state.trackSequence)
         return (
             <div>
                 <div className="container">
@@ -78,7 +166,7 @@ export default class Sequencer extends Component {
                         <div className="col">
                             <div className='player-wrapper'>
                                 <Player 
-                                    activeTrack={activeTrack}  //i don't think i wnat this here after all.... 
+                                    activeTrack={this.state.activeTrack}  //i don't think i wnat this here after all.... 
                                     //allTracks={this.state.preloadedTracks} 
                                     effects={this.state.effects} 
                                     playing={this.state.playing}

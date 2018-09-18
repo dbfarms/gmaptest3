@@ -12,10 +12,10 @@ eventually:
 
 shapes:
 -POLYGONS 
+  resets sequence completely, starts new track
+-CIRCLES
   add to the sequence, they CAN also contain effects 
  (that only last as long as the sequence they're on / associated with?)
--CIRCLES
-  resets sequence completely, starts new track
 -SQUARES
   scrambles sequence? effects? i guess scrambling sequence could be effect...
 -MARKERS

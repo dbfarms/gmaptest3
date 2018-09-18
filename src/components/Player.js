@@ -49,22 +49,22 @@ class Player extends Component {
   */
   
 
-  componentWillReceiveProps(prevState, nextProps) {
+  componentWillReceiveProps(nextProps) { //dont know how to use prevState,
     //debugger 
-    //console.log("nextProps")
-    //console.log(nextProps)
-    console.log("prevState")
-    console.log(prevState)
+
+    console.log("nextProps")
+    console.log(nextProps)
     //NEED TO ACCEPT NEW SEQUENCE FROM NEXTPROPS AT SOME POINT JUST NEED TO FIX BELOW FIRST I GUESS
 
-    if (nextProps.activeTrack !== null) {
-
+    if (nextProps.activeTrack !== undefined) {
+      //debugger 
       //console.log(track1)
       //console.log(track2)
       //console.log(track3)
       //console.log(track4)
-      const trackPath = this.setTrackPath(nextProps.activeTrack);
 
+      const trackPath = this.setTrackPath(nextProps.activeTrack);
+      console.log(trackPath)
       if (trackPath !== this.state.activeTrack || this.state.playing === false) {
         this.setState({
           activeTrack: trackPath,
