@@ -618,7 +618,13 @@ export default class MyFancyComponent extends React.PureComponent {
           editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
           draggable: true 
         }}
-      />, track: "empty", effectsList: {duration: 3, visits: 2, sequence: 1}}
+      />, trackSequence: {baseTrack: 'shayna_song', tracks: []}, effectsList: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
+      //baseTrack hard-coded at the moment
+      //oh wait, maybe sequence should be used... polygons add track and add a sequencing event?
+      //- how would sequence work? it would be associated with a set of 
+      //meh come back to this later
+      
+      
       // how should effectsList operate? 
       //check for the following
       //number of times in polygon(?) 
@@ -644,11 +650,18 @@ export default class MyFancyComponent extends React.PureComponent {
       'synth_2',
       'weird_swell_1']}
       
-      const i = Math.floor(Math.random() * 9)
-
-      polygon.track = preloadedTracks.sequence[i]
+      //eventually baseTrack won't be preloaded 
+      const n = Math.floor(Math.random() * 7 + 1)
+      for (let j = 0; j <= n; j++) {
+        const i = Math.floor(Math.random() * 9)
+        if (!polygon.trackSequence.tracks.includes(preloadedTracks.sequence[i])) {
+          polygon.trackSequence.tracks.push(preloadedTracks.sequence[i])
+          //debugger 
+        }
+      }
+      //polygon.track = preloadedTracks.sequence[i]
     })
-
+    //console.log(polygonsDrawn)
     return polygonsDrawn
   }
 

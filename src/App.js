@@ -69,8 +69,10 @@ class App extends Component {
     //will: erase sequence (right?), start new track-base 
     //what if anything to do about effects
 
+    //debugger 
     this.setState({
-      activeTrack: polygonActive.track, //will also erase sequence but haven't done that yet
+      activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
+      activeSquence: polygonActive.trackSequence.tracks,
       shapeType: polygonActive,
       //effects: effects, //setting effects now its own function though not hooked up yet
       playing: true,
