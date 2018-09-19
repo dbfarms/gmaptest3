@@ -23,10 +23,15 @@ export default class Sequencer extends Component {
             trackSequence: {baseTrack: undefined, sequence: []}, //for player1? when circle is hit, it adds a sequence from the track
             effectsSequence: [], //for player2? is this a sequence?
             activeTrack: null, //this will be from sequence, not from state unless i want to set state... ?
-            preloadedTracks: ['track1', 
-                       'track2', 
-                       'track3', 
-                       'track4'],
+            preloadedTracks: {baseTrack: 'shayna_song', sequence: ['drums_2', 
+                       'drums_3', 
+                       'drums_main', 
+                       'heavy_synth_1',
+                       'heavy_synth_2',
+                       'strings_1',
+                       'synth_1',
+                       'synth_2',
+                       'weird_swell_1']},
             effects: {volume: 0.5, playbackRate: 1, loop: false},
             playing: true,
             playIndex: 0,
@@ -56,6 +61,7 @@ export default class Sequencer extends Component {
        // console.log(prevState) // for in-line if statement for setting state... 
         
         if (nextProps.addTrack) {
+            debugger 
             console.log(nextProps.addTrack)
             newTrackSequence.push(nextProps.addTrack)
             this.setState({ sequence: newTrackSequence })
@@ -108,12 +114,17 @@ export default class Sequencer extends Component {
                 //polygons, right now, reset sequence altogether
                 // looks to see if currently playing track is teh same as the track hit by location
                 //if not, it adds it
+                console.log("this.state.activeTrack")
+                console.log(this.state.activeTrack)
+                console.log("this.state.trackSequence.baseTrack")
+                console.log(this.state.trackSequence.baseTrack)
                 console.log("in polygon case statement")
                 if (this.state.trackSequence.baseTrack !== this.state.activeTrack) {
                     const newSequence = Object.assign({}, this.state.trackSequence)
                     newSequence.baseTrack = this.state.activeTrack
                     newSequence.sequence = [] //yes, the [] will be the layers
                     
+                    debugger 
                     this.setState({
                         trackSequence: newSequence
                     })
@@ -158,7 +169,8 @@ export default class Sequencer extends Component {
         // 
         //const activeTrack = this.sequencing()  //moved to will receive props
         //console.log(activeTrack)
-        //console.log(this.state.trackSequence)
+        console.log("CURRENT TRACK SEQUENCE")
+        console.log(this.state.trackSequence)
         return (
             <div>
                 <div className="container">

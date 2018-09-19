@@ -75,7 +75,7 @@ export default class ShapeMenu extends Component {
                         <DropdownToggle caret size="lg" color="Danger" />
                         <DropdownMenu>
                         {/*trackOptions*/}
-                        {this.state.tracksList.map((track, trackKey) => {
+                        {this.state.tracksList.sequence.map((track, trackKey) => {
                             return <DropdownItem key={trackKey} onClick={e => this.state.chooseTrack(track, shape)}>{track}</DropdownItem>
                         })
                     }

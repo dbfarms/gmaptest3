@@ -35,7 +35,7 @@ export default class TimerComponent extends React.Component {
 
   componentDidMount() {
     //console.log("timer comp did mount")
-    console.log(this.state)
+    //console.log(this.state)
     const TIME_INTERVAL = 1000;
     this.intervalId = setInterval(this.timerPassThrough.bind(this), TIME_INTERVAL);
   }

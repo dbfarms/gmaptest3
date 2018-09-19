@@ -10,7 +10,6 @@ import { millisecondsToHuman } from '../utils/TimerUtils';
 export default class LocationChcker extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
 
         this.state = {
             marker: this.props.marker,
@@ -53,7 +52,7 @@ export default class LocationChcker extends Component {
         const latNow = this.state.marker.position.lat
         const lngNow = this.state.marker.position.lng 
         const listOfShapes = this.state.shapesList
-        console.log(listOfShapes)
+        //console.log(listOfShapes)
 
         //debugger 
         //what if you can be in two shapes at once? for another day...
@@ -90,8 +89,8 @@ export default class LocationChcker extends Component {
             //debugger 
             const durationStats = this.state.durationStats //unclear what i'm doing with this yet 
             
-            console.log("elapsed time in location checker")
-            console.log(this.state.elapsed)
+            //console.log("elapsed time in location checker")
+            //console.log(this.state.elapsed)
             //debugger 
 
             //how effects should operate here is unclear... right now polygons can trigger track part AND effect but maybe some 
@@ -111,9 +110,9 @@ export default class LocationChcker extends Component {
             //console.log(effects)
             this.state.nowPlaying(polygonActive, effects)
         } else {
-            console.log(this.state.durationStats)
-            console.log("in polygon check")
-            console.log(polygonActive)
+            //console.log(this.state.durationStats)
+            //console.log("in polygon check")
+            //console.log(polygonActive)
             if (this.state.durationStats.shape !== undefined) {
             this.setState({
                 durationStats: {shape: undefined, duration: undefined} //likely i'll be deleting this... 
@@ -198,7 +197,7 @@ export default class LocationChcker extends Component {
         const durationToSeconds = duration/1000
         if (durationToSeconds >= latestShape.effectsList.duration) {
             //hoist to Player
-            console.log("DURATION TRIGGERS BUT HAVENT DEFINED YET")
+            //console.log("DURATION TRIGGERS BUT HAVENT DEFINED YET")
             //debugger 
         }
 

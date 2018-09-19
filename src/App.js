@@ -13,6 +13,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MyFancyComponent from './components/MyMapComponent';
 import Sequencer from './components/Sequencer';
+
 //import Player from './components/Player';
 //import Player2 from './components/Player2';
 
@@ -22,10 +23,16 @@ class App extends Component {
 
     this.state = {
       geoLoc: '',
-      preloadedTracks: ['track1', 
-                       'track2', 
-                       'track3', 
-                       'track4'],
+      //has baseTrack and sequence, because some sequences from one baseTrack can work in baseTrack from another
+      preloadedTracks: {baseTrack: 'shayna_song', sequence: ['drums_2', 
+                       'drums_3', 
+                       'drums_main', 
+                       'heavy_synth_1',
+                       'heavy_synth_2',
+                       'strings_1',
+                       'synth_1',
+                       'synth_2',
+                       'weird_swell_1']},
       shapeType: undefined,
       activeTrack: undefined,
       effects: {volume: 0.5, playbackRate: 1, loop: false},
@@ -48,8 +55,9 @@ class App extends Component {
     });
   }
 
+
   componentWillReceiveProps(nextProps){
-    console.log(nextProps)
+    //console.log(nextProps)
   }
 
   nowPlaying = (polygonActive, effects) => { //poorly named, should be something like hitsCue and then determines what to do based on that

@@ -70,7 +70,6 @@ const MyMapComponent = compose(
                 <Marker position={{lat: props.testMarker.position.lat, lng: props.testMarker.position.lng}} />
                 
                 {props.thisTestMarker}
-                {console.log()}
               </div>
             }
 
@@ -635,11 +634,19 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //randomly assigns track to polygon, eventually this will be thought out
     polygonsDrawn.map(polygon => {
-      let preloadedTracks = ['track1', 'track2', 'track3', 'track4'] 
+      let preloadedTracks = {baseTrack: 'shayna_song', sequence: ['drums_2', 
+      'drums_3', 
+      'drums_main', 
+      'heavy_synth_1',
+      'heavy_synth_2',
+      'strings_1',
+      'synth_1',
+      'synth_2',
+      'weird_swell_1']}
       
-      const i = Math.floor(Math.random() * 4)
+      const i = Math.floor(Math.random() * 9)
 
-      polygon.track = preloadedTracks[i]
+      polygon.track = preloadedTracks.sequence[i]
     })
 
     return polygonsDrawn

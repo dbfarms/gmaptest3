@@ -11,10 +11,15 @@ import '../App.css'
 //import { version } from '../../package.json'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
 import Duration from './Duration'
-import track1 from '../jams/track1.mp3' ///  
-import track2 from '../jams/track2.mp3'
-import track3 from '../jams/track3.wav'
-import track4 from '../jams/track4.wav'
+import drums_2 from '../jams/shaynasong/drums_2.mp3' ///  
+import drums_3 from '../jams/shaynasong/drums_3.mp3'
+import drums_main from '../jams/shaynasong/drums_main.mp3'
+import heavy_synth_1 from '../jams/shaynasong/heavy_synth_1.mp3'
+import heavy_synth_2 from '../jams/shaynasong/heavy_synth_2.mp3'
+import strings_1 from '../jams/shaynasong/strings_1.mp3'
+import synth_1 from '../jams/shaynasong/synth_1.mp3'
+import synth_2 from '../jams/shaynasong/synth_2.mp3'
+import weird_swell_1 from '../jams/shaynasong/weird_swell_1.mp3'
 
 class Player extends Component {
   constructor(props) {
@@ -51,17 +56,25 @@ class Player extends Component {
 
   componentWillReceiveProps(nextProps) { //dont know how to use prevState,
     //debugger 
+    /*
+    console.log(drums_2) 
+    console.log(drums_3) 
+    console.log(drums_main )
+    console.log(heavy_synth_1)
+    console.log(heavy_synth_2)
+    console.log(strings_1)
+    console.log(synth_1)
+    console.log(synth_2)
+    console.log(weird_swell_1)
+    debugger 
+    */
 
-    console.log("nextProps")
-    console.log(nextProps)
+    //console.log("nextProps")
+    //console.log(nextProps)
     //NEED TO ACCEPT NEW SEQUENCE FROM NEXTPROPS AT SOME POINT JUST NEED TO FIX BELOW FIRST I GUESS
 
     if (nextProps.activeTrack !== undefined) {
       //debugger 
-      //console.log(track1)
-      //console.log(track2)
-      //console.log(track3)
-      //console.log(track4)
 
       const trackPath = this.setTrackPath(nextProps.activeTrack);
       console.log(trackPath)
@@ -85,17 +98,30 @@ class Player extends Component {
   setTrackPath(activeTrack) {
     //console.log(track1)
 
+
     switch(activeTrack) {
-      case("track1"): 
-        return "/static/media/track1.a468fde2.mp3"
-      case("track2"):
-        return "/static/media/track2.0334ef3d.mp3"
-      case("track3"):
-        return "/static/media/track3.db9366ce.wav"
-      case("track2"):
-        return "/static/media/track4.44d8193b.wav"
+      
+      case("drums_2"): 
+        return "/static/media/drums_2.847758bc.mp3"
+      case("drums_3"):
+        return "/static/media/drums_3.f08fb955.mp3"
+      case("drums_main"):
+        return "/static/media/drums_main.095fe340.mp3"
+      case("heavy_synth_1"):
+        return "/static/media/heavy_synth_1.626cdb88.mp3"
+      case("heavy_synth_2"):
+        return "/static/media/heavy_synth_2.626cdb88.mp3"
+      case("strings_1"):
+        return "/static/media/strings_1.363f003e.mp3"
+      case("synth_1"):
+        return "/static/media/synth_1.bd1fb0dc.mp3"
+      case("synth_2"):
+        return "/static/media/synth_2.df4a61eb.mp3"
+      case("weird_swell_1"):
+        return "/static/media/weird_swell_1.9a4ae47f.mp3"
       default: 
         break 
+      
     }
     //debugger 
     /*
@@ -203,6 +229,8 @@ class Player extends Component {
         <section className='section'>
           <h3>Player</h3>
           <div className='player-wrapper'>
+          <h4>track:</h4>
+          <h4>{url}</h4>
             <ReactPlayer
               ref={this.ref}
               className='react-player'
@@ -288,10 +316,10 @@ class Player extends Component {
             <tr>
               <th>Files</th>
               <td>
-                {this.renderLoadButton(track1, 'mp3')}
-                {this.renderLoadButton(track2, 'mp3')}
-                {this.renderLoadButton(track3, 'wav')}
-                {this.renderLoadButton(track4, 'wav')}
+                {this.renderLoadButton(drums_2, 'mp3')}
+                {this.renderLoadButton(drums_3, 'mp3')}
+                {this.renderLoadButton(drums_main, 'mp3')}
+                {this.renderLoadButton(synth_1, 'mp3')}
               </td>
             </tr>
           </tbody></table>
