@@ -57,14 +57,20 @@ export default class Sequencer extends Component {
         //determines shape you're in, if you're in a shape, and sets this.state.trackSequence accordingly
         //debugger 
         //console.log(nextProps)
-        if (nextProps.activeTrack !== undefined){
+        if (nextProps.activeTrack !== undefined){ // checks if you will be entering a location trigger
             //debugger 
             this.sequencing(nextProps); 
+        } else {
+            console.log("nextProps.activeTrack is undefined")
+            if (this.state.activeTrack !== undefined) {
+                //right now it shouldn't reach here because activeTrack, once defined, is never undefined again
+                debugger 
+            }
         }
         
-        //not sure what of the below i'm keeping !!!!!11
-
-
+        //not sure what of the below i'm keeping !!!!!1 
+        
+        /*
         const newTrackSequence = Object.assign([], this.state.trackSequence)
        // console.log(prevState) // for in-line if statement for setting state... 
         
@@ -81,6 +87,7 @@ export default class Sequencer extends Component {
                 shapeType: nextProps.shapeType 
             })
         }
+        */
 
     }
 
@@ -100,48 +107,58 @@ export default class Sequencer extends Component {
         const nextSequence = nextProps.shapeType.trackSequence.tracks 
         //console.log("next song next song next song")
         //console.log(nextProps)
-        const nextSong = nextProps.shapeType.activeTrack
+        const nextSong = nextProps.shapeType.trackSequence.baseTrack
+        
 
         //checks to see if location is already in shape
         if (this.state.shapeType !== undefined ) {
 
             //debugger 
-            const shape = this.state.shapeType.polygon.props.type //check on this
+             //check on this
+             const shape = this.state.shapeType.polygon.props.type
             this.typeOfShape(shape, nextSequence, nextSong)
             //debugger 
         } else {
         // checks to see if will be entering location
             if (nextProps.shapeType !== undefined) {
                 //debugger 
-                this.typeOfShape(nextProps.shapeType, nextSequence, nextSong)
+                const shape = nextProps.shapeType.polygon.props.type 
+                this.typeOfShape(shape, nextSequence, nextSong)
+                //debugger 
                 this.setState({
                     shapeType: nextProps.shapeType,
                 })
             }
-            return this.state.trackSequence
+            //return this.state.trackSequence
         }
     }
 
     typeOfShape(shape, nextSequence, nextSong){
         //debugger 
+        console.log(shape)
         switch(shape) {
             case("polygons"):
                 //polygons, right now, reset sequence altogether
                 // looks to see if currently playing track is teh same as the track hit by location
                 //if not, it adds it
 
-                //debugger 
+                console.log("in polygon case statement")
                 console.log("this.state.activeTrack")
                 console.log(this.state.activeTrack)
                 console.log("this.state.trackSequence.baseTrack")
                 console.log(this.state.trackSequence.baseTrack)
-                console.log("in polygon case statement")
-                if (this.state.trackSequence.baseTrack !== this.state.activeTrack) {
+                
+                console.log(this.state.trackSequence.baseTrack == this.state.activeTrack)
+
+                //this checks for new baseTrack 
+                //if found it updates state with baseTrack and current polygons tracks
+                if (this.state.trackSequence.baseTrack !== nextSong) {
+                    //debugger  //NOT UPDATING STATE CORRECTLY, SEE CONSOLE.LOG 
                     const newTrackAndSequence = Object.assign({}, this.state.trackSequence)
                     newTrackAndSequence.baseTrack = nextSong //this.state.activeTrack
                     newTrackAndSequence.sequence = nextSequence //this.state.trackSequence.sequence  //yes, the [] will be the layers
                     
-                    debugger 
+                    //debugger 
                     this.setState({
                         trackSequence: newTrackAndSequence
                     })
@@ -151,11 +168,16 @@ export default class Sequencer extends Component {
                     //return newSequence
                     
                 } else {
+                //this means it's the same baseTrack and will only update tracks
                     //debugger 
                     //break
+                    if (this.state.activeTrack !== nextSong) {
+                        this.setState({ activeTrack: nextSong})
+                    }
                     if (this.state.trackSequence.sequence !== nextSequence) {
                         const newSequence = Object.assign({}, this.state.trackSequence)
-                        newSequence.sequence = this.state.trackSequence.sequence  
+                        //debugger 
+                        newSequence.sequence = nextSequence  
 
                         this.setState({
                             trackSequence: newSequence
@@ -166,6 +188,7 @@ export default class Sequencer extends Component {
                 }
                     //return newSequence
                 //debugger 
+                break 
             case("circles"):
                 //
                 // looks to see if currently playing track is teh same as the track hit by location
@@ -180,8 +203,10 @@ export default class Sequencer extends Component {
                 }
                 
             default:
-                //debugger
+                //should never actually get here since shape has to be definable to get to this function
+                debugger
                 console.log("not in shape")
+                console.log(shape)
                 console.log(this.state.trackSequence)
                 return this.state.trackSequence 
         }
