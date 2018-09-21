@@ -44,21 +44,8 @@ export default class Sequencer extends Component {
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
 
-        /*
-            how this should work:
-            -receives updated location information
-                -sequencing function checks shape
-                    -if different shape (but same kind of shape), react accordingly
-                    -if new kind of shape, etc
-                    -if in same sahpe (duration? or should that remain where it was)
-
-        */
-
         //determines shape you're in, if you're in a shape, and sets this.state.trackSequence accordingly
-        //debugger 
-        //console.log(nextProps)
         if (nextProps.activeTrack !== undefined){ // checks if you will be entering a location trigger
-            //debugger 
             this.sequencing(nextProps); 
         } else {
             console.log("nextProps.activeTrack is undefined")
@@ -67,32 +54,9 @@ export default class Sequencer extends Component {
                 debugger 
             }
         }
-        
-        //not sure what of the below i'm keeping !!!!!1 
-        
-        /*
-        const newTrackSequence = Object.assign([], this.state.trackSequence)
-       // console.log(prevState) // for in-line if statement for setting state... 
-        
-        if (nextProps.addTrack) {
-            debugger 
-            console.log(nextProps.addTrack)
-            newTrackSequence.push(nextProps.addTrack)
-            this.setState({ sequence: newTrackSequence })
-        }
-        if (nextProps.activeTrack !== this.state.activeTrack) {
-            //debugger
-            this.setState({ 
-                activeTrack: nextProps.activeTrack,
-                shapeType: nextProps.shapeType 
-            })
-        }
-        */
-
     }
 
     sequencing(nextProps){
-        //debugger 
         /*
         will need to parse sequence into player(s)
         -so there's an array of track objects with their effects... 
@@ -102,7 +66,6 @@ export default class Sequencer extends Component {
         */
 
         //need base track that starts when you hit start , will be what?? i don't know
-        //
        
         const nextSequence = nextProps.shapeType.trackSequence.tracks 
         //console.log("next song next song next song")
@@ -212,28 +175,86 @@ export default class Sequencer extends Component {
         }
     }
 
+    setTrackPath(sequence) {
+        console.log(sequence)
+        if (sequence.sequence.length > 0 ) {
+            const trackPaths = sequence.sequence.map(track => {
+                switch(track) {
+                  case("drums_2"): 
+                    return "/static/media/drums_2.847758bc.mp3"
+                  case("drums_3"):
+                    return "/static/media/drums_3.f08fb955.mp3"
+                  case("drums_main"):
+                    return "/static/media/drums_main.095fe340.mp3"
+                  case("heavy_synth_1"):
+                    return "/static/media/heavy_synth_1.626cdb88.mp3"
+                  case("heavy_synth_2"):
+                    return "/static/media/heavy_synth_2.626cdb88.mp3"
+                  case("strings_1"):
+                    return "/static/media/strings_1.363f003e.mp3"
+                  case("synth_1"):
+                    return "/static/media/synth_1.bd1fb0dc.mp3"
+                  case("synth_2"):
+                    return "/static/media/synth_2.df4a61eb.mp3"
+                  case("weird_swell_1"):
+                    return "/static/media/weird_swell_1.9a4ae47f.mp3"
+                  default: 
+                    break 
+                }
+            })
+            return trackPaths
+        }
+        
+    }
+
+    createPlayers(playerPaths) {
+        //console.log(playerPaths)
+        if (playerPaths !== undefined ) {
+            const allThePlayers = playerPaths.map(player => {
+                //debugger 
+                return (
+                    <div>
+                        <Player 
+                            activeTrack={player}  // 
+                            effects={this.state.effects} //this will be more specific to the part i think
+                            playing={this.state.playing}
+                        />
+                    </div>
+                )
+            })
+            //debugger
+            return allThePlayers
+        } 
+    }
+
     render() {
 
-        // calls sequence function...
-        // should know where in sequence is playing
-        // will update sequence as per map
-        // 
-        //const activeTrack = this.sequencing()  //moved to will receive props
         //console.log(activeTrack)
+
+        const playerPaths = this.setTrackPath(this.state.trackSequence) //gets address of tracks
+        const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
+        if (playersFromPlayerPaths !== undefined ) {
+            //OK NOW PLAYER NEEDS TO REFLECT NEW PROPS IT WILL BE RECEIVING, SEE 217
+            debugger 
+
+        }
+        //rendered below in return statement 
         console.log("CURRENT TRACK SEQUENCE")
         console.log(this.state.trackSequence)
         return (
             <div>
                 <div className="container">
+                    {playersFromPlayerPaths} 
+
                     <div className="row">
                         <div className="col">
                             <div className='player-wrapper'>
                                 <Player 
-                                    activeTrack={this.state.activeTrack}  //i don't think i wnat this here after all.... 
+                                    activeTrack={this.state.activeTrack}  //ithink keep to baseTrack works in createPlayers
                                     //allTracks={this.state.preloadedTracks} 
                                     effects={this.state.effects} 
                                     playing={this.state.playing}
-                                    sequence={this.state.trackSequence}
+                                    trackSequence={this.state.trackSequence}
                                 />
                             </div>
                         </div>
@@ -248,3 +269,54 @@ export default class Sequencer extends Component {
         )
     }
 }
+
+/*
+
+return (
+            <div>
+                <div className="container">
+                    <div className="row">
+                        <div className="col">
+                            <div className='player-wrapper'>
+                                <Player 
+                                    activeTrack={this.state.activeTrack}  //i don't think i wnat this here after all.... 
+                                    //allTracks={this.state.preloadedTracks} 
+                                    effects={this.state.effects} 
+                                    playing={this.state.playing}
+                                    trackSequence={this.state.trackSequence}
+                                />
+                            </div>
+                        </div>
+                        <div className="col">
+                        <div className='player-wrapper2'>
+                            <Player2 sounds={this.state.sounds} />
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+
+///
+
+        //not sure what of the below i'm keeping !!!!!1 
+        
+        /*
+        const newTrackSequence = Object.assign([], this.state.trackSequence)
+       // console.log(prevState) // for in-line if statement for setting state... 
+        
+        if (nextProps.addTrack) {
+            debugger 
+            console.log(nextProps.addTrack)
+            newTrackSequence.push(nextProps.addTrack)
+            this.setState({ sequence: newTrackSequence })
+        }
+        if (nextProps.activeTrack !== this.state.activeTrack) {
+            //debugger
+            this.setState({ 
+                activeTrack: nextProps.activeTrack,
+                shapeType: nextProps.shapeType 
+            })
+        }
+
+*/

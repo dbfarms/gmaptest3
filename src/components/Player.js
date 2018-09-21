@@ -38,7 +38,7 @@ class Player extends Component {
       activeTrack: this.props.activeTrack,
       //allTracks: this.props.allTracks, //
       stopPlayingTest: this.props.stopPlayingTest,
-      sequence: this.props.sequence,
+      trackSequence: this.props.sequence,
       playIndex: null,
       effects: this.props.effects
     }
@@ -71,12 +71,11 @@ class Player extends Component {
 
     //console.log("nextProps")
     //console.log(nextProps)
-    //NEED TO ACCEPT NEW SEQUENCE FROM NEXTPROPS AT SOME POINT JUST NEED TO FIX BELOW FIRST I GUESS
 
-    if (nextProps.activeTrack !== undefined) {
+    if (nextProps.activeTrack !== undefined) { 
       //debugger 
 
-      const trackPath = this.setTrackPath(nextProps.activeTrack);
+      const trackPath = this.setTrackPath(nextProps.trackSequence.sequence); // this gets teh actual file path for the track
       console.log(trackPath)
       if (trackPath !== this.state.activeTrack || this.state.playing === false) {
         this.setState({
@@ -86,6 +85,8 @@ class Player extends Component {
           //volume: nextProps.effects.volume //this ain't working but prob changing how it's done anyway so fine
         })
       }
+    } else {
+      //if nextProps.activeTrack does equal undefined, does it matter?
     }
 
     if (nextProps.playing === false) {
@@ -95,34 +96,34 @@ class Player extends Component {
     }
   }
 
-  setTrackPath(activeTrack) {
+  setTrackPath(sequence) {
     //console.log(track1)
-
-
-    switch(activeTrack) {
-      
-      case("drums_2"): 
-        return "/static/media/drums_2.847758bc.mp3"
-      case("drums_3"):
-        return "/static/media/drums_3.f08fb955.mp3"
-      case("drums_main"):
-        return "/static/media/drums_main.095fe340.mp3"
-      case("heavy_synth_1"):
-        return "/static/media/heavy_synth_1.626cdb88.mp3"
-      case("heavy_synth_2"):
-        return "/static/media/heavy_synth_2.626cdb88.mp3"
-      case("strings_1"):
-        return "/static/media/strings_1.363f003e.mp3"
-      case("synth_1"):
-        return "/static/media/synth_1.bd1fb0dc.mp3"
-      case("synth_2"):
-        return "/static/media/synth_2.df4a61eb.mp3"
-      case("weird_swell_1"):
-        return "/static/media/weird_swell_1.9a4ae47f.mp3"
-      default: 
-        break 
-      
-    }
+    const trackPaths = sequence.map(track => {
+      switch(track) {
+        case("drums_2"): 
+          return "/static/media/drums_2.847758bc.mp3"
+        case("drums_3"):
+          return "/static/media/drums_3.f08fb955.mp3"
+        case("drums_main"):
+          return "/static/media/drums_main.095fe340.mp3"
+        case("heavy_synth_1"):
+          return "/static/media/heavy_synth_1.626cdb88.mp3"
+        case("heavy_synth_2"):
+          return "/static/media/heavy_synth_2.626cdb88.mp3"
+        case("strings_1"):
+          return "/static/media/strings_1.363f003e.mp3"
+        case("synth_1"):
+          return "/static/media/synth_1.bd1fb0dc.mp3"
+        case("synth_2"):
+          return "/static/media/synth_2.df4a61eb.mp3"
+        case("weird_swell_1"):
+          return "/static/media/weird_swell_1.9a4ae47f.mp3"
+        default: 
+          break 
+      }
+    })
+    //debugger 
+    
     //debugger 
     /*
     this.state.allTracks.map(track => {
