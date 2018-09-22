@@ -1,12 +1,11 @@
 /*
 
+need to send props to baseTrack from app via locationchecker
+
 still not done:
 -when start is hit on pulse, what plays?
 -
 
-this will either be in Player or above Player and send down to Players(1-?)
--as things occur, duration/location cues/ etc
--the sequence list will be added to 
 
 */
 
@@ -24,6 +23,7 @@ export default class Sequencer extends Component {
             effectsSequence: [], //for player2? is this a sequence?
             activeTrack: undefined, //this will be from sequence, not from state unless i want to set state... ?
             activeSequence: undefined,
+            //baseTrack: undefined, //still need to get this from locationChecker 
             preloadedTracks: {baseTrack: 'shayna_song', sequence: ['drums_2', 
                        'drums_3', 
                        'drums_main', 
@@ -36,7 +36,7 @@ export default class Sequencer extends Component {
             effects: {volume: 0.5, playbackRate: 1, loop: false},
             playing: true,
             playIndex: 0,
-            addTrack: this.props.addTrack,
+            addTrack: this.props.addTrack, //i don't think this does anything? not sure
             shapeType: undefined,
         }
     }
@@ -51,6 +51,7 @@ export default class Sequencer extends Component {
             console.log("nextProps.activeTrack is undefined")
             if (this.state.activeTrack !== undefined) {
                 //right now it shouldn't reach here because activeTrack, once defined, is never undefined again
+                //but that might change, i dunno
                 debugger 
             }
         }
@@ -210,22 +211,140 @@ export default class Sequencer extends Component {
     createPlayers(playerPaths) {
         //console.log(playerPaths)
         if (playerPaths !== undefined ) {
-            const allThePlayers = playerPaths.map(player => {
+            
+            //if only one player though eventually i might have all players viewable and only activate the ones being used or
+            //i might not show players at all? dunno
+            //debugger 
+            if (playerPaths.length < 2 ) {
+                playerPaths.map((player) => { 
+                    return (
+                        <div className="row">
+                            <div className="col">
+                                <div className="player-wrapper">
+                                    <Player 
+                                        activeTrack={player}  // 
+                                        effects={this.state.effects} //this will be more specific to the part i think
+                                        playing={this.state.playing}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })
+            }
+
+            //debugger 
+            /*
+                HERE 
+                so right now we'll only ever have a max of 8 players (split array evenly later)
+                -match index of mapping to index position of player props
+
+                1) make else statement inherit props from a list of const i define below. they'll
+                either be undefined (from state? or...?) or have information from polygon. 
+            */
+            
+            const allThePlayers = playerPaths.map((player, index) => {
                 //debugger 
-                return (
+                return (<div className="col">
+                            <Player key={index} activeTrack={player} playing={true}/>
+                        </div>
+                        )
+            })
+
+            const firstHalfPlayers = allThePlayers.slice(0, 3)
+            const secondHalfPlayers = allThePlayers.slice(4,7)
+
+            debugger //this return statement... doesn't seem to be working
+
+               return (
                     <div>
-                        <Player 
-                            activeTrack={player}  // 
-                            effects={this.state.effects} //this will be more specific to the part i think
-                            playing={this.state.playing}
-                        />
+                        <div className="row">
+                            {firstHalfPlayers.map(player => { 
+                                player
+                            })
+                            }
+                        </div>
+                        <div className="row">
+                        {secondHalfPlayers.length > 0 && 
+                            <div className="row">
+                            {secondHalfPlayers.map(player => { 
+                                player
+                            })
+                            }
+                            </div>
+                        }
+                        </div>
                     </div>
                 )
-            })
+            //})
+
+            /*
+                return (
+                    <div className={index == 0 || index % 3 === 0 ? "row" : "notRow"}> {/* not working yet}
+                        <div className="col">
+                            <div className="player-wrapper">
+                                <Player 
+                                    activeTrack={player}  // 
+                                    effects={this.state.effects} //this will be more specific to the part i think
+                                    playing={this.state.playing}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )
+            */
             //debugger
-            return allThePlayers
-        } 
+        } else {
+            return (
+                <div>
+                    <div className="row">
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                        <div className="col">
+                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
     }
+
+    /*
+    dividePlayers(playersFromPlayerPaths){
+        const playersCount = playersFromPlayerPaths.length 
+        if (playersCount < 2) 
+            return playersFromPlayerPaths
+        
+        if (playersCount % 2 === 0) {
+
+        }
+
+        return (
+            <div></div>
+        )
+    }
+    */
 
     render() {
 
@@ -235,7 +354,7 @@ export default class Sequencer extends Component {
         const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
         if (playersFromPlayerPaths !== undefined ) {
             //OK NOW PLAYER NEEDS TO REFLECT NEW PROPS IT WILL BE RECEIVING, SEE 217
-            debugger 
+            //debugger 
 
         }
         //rendered below in return statement 
@@ -244,26 +363,7 @@ export default class Sequencer extends Component {
         return (
             <div>
                 <div className="container">
-                    {playersFromPlayerPaths} 
-
-                    <div className="row">
-                        <div className="col">
-                            <div className='player-wrapper'>
-                                <Player 
-                                    activeTrack={this.state.activeTrack}  //ithink keep to baseTrack works in createPlayers
-                                    //allTracks={this.state.preloadedTracks} 
-                                    effects={this.state.effects} 
-                                    playing={this.state.playing}
-                                    trackSequence={this.state.trackSequence}
-                                />
-                            </div>
-                        </div>
-                        <div className="col">
-                        <div className='player-wrapper2'>
-                            <Player2 sounds={this.state.sounds} />
-                        </div>
-                        </div>
-                    </div>
+                    {playersFromPlayerPaths}
                 </div>
             </div>
         )

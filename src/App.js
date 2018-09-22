@@ -73,7 +73,7 @@ class App extends Component {
     this.setState({
       activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
       activeSquence: polygonActive.trackSequence.tracks,
-      shapeType: polygonActive,
+      shapeType: polygonActive, //for sequencer case statement 
       //effects: effects, //setting effects now its own function though not hooked up yet
       playing: true,
     })
@@ -114,7 +114,7 @@ class App extends Component {
         <div>
           <Sequencer 
             activeTrack={this.state.activeTrack} //this will trigger only when a new track is loaded and clears(?) sequence
-            shapeType={this.state.shapeType}
+            shapeType={this.state.shapeType} //include shapeType so the case statement in sequencer knows what to do with new track info
             addTrack={this.state.addTrack} //this adds a track or whatever to sequence
             allTracks={this.state.preloadedTracks} 
             effects={this.state.effects}

@@ -28,7 +28,7 @@ class Player extends Component {
     this.state = {
       url: this.props.activeTrack,
       playing: true,
-      volume: this.props.effects.volume,
+      volume: this.props.effects.volume || 0,
       muted: false,
       played: 0,
       loaded: 0,
@@ -74,8 +74,7 @@ class Player extends Component {
 
     if (nextProps.activeTrack !== undefined) { 
       //debugger 
-
-      const trackPath = this.setTrackPath(nextProps.trackSequence.sequence); // this gets teh actual file path for the track
+      const trackPath = this.setTrackPath(nextProps.activeTrack); // this gets teh actual file path for the track
       console.log(trackPath)
       if (trackPath !== this.state.activeTrack || this.state.playing === false) {
         this.setState({
@@ -96,9 +95,9 @@ class Player extends Component {
     }
   }
 
-  setTrackPath(sequence) {
+  setTrackPath(track) {
     //console.log(track1)
-    const trackPaths = sequence.map(track => {
+    //const trackPaths = sequence.map(track => {
       switch(track) {
         case("drums_2"): 
           return "/static/media/drums_2.847758bc.mp3"
@@ -121,10 +120,9 @@ class Player extends Component {
         default: 
           break 
       }
-    })
+    //})
     //debugger 
     
-    //debugger 
     /*
     this.state.allTracks.map(track => {
       if (track === activeTrack) {
@@ -242,7 +240,7 @@ class Player extends Component {
               loop={loop}
               playbackRate={playbackRate}
               volume={volume}
-              muted={muted}
+              //muted={muted}
               onReady={() => console.log('onReady')}
               onStart={() => console.log('onStart')}
               onPlay={this.onPlay}
@@ -258,75 +256,14 @@ class Player extends Component {
 
           <table><tbody>
             <tr>
-              <th>Controls</th>
-              <td>
-                <button onClick={this.stop}>Stop</button>
-                <button onClick={this.playPause}>{playing ? 'Pause' : 'Play'}</button>
-                <button onClick={this.setPlaybackRate} value={1}>1</button>
-                <button onClick={this.setPlaybackRate} value={1.5}>1.5</button>
-                <button onClick={this.setPlaybackRate} value={2}>2</button>
-              </td>
-            </tr>
-            <tr>
-              <th>Seek</th>
-              <td>
-                <input
-                  type='range' min={0} max={1} step='any'
-                  value={played}
-                  onMouseDown={this.onSeekMouseDown}
-                  onChange={this.onSeekChange}
-                  onMouseUp={this.onSeekMouseUp}
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>Volume</th>
-              <td>
-                <input type='range' min={0} max={1} step='any' value={volume} onChange={this.setVolume} />
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor='muted'>Muted</label>
-              </th>
-              <td>
-                <input id='muted' type='checkbox' checked={muted} onChange={this.toggleMuted} />
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor='loop'>Loop</label>
-              </th>
-              <td>
-                <input id='loop' type='checkbox' checked={loop} onChange={this.toggleLoop} />
-              </td>
-            </tr>
-            <tr>
               <th>Played</th>
               <td><progress max={1} value={played} /></td>
-            </tr>
-            <tr>
-              <th>Loaded</th>
-              <td><progress max={1} value={loaded} /></td>
             </tr>
           </tbody></table>
         </section>
 
         <section className='section'>
           <table><tbody>
-            <tr>
-              <th>Files</th>
-              <td>
-                {this.renderLoadButton(drums_2, 'mp3')}
-                {this.renderLoadButton(drums_3, 'mp3')}
-                {this.renderLoadButton(drums_main, 'mp3')}
-                {this.renderLoadButton(synth_1, 'mp3')}
-              </td>
-            </tr>
-          </tbody></table>
-
-          <table><tbody>
-            
             <tr>
               <th>playing</th>
               <td>{playing ? 'true' : 'false'}</td>
@@ -338,22 +275,6 @@ class Player extends Component {
             <tr>
               <th>played</th>
               <td>{played.toFixed(3)}</td>
-            </tr>
-            <tr>
-              <th>loaded</th>
-              <td>{loaded.toFixed(3)}</td>
-            </tr>
-            <tr>
-              <th>duration</th>
-              <td><Duration seconds={duration} /></td>
-            </tr>
-            <tr>
-              <th>elapsed</th>
-              <td><Duration seconds={duration * played} /></td>
-            </tr>
-            <tr>
-              <th>remaining</th>
-              <td><Duration seconds={duration * (1 - played)} /></td>
             </tr>
           </tbody></table>
         </section>
