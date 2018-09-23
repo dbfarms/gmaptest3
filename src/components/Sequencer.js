@@ -375,12 +375,23 @@ export default class Sequencer extends Component {
         const playerPaths = this.setTrackPath(this.state.trackSequence) //gets address of tracks
         const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
         
-        console.log(playersFromPlayerPaths)
+        //console.log(playersFromPlayerPaths)
         //rendered below in return statement 
-        console.log("CURRENT TRACK SEQUENCE")
-        console.log(this.state.trackSequence)
+        //console.log("CURRENT TRACK SEQUENCE")
+        //console.log(this.state.trackSequence)
         //console.log(playersFromPlayerPaths.length)
         //debugger 
+
+        return (
+            <div>
+                <div className="container">
+                    {playersFromPlayerPaths}
+                </div>
+            </div>
+        )
+    }
+}
+
 
         /*
         {playersFromPlayerPaths.length !== undefined &&
@@ -399,17 +410,10 @@ export default class Sequencer extends Component {
             </div>
         } 
         */
-        return (
-            <div>
-                <div className="container">
-                    {playersFromPlayerPaths}
-                </div>
-            </div>
-        )
-    }
-}
 
 /*
+
+
 
 return (
             <div>
