@@ -28,7 +28,7 @@ class Player extends Component {
     this.state = {
       url: this.props.activeTrack,
       playing: true,
-      volume: this.props.effects.volume || 0,
+      volume: 0.5, //this.props.effects.volume || 0,
       muted: false,
       played: 0,
       loaded: 0,

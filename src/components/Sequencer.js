@@ -179,26 +179,27 @@ export default class Sequencer extends Component {
     setTrackPath(sequence) {
         console.log(sequence)
         if (sequence.sequence.length > 0 ) {
+            //debugger 
             const trackPaths = sequence.sequence.map(track => {
-                switch(track) {
+                switch(track.track) {
                   case("drums_2"): 
-                    return "/static/media/drums_2.847758bc.mp3"
+                    return ["/static/media/drums_2.847758bc.mp3", track.effects]
                   case("drums_3"):
-                    return "/static/media/drums_3.f08fb955.mp3"
+                    return ["/static/media/drums_3.f08fb955.mp3", track.effects]
                   case("drums_main"):
-                    return "/static/media/drums_main.095fe340.mp3"
+                    return ["/static/media/drums_main.095fe340.mp3", track.effects]
                   case("heavy_synth_1"):
-                    return "/static/media/heavy_synth_1.626cdb88.mp3"
+                    return ["/static/media/heavy_synth_1.626cdb88.mp3", track.effects]
                   case("heavy_synth_2"):
-                    return "/static/media/heavy_synth_2.626cdb88.mp3"
+                    return ["/static/media/heavy_synth_2.626cdb88.mp3", track.effects]
                   case("strings_1"):
-                    return "/static/media/strings_1.363f003e.mp3"
+                    return ["/static/media/strings_1.363f003e.mp3", track.effects]
                   case("synth_1"):
-                    return "/static/media/synth_1.bd1fb0dc.mp3"
+                    return ["/static/media/synth_1.bd1fb0dc.mp3", track.effects]
                   case("synth_2"):
-                    return "/static/media/synth_2.df4a61eb.mp3"
+                    return ["/static/media/synth_2.df4a61eb.mp3", track.effects]
                   case("weird_swell_1"):
-                    return "/static/media/weird_swell_1.9a4ae47f.mp3"
+                    return ["/static/media/weird_swell_1.9a4ae47f.mp3", track.effects]
                   default: 
                     break 
                 }
@@ -216,15 +217,16 @@ export default class Sequencer extends Component {
             //i might not show players at all? dunno
             //debugger 
             if (playerPaths.length < 2 ) {
+                //debugger 
                 playerPaths.map((player) => { 
                     return (
                         <div className="row">
                             <div className="col">
                                 <div className="player-wrapper">
                                     <Player 
-                                        activeTrack={player}  // 
-                                        effects={this.state.effects} //this will be more specific to the part i think
-                                        playing={this.state.playing}
+                                        activeTrack={player[0]}  // 
+                                        effects={player[1]} //this will be more specific to the part i think
+                                        playing={true}
                                     />
                                 </div>
                             </div>
@@ -246,20 +248,28 @@ export default class Sequencer extends Component {
             const allThePlayers = playerPaths.map((player, index) => {
                 //debugger 
                 return (<div className="col">
-                            <Player key={index} activeTrack={player} playing={true}/>
+                            <Player key={index} activeTrack={player[0]} effects={player[1]} playing={true}/>
                         </div>
                         )
             })
 
+            //debugger 
+
             const firstHalfPlayers = allThePlayers.slice(0, 3)
+            console.log("firstHalfPlayers")
+            console.log(firstHalfPlayers)
             const secondHalfPlayers = allThePlayers.slice(4,7)
 
-            debugger //this return statement... doesn't seem to be working
+            //debugger //this return statement... doesn't seem to be working
+                //const test = this.createRows(firstHalfPlayers, secondHalfPlayers)
 
+                return [firstHalfPlayers, secondHalfPlayers]
+                /*
                return (
                     <div>
                         <div className="row">
                             {firstHalfPlayers.map(player => { 
+                                //debugger 
                                 player
                             })
                             }
@@ -268,6 +278,7 @@ export default class Sequencer extends Component {
                         {secondHalfPlayers.length > 0 && 
                             <div className="row">
                             {secondHalfPlayers.map(player => { 
+                                debugger 
                                 player
                             })
                             }
@@ -276,24 +287,7 @@ export default class Sequencer extends Component {
                         </div>
                     </div>
                 )
-            //})
-
-            /*
-                return (
-                    <div className={index == 0 || index % 3 === 0 ? "row" : "notRow"}> {/* not working yet}
-                        <div className="col">
-                            <div className="player-wrapper">
-                                <Player 
-                                    activeTrack={player}  // 
-                                    effects={this.state.effects} //this will be more specific to the part i think
-                                    playing={this.state.playing}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )
-            */
-            //debugger
+                */
         } else {
             return (
                 <div>
@@ -331,6 +325,34 @@ export default class Sequencer extends Component {
     }
 
     /*
+    createRows(firstHalfPlayers, secondHalfPlayers) {
+        //debugger 
+        return (
+            <div>
+                <div className="row">
+                    {firstHalfPlayers.map(player => { 
+                        //debugger 
+                        player
+                    })
+                    }
+                </div>
+                <div className="row">
+                {secondHalfPlayers.length > 0 && 
+                    <div className="row">
+                    {secondHalfPlayers.map(player => { 
+                        debugger 
+                        player
+                    })
+                    }
+                    </div>
+                }
+                </div>
+            </div>
+        )
+    }
+    */
+
+    /*
     dividePlayers(playersFromPlayerPaths){
         const playersCount = playersFromPlayerPaths.length 
         if (playersCount < 2) 
@@ -352,14 +374,31 @@ export default class Sequencer extends Component {
 
         const playerPaths = this.setTrackPath(this.state.trackSequence) //gets address of tracks
         const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
-        if (playersFromPlayerPaths !== undefined ) {
-            //OK NOW PLAYER NEEDS TO REFLECT NEW PROPS IT WILL BE RECEIVING, SEE 217
-            //debugger 
-
-        }
+        
+        console.log(playersFromPlayerPaths)
         //rendered below in return statement 
         console.log("CURRENT TRACK SEQUENCE")
         console.log(this.state.trackSequence)
+        //console.log(playersFromPlayerPaths.length)
+        //debugger 
+
+        /*
+        {playersFromPlayerPaths.length !== undefined &&
+            <div>
+            {playersFromPlayerPaths.map((players, index) => {
+                <div className="row" key={index}>
+                    {players}
+                </div>
+            })}
+            </div>
+        }
+        {playersFromPlayerPaths == undefined && 
+            <div>
+                <h3>here</h3>
+            {playersFromPlayerPaths}
+            </div>
+        } 
+        */
         return (
             <div>
                 <div className="container">

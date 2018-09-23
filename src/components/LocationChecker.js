@@ -194,8 +194,9 @@ export default class LocationChcker extends Component {
         //just an example of how it would work
         //eventually the duration would be meaningfully determined by track and polygon
         //
+
         const durationToSeconds = duration/1000
-        if (durationToSeconds >= latestShape.effectsList.duration) {
+        if (durationToSeconds >= latestShape.trackEffects.duration) {
             //hoist to Player
             //console.log("DURATION TRIGGERS BUT HAVENT DEFINED YET")
             //debugger 
