@@ -183,23 +183,23 @@ export default class Sequencer extends Component {
             const trackPaths = sequence.sequence.map(track => {
                 switch(track.track) {
                   case("drums_2"): 
-                    return ["/static/media/drums_2.847758bc.mp3", track.effects]
+                    return ["/static/media/drums_2.47d4832d.mp3", track.effects]
                   case("drums_3"):
-                    return ["/static/media/drums_3.f08fb955.mp3", track.effects]
+                    return ["/static/media/drums_3.218cdb0f.mp3", track.effects]
                   case("drums_main"):
-                    return ["/static/media/drums_main.095fe340.mp3", track.effects]
+                    return ["/static/media/drums_main.3384accf.mp3", track.effects]
                   case("heavy_synth_1"):
-                    return ["/static/media/heavy_synth_1.626cdb88.mp3", track.effects]
+                    return ["/static/media/heavy_synth_1.89e2c3da.mp3", track.effects]
                   case("heavy_synth_2"):
-                    return ["/static/media/heavy_synth_2.626cdb88.mp3", track.effects]
+                    return ["/static/media/heavy_synth_2.8cde8bed.mp3", track.effects]
                   case("strings_1"):
-                    return ["/static/media/strings_1.363f003e.mp3", track.effects]
+                    return ["/static/media/strings_1.2e9c364e.mp3", track.effects]
                   case("synth_1"):
-                    return ["/static/media/synth_1.bd1fb0dc.mp3", track.effects]
+                    return ["/static/media/synth_1.343f14c6.mp3", track.effects]
                   case("synth_2"):
-                    return ["/static/media/synth_2.df4a61eb.mp3", track.effects]
+                    return ["/static/media/synth_2.76c1a280.mp3", track.effects]
                   case("weird_swell_1"):
-                    return ["/static/media/weird_swell_1.9a4ae47f.mp3", track.effects]
+                    return ["/static/media/weird_swell_1.ec27bfe8.mp3", track.effects]
                   default: 
                     break 
                 }
@@ -244,7 +244,50 @@ export default class Sequencer extends Component {
                 1) make else statement inherit props from a list of const i define below. they'll
                 either be undefined (from state? or...?) or have information from polygon. 
             */
-            
+            const testPlayers = [] 
+            for (let i = 0; i < 8; i++) {
+                if (playerPaths[i] !== undefined ) {
+                    const newPlayer = <Player key={i} activeTrack={playerPaths[i][0]} effects={playerPaths[i][1]} playing={true}/>
+                    testPlayers.push(newPlayer)
+                } else {
+                    const otherPlayer = <Player key={i} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                    testPlayers.push(otherPlayer)
+                }
+            }
+            return (
+                <div>
+                    <div className="row">
+                        <div className="col">
+                            {testPlayers[0]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[1]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[2]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[3]}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            {testPlayers[4]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[5]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[6]}
+                        </div>
+                        <div className="col">
+                            {testPlayers[7]}
+                        </div>
+                    </div>
+                </div>
+            )
+            /*
+            debugger 
             const allThePlayers = playerPaths.map((player, index) => {
                 //debugger 
                 return (<div className="col">
@@ -287,7 +330,7 @@ export default class Sequencer extends Component {
                         </div>
                     </div>
                 )
-                */
+                // /
         } else {
             return (
                 <div>
@@ -321,7 +364,8 @@ export default class Sequencer extends Component {
                     </div>
                 </div>
             )
-        }
+            */
+        } 
     }
 
     /*

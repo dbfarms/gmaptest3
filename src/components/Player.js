@@ -77,6 +77,7 @@ class Player extends Component {
       const trackPath = nextProps.activeTrack //this.setTrackPath(nextProps.activeTrack); // this gets teh actual file path for the track
       //console.log(trackPath)
       if (trackPath !== this.state.activeTrack || this.state.playing === false) {
+        debugger 
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
@@ -123,14 +124,12 @@ class Player extends Component {
       }
     //})
     
-    
     /*
     this.state.allTracks.map(track => {
       if (track === activeTrack) {
         return 
       }
     })
-    
   }
   */
 
@@ -220,11 +219,14 @@ class Player extends Component {
 
   render () {
     const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
-    const SEPARATOR = ' · '
+    //const SEPARATOR = ' · '
     //console.log("this.state")
     //console.log(this.state)
-    //debugger
-
+    if (url !== undefined) {
+      //debugger
+      console.log(url)
+      console.log(playing)
+    }
     return (
       <div className='app'>
         <section className='section'>
