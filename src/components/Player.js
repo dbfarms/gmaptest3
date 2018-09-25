@@ -258,12 +258,16 @@ class Player extends Component {
             />
           </div>
 
-          <table><tbody>
-            <tr>
+          
+            {/*
+            <table><tbody>
+              <tr>
               <th>Played</th>
               <td><progress max={1} value={played} /></td>
             </tr>
           </tbody></table>
+            */}
+            
         </section>
 
         <section className='section'>

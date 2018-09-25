@@ -19,11 +19,11 @@ import DrawingManager from "react-google-maps/lib/components/drawing/DrawingMana
 //import { connect } from 'react-redux'
 //import { bindActionCreators } from 'redux';
 
-import Pulse from './Pulse';
+//import Pulse from './Pulse';
 import ShapeMenu from './ShapeMenu';
 import { willHandleDrawingComplete } from './DrawingFunctions';
 
-import geolib from 'geolib'
+//import geolib from 'geolib'
 //still to make or maybe not i dunno
 import {onTestPolygonChange} from './PolygonFunctions'
 //import checkLocation from './TestFunctions';
@@ -174,22 +174,38 @@ export default class MyFancyComponent extends React.PureComponent {
         //const testLatLng = props.google.maps.geometry.poly.containsLocation( actualMarker.latLng, this.state.markers[0].polygonObject.props.getPath())
         //const thisWork = actualMarker.props.lat(actualMarker.props.position.lat)
         let markerListHere = []
-        for (let i = 1; i<5; i++) {
+        for (let i = 0; i<5; i++) {
           let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
           let newMarker = []
-          let newPosition = i * .0007
-          newMarker[0] = nextProps.geoLoc.lat + newPosition;
-          newMarker[1] = nextProps.geoLoc.lng + newPosition;
-          markerObject.position = newMarker 
-          let polygonCoordsSketch = [
-            {lat: newMarker[0] + .0003, lng: newMarker[1] + .0003},
-            {lat: newMarker[0] - .0003, lng: newMarker[1] - .0003},
-            {lat: newMarker[0] - .0002, lng: newMarker[1] + .0002},
-          ];
+          let polygonCoordsSketch
+          if (i === 0 ) {
+            newMarker[0] = nextProps.geoLoc.lat;
+            newMarker[1] = nextProps.geoLoc.lng;
+            markerObject.position = newMarker 
+            polygonCoordsSketch = [
+              {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
+              {lat: newMarker[0] + .0005, lng: newMarker[1] - .0003},
+              {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
+            ];
+          } else {
+            let newPosition = i * .0014
+            newMarker[0] = nextProps.geoLoc.lat + newPosition;
+            newMarker[1] = nextProps.geoLoc.lng + newPosition;
+            markerObject.position = newMarker 
+            polygonCoordsSketch = [
+              {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
+              {lat: newMarker[0] - .0005, lng: newMarker[1] - .0003},
+              {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
+            ];
+          }
 
           markerObject.polygonCoords = polygonCoordsSketch
           markerListHere.push(markerObject)
         }
+
+        /*
+          creates circles which do what?
+        */
 
         const geoLoc = nextProps.geoLoc
         //debugger 

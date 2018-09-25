@@ -1,7 +1,28 @@
 notes:
 
 to-do:
-9.14.18
+9.24
+
+-redraw polygons so they're all hit and for longer
+-add circles/rectangles/polylines somehow and see what that does
+-fix audio files or add a few seconds wait to make loop more seemless
+-rails? save maps?
+-maybe ambitiously add manual keyboard control for movement but probably not
+-hardcode baseTrack into app so it triggers with start playing
+-see below
+
+-randomized polylines that have other kinds of effects
+
+  -baseTrack (each song has a baseTrack and its component parts in sequence. maybe baseTrack is set randomly (or not?) at start)
+    -so each polygon would be a new song, so get some circles in there.. which adds to the sequence randomly? or... adjusts the song 
+    based on certain things (elapsed time overall, number of currently running sequences, what else?)
+
+  -maybe polygons change to circles and then back to polygons depending on aspects of the song? like if it's been on too long?
+  or if user hits a button on phone to change things up
+
+  
+
+    
   -rename things so they're more accurately named
   -set polygon triggers in location checker to better reflect shape notes below
   -
@@ -12,12 +33,12 @@ eventually:
 
 shapes:
 -POLYGONS 
-  resets sequence completely, starts new track
+  -random assortment of tracks from specific baseTrack
 -CIRCLES
-  add to the sequence, they CAN also contain effects 
- (that only last as long as the sequence they're on / associated with?)
+  effects
 -SQUARES
-  scrambles sequence? effects? i guess scrambling sequence could be effect...
+  transitions? must exist between two polygons? so have them automatically added some space before getting to one or that doesn't
+  make sense actually
 -MARKERS
   triggers some kind of event i haven't thought up yet
 -POLYLINES

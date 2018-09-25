@@ -286,51 +286,6 @@ export default class Sequencer extends Component {
                     </div>
                 </div>
             )
-            /*
-            debugger 
-            const allThePlayers = playerPaths.map((player, index) => {
-                //debugger 
-                return (<div className="col">
-                            <Player key={index} activeTrack={player[0]} effects={player[1]} playing={true}/>
-                        </div>
-                        )
-            })
-
-            //debugger 
-
-            const firstHalfPlayers = allThePlayers.slice(0, 3)
-            console.log("firstHalfPlayers")
-            console.log(firstHalfPlayers)
-            const secondHalfPlayers = allThePlayers.slice(4,7)
-
-            //debugger //this return statement... doesn't seem to be working
-                //const test = this.createRows(firstHalfPlayers, secondHalfPlayers)
-
-                return [firstHalfPlayers, secondHalfPlayers]
-                /*
-               return (
-                    <div>
-                        <div className="row">
-                            {firstHalfPlayers.map(player => { 
-                                //debugger 
-                                player
-                            })
-                            }
-                        </div>
-                        <div className="row">
-                        {secondHalfPlayers.length > 0 && 
-                            <div className="row">
-                            {secondHalfPlayers.map(player => { 
-                                debugger 
-                                player
-                            })
-                            }
-                            </div>
-                        }
-                        </div>
-                    </div>
-                )
-                // /
         } else {
             return (
                 <div>
@@ -364,53 +319,9 @@ export default class Sequencer extends Component {
                     </div>
                 </div>
             )
-            */
         } 
     }
 
-    /*
-    createRows(firstHalfPlayers, secondHalfPlayers) {
-        //debugger 
-        return (
-            <div>
-                <div className="row">
-                    {firstHalfPlayers.map(player => { 
-                        //debugger 
-                        player
-                    })
-                    }
-                </div>
-                <div className="row">
-                {secondHalfPlayers.length > 0 && 
-                    <div className="row">
-                    {secondHalfPlayers.map(player => { 
-                        debugger 
-                        player
-                    })
-                    }
-                    </div>
-                }
-                </div>
-            </div>
-        )
-    }
-    */
-
-    /*
-    dividePlayers(playersFromPlayerPaths){
-        const playersCount = playersFromPlayerPaths.length 
-        if (playersCount < 2) 
-            return playersFromPlayerPaths
-        
-        if (playersCount % 2 === 0) {
-
-        }
-
-        return (
-            <div></div>
-        )
-    }
-    */
 
     render() {
 

@@ -11,7 +11,9 @@ export default class LocationChcker extends Component {
     constructor(props) {
         super(props)
 
+        this.handleKey = this.handleKey.bind(this)
         this.state = {
+            move: {dir: undefined, distance: undefined},
             marker: this.props.marker,
             markers: this.props.markers,
             polylines: this.props.polylines,
@@ -31,6 +33,7 @@ export default class LocationChcker extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        //console.log(this.state.marker)
         //console.log(nextProps)
         //debugger 
         const newShapesList = Object.assign({}, this.state.shapesList)
@@ -38,6 +41,9 @@ export default class LocationChcker extends Component {
         newShapesList.rectangles = nextProps.rectangles
         newShapesList.circles = nextProps.circles 
 
+        if (this.state.move.dir !== undefined ) {
+            this.setState({move: {dir: undefined, distance: undefined}})
+        }
         this.setState({
             marker: nextProps.marker,
             shapesList: newShapesList,
@@ -160,9 +166,66 @@ export default class LocationChcker extends Component {
         return effectsSet //{volume: , speed: , }
     }
 
-    startTestRun = () => {
-        //console.log("running")
+    handleKey(e){
+        e.preventDefault()
+        //console.log(e)
+        let movement;
+        switch(e.key) {
+            case("ArrowUp"):
+            //debugger 
+                //console.log(e.key)
+                this.setState({move: {dir: "lat", distance: .00004}})
+                break //return .00004
+            case("ArrowRight"):
+                this.setState({move: {dir: "lng", distance: .00004}})
+                break
+                //return .00004
+            case("ArrowLeft"):
+                this.setState({move: {dir: "lng", distance: -.00004}})
+                break 
+                //return -.00004
+            case("ArrowDown"):
+                this.setState({move: {dir: "lat", distance: -.00004}})
+                break
+                //return -.00004
+            default:
+            //debugger 
+                this.setState({move: {dir: undefined, distance: undefined}})
+                break
+        }
+        console.log(movement)
+        return movement 
+    }
 
+    startTestRun = () => {
+        //moves testMarker around at pace you feel like going to better test music
+        const movement = document.addEventListener('keydown', this.handleKey)
+        console.log(movement)
+        //if (movement !== undefined ) debugger 
+
+        const newMarkerLocation = Object.assign({}, this.state.marker)
+
+        if (this.state.move.dir !== undefined) {
+            if (this.state.move.dir === "lat") {
+                newMarkerLocation.position.lat = this.state.marker.position.lat + this.state.move.distance
+            } else if (this.state.move.dir === "lng") {
+                newMarkerLocation.position.lng = this.state.marker.position.lng + this.state.move.distance
+            }
+
+            newMarkerLocation.show = true; 
+
+            this.state.startPlayer1()
+            this.checkLocation() //checks location for player update
+            this.state.updateMap(newMarkerLocation)
+
+            this.setState({
+                marker: newMarkerLocation
+            })
+            //debugger 
+        }
+        
+
+        /*
         const newMarkerLocation = Object.assign({}, this.state.marker)
 
         //MOVES MARKER AS FOLLOWS, EVENTUALLY THIS SHOULD BE MORE MEANINGFUL 
@@ -178,6 +241,7 @@ export default class LocationChcker extends Component {
         this.setState({
             marker: newMarkerLocation
         })
+        */
     }
 
     timerFunction = () => {
