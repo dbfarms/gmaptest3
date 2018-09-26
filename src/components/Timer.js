@@ -44,14 +44,10 @@ export default class Timer extends React.Component {
 
     //im keeping this here because this is a function of timer itself and this way i dont have to keep setting state 
     //re: timer in multiple locations
-    if (inShape !== undefined ) {
-      /* 
-      console.log("inShape")
-      console.log(inShape)
-      console.log("latestShape")
-      console.log(latestShape)
-      */
-    }
+    
+
+    //1) check type of shape. if type of shape is circle then cehck duration in shape
+    //2) if it's polygon, check duration until new baseTrack
     
     
     if (inShape !== undefined) {
@@ -64,28 +60,18 @@ export default class Timer extends React.Component {
             durationStart: this.state.elapsed,
             latestShape: inShape 
           })
-
-          
         } else {
           //still in shape... checks and hoists
           console.log("same shape")
-          const duration = this.state.elapsed - this.state.durationStart 
+          const durationInShape = this.state.elapsed - this.state.durationStart 
           //debugger 
           //console.log(duration)
           if (duration > 1) {
-
-            this.state.getDuration(latestShape, duration)
+            //maybe this should be if baseTrack is the same and duration in shape is only for certain shapes, like circles, not polygons
+            this.state.getDuration(latestShape, durationInShape)
           }
-          
         }
-    } /*else {
-        //
-
-        this.setState({
-          durationStart: 0,
-          latestShape: null //??
-        })
-    } */
+    } 
       
 
     return (

@@ -188,7 +188,7 @@ export default class MyFancyComponent extends React.PureComponent {
               {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
             ];
           } else {
-            let newPosition = i * .0014
+            let newPosition = i * .0006
             newMarker[0] = nextProps.geoLoc.lat + newPosition;
             newMarker[1] = nextProps.geoLoc.lng + newPosition;
             markerObject.position = newMarker 
@@ -206,6 +206,8 @@ export default class MyFancyComponent extends React.PureComponent {
         /*
           creates circles which do what?
         */
+
+        this.createCircles();
 
         const geoLoc = nextProps.geoLoc
         //debugger 
@@ -226,6 +228,15 @@ export default class MyFancyComponent extends React.PureComponent {
 
       }
     }
+  }
+
+  createCircles() {
+
+    //circles will affect effects, so volume? speed? maybe 
+    // how to execute this? i don't know. i don't know! I DONT KNOW. gah. so you walk around and you hit a trigger and the song
+    //starts and then you keep walking and it evolves so it needs some kind of meaningful designation of song parts?
+    //
+    //debugger 
   }
 
   /*
@@ -667,18 +678,21 @@ export default class MyFancyComponent extends React.PureComponent {
       'weird_swell_1']}
       
       //eventually baseTrack won't be preloaded 
+      const tracksCheck = []
       const n = Math.floor(Math.random() * 7 + 1)
       for (let j = 0; j <= n; j++) {
         const i = Math.floor(Math.random() * 9)
-        if (!polygon.trackSequence.tracks.includes(preloadedTracks.sequence[i])) {
-         // debugger 
+        if (!tracksCheck.includes(preloadedTracks.sequence[i])) {
+          tracksCheck.push(preloadedTracks.sequence[i])
           polygon.trackSequence.tracks.push({track: preloadedTracks.sequence[i], effects: {volume: 0.5, playbackRate: 1, loop: true}})
-          //debugger 
+        } else {
+         // debugger 
         }
       }
       //polygon.track = preloadedTracks.sequence[i]
     })
     //console.log(polygonsDrawn)
+    debugger 
     return polygonsDrawn
   }
 

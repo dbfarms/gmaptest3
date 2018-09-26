@@ -168,40 +168,28 @@ export default class LocationChcker extends Component {
 
     handleKey(e){
         e.preventDefault()
-        //console.log(e)
-        let movement;
         switch(e.key) {
             case("ArrowUp"):
-            //debugger 
-                //console.log(e.key)
                 this.setState({move: {dir: "lat", distance: .00004}})
                 break //return .00004
             case("ArrowRight"):
                 this.setState({move: {dir: "lng", distance: .00004}})
                 break
-                //return .00004
             case("ArrowLeft"):
                 this.setState({move: {dir: "lng", distance: -.00004}})
                 break 
-                //return -.00004
             case("ArrowDown"):
                 this.setState({move: {dir: "lat", distance: -.00004}})
                 break
-                //return -.00004
             default:
-            //debugger 
                 this.setState({move: {dir: undefined, distance: undefined}})
                 break
         }
-        console.log(movement)
-        return movement 
     }
 
     startTestRun = () => {
         //moves testMarker around at pace you feel like going to better test music
         const movement = document.addEventListener('keydown', this.handleKey)
-        console.log(movement)
-        //if (movement !== undefined ) debugger 
 
         const newMarkerLocation = Object.assign({}, this.state.marker)
 
@@ -221,7 +209,6 @@ export default class LocationChcker extends Component {
             this.setState({
                 marker: newMarkerLocation
             })
-            //debugger 
         }
         
 

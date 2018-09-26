@@ -77,7 +77,7 @@ class Player extends Component {
       const trackPath = nextProps.activeTrack //this.setTrackPath(nextProps.activeTrack); // this gets teh actual file path for the track
       //console.log(trackPath)
       if (trackPath !== this.state.activeTrack || this.state.playing === false) {
-        debugger 
+        //debugger 
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
