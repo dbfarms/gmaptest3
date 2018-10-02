@@ -33,17 +33,26 @@ class App extends Component {
                        'synth_1',
                        'synth_2',
                        'weird_swell_1']},
+      inBetweenTracks: {baseTrack: 'ticktock_song', 
+                       sequence: [{track: 'clock_ticking', 
+                       effects: {volume: 0.5, playbackRate: 1, loop: true}}, 
+                       {track: 'something_else_maybe', 
+                       effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
       shapeType: undefined,
       activeTrack: undefined,
       effects: {volume: 0.5, playbackRate: 1, loop: false},
-      playing: true,
+      playing: false,
+      playing2: false,
     }
 
     this.nowPlaying = this.nowPlaying.bind(this)
     this.stopPlayingTest = this.stopPlayingTest.bind(this)
     this.startPlayer1 = this.startPlayer1.bind(this)
 
+    //console.log(" got here ")
+    //debugger 
     navigator.geolocation.getCurrentPosition(position => {
+      //debugger 
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}
       //debugger 
@@ -70,13 +79,25 @@ class App extends Component {
     //what if anything to do about effects
 
     //debugger 
-    this.setState({
-      activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
-      activeSquence: polygonActive.trackSequence.tracks,
-      shapeType: polygonActive, //for sequencer case statement 
-      //effects: effects, //setting effects now its own function though not hooked up yet
-      playing: true,
-    })
+    if (polygonActive !== undefined ) {
+      this.setState({
+        activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
+        activeSquence: polygonActive.trackSequence.tracks,
+        shapeType: polygonActive, //for sequencer case statement 
+        //effects: effects, //setting effects now its own function though not hooked up yet
+        playing: true,
+      })
+    } else {
+      this.setState({
+        activeTrack: this.state.inBetweenTracks.baseTrack, //is this right? no i don't think so
+        activeSquence: this.state.inBetweenTracks.sequence,
+        shapeType: undefined,
+        effects: this.state.inBetweenTracks.effects, // probably needs to come from somewehre else
+        playing: true, 
+      })
+    }
+
+    
   }
 
   /*
@@ -108,6 +129,13 @@ class App extends Component {
     })
   }
 
+  startPlayer2(){
+    debugger 
+    this.setState({
+      playing2: true,
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -120,6 +148,7 @@ class App extends Component {
             effects={this.state.effects}
             playing={this.state.playing}
             sounds={this.state.sounds}
+            
           />
         </div>
         <div className="map">
@@ -130,6 +159,7 @@ class App extends Component {
             nowPlaying={this.nowPlaying}
             stopPlayingTest={this.stopPlayingTest}
             startPlayer1={this.startPlayer1}
+            startPlayer2={this.startPlayer2}
           />
         </div>
       </div>

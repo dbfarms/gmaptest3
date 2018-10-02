@@ -21,6 +21,7 @@ export default class LocationChcker extends Component {
             updateMap: this.props.updateMap,
             effects: this.props.effects,
             startPlayer1: this.props.startPlayer1,
+            startPlayer2: this.props.startPlayer2,
             timer: false,
             elapsed: undefined, //if the below works do i need this?
             inShape: undefined, 
@@ -49,7 +50,7 @@ export default class LocationChcker extends Component {
             shapesList: newShapesList,
             markers: nextProps.markers,
             polylines: nextProps.polylines,
-            shapesList: newShapesList,
+            //shapesList: newShapesList,
         })
     }
 
@@ -81,6 +82,7 @@ export default class LocationChcker extends Component {
                     if (inPolygonCheck === true ) {
                         //debugger 
                         polygonActive = this.state.shapesList[key][i]
+                        this.state.startPlayer1(); //this starts player but maybe it should only do that if there's something to play?
                         //debugger 
                     } 
                 }
@@ -89,16 +91,8 @@ export default class LocationChcker extends Component {
 
         if (polygonActive !== undefined ) {
             
-            // this should only happen if it's a square? put that in
-            const effects = this.checkEffects(polygonActive);
-
-            //debugger 
+            const effects = this.checkEffects(polygonActive); // this should only happen if it's a square? put that in. maybe.
             const durationStats = this.state.durationStats //unclear what i'm doing with this yet 
-            
-            //console.log("elapsed time in location checker")
-            //console.log(this.state.elapsed)
-            //debugger 
-
             //how effects should operate here is unclear... right now polygons can trigger track part AND effect but maybe some 
             //shapes should just be effects and some just track stuff
             if (effects !== this.state.effects) {
@@ -106,24 +100,35 @@ export default class LocationChcker extends Component {
                     effects: effects,
                 })
             }
- 
-            //console.log("sets polygonActive: ")
-            //console.log(polygonActive)
             this.setState({
                 inShape: polygonActive
             })
-
             //console.log(effects)
             this.state.nowPlaying(polygonActive, effects)
         } else {
-            //console.log(this.state.durationStats)
-            //console.log("in polygon check")
-            //console.log(polygonActive)
-            if (this.state.durationStats.shape !== undefined) {
+            //not in a polygon
+            //debugger  //HEY HERE~! maybe make inShape below in similar format to what it would be if it was in a polygon
+            //that is to say see console.log of what it looks like with effects and other stuff? 
+            //though not totally necessary I guess
+            //just more like, pattern-like?
+
+            //debugger 
             this.setState({
-                durationStats: {shape: undefined, duration: undefined} //likely i'll be deleting this... 
+                inShape: undefined //can move all that stuff here 
             })
+            //debugger 
+            const shape = undefined 
+            const effects=this.checkEffects(shape)
+            this.state.nowPlaying(this.state.inShape, effects)
+
+            //the below hasn't been set up yet
+            if (this.state.durationStats.shape !== undefined) {
+                this.setState({
+                    durationStats: {shape: undefined, duration: undefined} //likely i'll be deleting this... 
+                })
             }
+
+            this.state.startPlayer1(); //this is here but... maybe it should be in check location like the other one?
         }
     }
 
@@ -131,39 +136,44 @@ export default class LocationChcker extends Component {
         //speed?
         //something else?
         //THIS MIGHT BE MOVED TO EFFECTSLIST FOR POLYGON SOMEHOW...
+        if (polygon !== undefined ) {
+            const center = geolib.getCenter(polygon.polygon.props.path)
+            const distanceFromCenter = geolib.getDistance(
+                this.state.marker.position,
+                center
+            );
 
-        const center = geolib.getCenter(polygon.polygon.props.path)
-        const distanceFromCenter = geolib.getDistance(
-            this.state.marker.position,
-            center
-        );
+            const bounds = geolib.getBounds(polygon.polygon.props.path)
+            let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
+            //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
+            //accordingly?
 
-        const bounds = geolib.getBounds(polygon.polygon.props.path)
-        let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
-        //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
-        //accordingly?
+            /// how should check effects work here?
+            // 1) squares
+            // 2) 
+            //
+            //
 
-        /// how should check effects work here?
-        // 1) squares
-        // 2) 
-        //
-        //
+            //
 
-        //
+            //console.log(distanceFromCenter)
+            if (distanceFromCenter <= 10) {
+                //console.log("do i get here?")
+                effectsSet.volume = 0.8 //not sure about what max should be, so I made it .8 out of 1
+            } else if (distanceFromCenter <= 20 && distanceFromCenter > 10) {
+                //console.log("what about here?")
+                effectsSet.volume = 0.5
+            } else if (distanceFromCenter > 20) {
+                effectsSet.volume = 0.3 //again, probably too low? not sure how to make the swell meaningful yet
+            }
+            //debugger 
 
-        //console.log(distanceFromCenter)
-        if (distanceFromCenter <= 10) {
-            //console.log("do i get here?")
-            effectsSet.volume = 0.8 //not sure about what max should be, so I made it .8 out of 1
-        } else if (distanceFromCenter <= 20 && distanceFromCenter > 10) {
-            //console.log("what about here?")
-            effectsSet.volume = 0.5
-        } else if (distanceFromCenter > 20) {
-            effectsSet.volume = 0.3 //again, probably too low? not sure how to make the swell meaningful yet
+            return effectsSet //{volume: , speed: , }
+        } else {
+            //eventually i need to get this going but first to debug
+            return this.state.effects 
         }
-        //debugger 
-
-        return effectsSet //{volume: , speed: , }
+        
     }
 
     handleKey(e){
@@ -202,7 +212,6 @@ export default class LocationChcker extends Component {
 
             newMarkerLocation.show = true; 
 
-            this.state.startPlayer1()
             this.checkLocation() //checks location for player update
             this.state.updateMap(newMarkerLocation)
 

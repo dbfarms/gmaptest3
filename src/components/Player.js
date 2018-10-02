@@ -20,6 +20,7 @@ import strings_1 from '../jams/shaynasong/strings_1.mp3'
 import synth_1 from '../jams/shaynasong/synth_1.mp3'
 import synth_2 from '../jams/shaynasong/synth_2.mp3'
 import weird_swell_1 from '../jams/shaynasong/weird_swell_1.mp3'
+import clock_ticking from '../jams/clock_ticking.mp3';
 
 class Player extends Component {
   constructor(props) {
@@ -68,6 +69,8 @@ class Player extends Component {
     console.log(weird_swell_1)
     debugger 
     */
+   //console.log(clock_ticking)
+   //debugger
 
     //console.log("nextProps")
     //console.log(nextProps)

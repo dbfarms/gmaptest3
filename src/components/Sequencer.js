@@ -14,6 +14,7 @@ import Player from './Player';
 import Player2 from './Player2';
 
 
+
 export default class Sequencer extends Component {
     constructor(props){
         super(props)
@@ -32,8 +33,13 @@ export default class Sequencer extends Component {
                        'strings_1',
                        'synth_1',
                        'synth_2',
-                       'weird_swell_1']},
-            effects: {volume: 0.5, playbackRate: 1, loop: false},
+                       'weird_swell_1']}, 
+            inBetweenTracks: {baseTrack: 'ticktock_song', 
+                              sequence: [{track: 'clock_ticking', 
+                              effects: {volume: 0.5, playbackRate: 1, loop: true}}, 
+                              {track: 'something_else_maybe', 
+                              effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
+            effects: {volume: 0.5, playbackRate: 1, loop: false}, //is this redundant or what!?
             playing: true,
             playIndex: 0,
             addTrack: this.props.addTrack, //i don't think this does anything? not sure
@@ -45,6 +51,8 @@ export default class Sequencer extends Component {
         console.log(nextProps)
 
         //determines shape you're in, if you're in a shape, and sets this.state.trackSequence accordingly
+        this.sequencing(nextProps)
+        /*
         if (nextProps.activeTrack !== undefined){ // checks if you will be entering a location trigger
             this.sequencing(nextProps); 
         } else {
@@ -55,35 +63,53 @@ export default class Sequencer extends Component {
                 debugger 
             }
         }
+        */
     }
 
     sequencing(nextProps){
         /*
         will need to parse sequence into player(s)
-        -so there's an array of track objects with their effects... 
-        -once one track is done (And isn't looping), the next in the sequence should be sent down to player
+        -once one track is done (And isn't looping), the next in the sequence should be sent down to player,
+        right now it changes right away... but that might be fine?
         -ok, so i need to check playing status in player from sequencer, and if it returns not-playing,
         -we get to the next in the list
         */
 
         //need base track that starts when you hit start , will be what?? i don't know
-       
-        const nextSequence = nextProps.shapeType.trackSequence.tracks 
-        //console.log("next song next song next song")
         //console.log(nextProps)
-        const nextSong = nextProps.shapeType.trackSequence.baseTrack
+        let nextSequence = undefined 
+        let nextSong = undefined 
+        let shape = undefined 
+        if (nextProps.shapeType !== undefined ) { //checks to see if you will be in shape 
+            
+            if (this.state.shapeType !== nextProps.shapeType) { //sets state for shapeType if needed
+                this.setState({ shapeType: nextProps.shapeType})
+            }
+
+            shape = nextProps.shapeType.polygon.props.type //works with polygons, not sure about other shapes 
+            nextSequence = nextProps.shapeType.trackSequence.tracks 
+            nextSong = nextProps.shapeType.trackSequence.baseTrack
+            this.typeOfShape(shape, nextSequence, nextSong)
+        } else { //checks to see if you will be exiting state
+            this.setState({ 
+                trackSequence: 
+                    {baseTrack: this.state.inBetweenTracks.baseTrack, 
+                     sequence: this.state.inBetweenTracks.sequence},
+            })
+            //debugger 
+        }
         
-
-        //checks to see if location is already in shape
+        /* --THE ABOVE SHOULD REPLACE THIS 
         if (this.state.shapeType !== undefined ) {
-
             //debugger 
              //check on this
-             const shape = this.state.shapeType.polygon.props.type
+            const shape = this.state.shapeType.polygon.props.type
+            debugger 
             this.typeOfShape(shape, nextSequence, nextSong)
             //debugger 
         } else {
         // checks to see if will be entering location
+            //debugger 
             if (nextProps.shapeType !== undefined) {
                 //debugger 
                 const shape = nextProps.shapeType.polygon.props.type 
@@ -92,9 +118,19 @@ export default class Sequencer extends Component {
                 this.setState({
                     shapeType: nextProps.shapeType,
                 })
+            } else {
+                //debugger 
+                this.setState({ 
+                    trackSequence: 
+                        {baseTrack: this.state.inBetweenTracks.baseTrack, 
+                         sequence: this.state.inBetweenTracks.sequence},
+                    shapeType: undefined 
+                })
             }
+            //debugger 
             //return this.state.trackSequence
         }
+        */
     }
 
     typeOfShape(shape, nextSequence, nextSong){
@@ -112,7 +148,7 @@ export default class Sequencer extends Component {
                 console.log("this.state.trackSequence.baseTrack")
                 console.log(this.state.trackSequence.baseTrack)
                 
-                console.log(this.state.trackSequence.baseTrack == this.state.activeTrack)
+                //console.log(this.state.trackSequence.baseTrack == this.state.activeTrack)
 
                 //this checks for new baseTrack 
                 //if found it updates state with baseTrack and current polygons tracks
@@ -131,22 +167,18 @@ export default class Sequencer extends Component {
 
                     //return newSequence
                     
-                } else {
-                //this means it's the same baseTrack and will only update tracks
+                } else { //this means it's the same baseTrack and will only update tracks
                     //debugger 
-                    //break
                     if (this.state.activeTrack !== nextSong) {
                         this.setState({ activeTrack: nextSong})
                     }
                     if (this.state.trackSequence.sequence !== nextSequence) {
                         const newSequence = Object.assign({}, this.state.trackSequence)
-                        //debugger 
                         newSequence.sequence = nextSequence  
 
                         this.setState({
                             trackSequence: newSequence
                         })
-                        //debugger 
                     }
                     //return this.state.trackSequence
                 }
@@ -180,31 +212,50 @@ export default class Sequencer extends Component {
         console.log(sequence)
         if (sequence.sequence.length > 0 ) {
             //debugger 
-            const trackPaths = sequence.sequence.map(track => {
-                switch(track.track) {
-                  case("drums_2"): 
-                    return ["/static/media/drums_2.47d4832d.mp3", track.effects]
-                  case("drums_3"):
-                    return ["/static/media/drums_3.218cdb0f.mp3", track.effects]
-                  case("drums_main"):
-                    return ["/static/media/drums_main.3384accf.mp3", track.effects]
-                  case("heavy_synth_1"):
-                    return ["/static/media/heavy_synth_1.89e2c3da.mp3", track.effects]
-                  case("heavy_synth_2"):
-                    return ["/static/media/heavy_synth_2.8cde8bed.mp3", track.effects]
-                  case("strings_1"):
-                    return ["/static/media/strings_1.2e9c364e.mp3", track.effects]
-                  case("synth_1"):
-                    return ["/static/media/synth_1.343f14c6.mp3", track.effects]
-                  case("synth_2"):
-                    return ["/static/media/synth_2.76c1a280.mp3", track.effects]
-                  case("weird_swell_1"):
-                    return ["/static/media/weird_swell_1.ec27bfe8.mp3", track.effects]
-                  default: 
-                    break 
-                }
-            })
-            return trackPaths
+            if (sequence.baseTrack == "ticktock_song") {
+                //debugger 
+                const ticktockPaths = sequence.sequence.map(track => {
+                   //debugger 
+                    switch(track.track) {
+                        case("clock_ticking"): 
+                            return ["/static/media/clock_ticking.018d1ec5.mp3", track.effects]
+                        default: 
+                            break 
+                    }
+                    //still need to get duration up here for when not in polygon
+                    //HERE
+                    //-need tracks, import em above, then console.log for actual file path
+                    //set ticktockPaths (perhaps change name...)
+                    //then have this set players
+                })
+                //debugger
+            } else {
+                const trackPaths = sequence.sequence.map(track => {
+                    switch(track.track) {
+                      case("drums_2"): 
+                        return ["/static/media/drums_2.47d4832d.mp3", track.effects]
+                      case("drums_3"):
+                        return ["/static/media/drums_3.218cdb0f.mp3", track.effects]
+                      case("drums_main"):
+                        return ["/static/media/drums_main.3384accf.mp3", track.effects]
+                      case("heavy_synth_1"):
+                        return ["/static/media/heavy_synth_1.89e2c3da.mp3", track.effects]
+                      case("heavy_synth_2"):
+                        return ["/static/media/heavy_synth_2.8cde8bed.mp3", track.effects]
+                      case("strings_1"):
+                        return ["/static/media/strings_1.2e9c364e.mp3", track.effects]
+                      case("synth_1"):
+                        return ["/static/media/synth_1.343f14c6.mp3", track.effects]
+                      case("synth_2"):
+                        return ["/static/media/synth_2.76c1a280.mp3", track.effects]
+                      case("weird_swell_1"):
+                        return ["/static/media/weird_swell_1.ec27bfe8.mp3", track.effects]
+                      default: 
+                        break 
+                    }
+                })
+                return trackPaths
+            }
         }
         
     }

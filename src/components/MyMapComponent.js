@@ -116,6 +116,7 @@ export default class MyFancyComponent extends React.PureComponent {
       effects: this.props.effects,
       stopPlayingTest: this.props.stopPlayingTest,
       startPlayer1: this.props.startPlayer1,
+      startPlayer2: this.props.startPlayer2,
     }
   }
 
@@ -169,6 +170,31 @@ export default class MyFancyComponent extends React.PureComponent {
         position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
       
         createTestMarker.marker = actualMarker
+
+        /*
+        plan: have a few markers as points to work/walk towards
+        how: enter miles to travel?
+        -map out route with api?
+        -pointers? suggest routes?
+        -if no map (i.e. woods) then what?
+        -have volume drop if going in wrong direction... or... lose tracks from sequence! but that can be confusing if path
+        is windy
+
+        by what means should proxmity be measured? lat/lng and...? 
+
+        new plan:
+        -baseTrack plays for x-duration. 
+        -slowly shifts over time(adds tracks? subtracts tracks?)
+        -hit triggers that make additional sounds (swells?)
+        -randomly place effects as you walk?
+        -control panel on phone to change track when you want as well?
+        -arrows pointing you in possible directions to do things
+        -create 'sets' of tracks that build... so 1,2,3 then 1,2,3,4, then etc... if you move away from
+        marker effects or something triggers? affects sequences? slows down?
+        how does the above work with duration affecting sequences? 
+        -success sounds?
+
+        */ 
 
         //debugger 
         //const testLatLng = props.google.maps.geometry.poly.containsLocation( actualMarker.latLng, this.state.markers[0].polygonObject.props.getPath())
@@ -395,8 +421,6 @@ export default class MyFancyComponent extends React.PureComponent {
       default:
         break 
     }
-
-    //debugger 
   }
 
   onMouseOver(key, type, props) {
@@ -408,8 +432,6 @@ export default class MyFancyComponent extends React.PureComponent {
           shapeSelected = this.state.polygons
           const shape = shapeSelected[key]
           console.log("polygon mouse over")
-          //console.log(shape)
-          //debugger 
           this.setState({
             shapeMenu: { menu: <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>, shape: shape, key: key}
           })
@@ -428,34 +450,22 @@ export default class MyFancyComponent extends React.PureComponent {
     this.setState({
       polyMenu: {key: key, type: type}
     })
-
-    //load <ShapeMenu here 
-    
   }
 
   showShapeMenuDeets = () => {
 
     const {key, type} = this.state.polyMenu
-
-    //console.log(key)
-    //console.log(type)
     let shapeSelected
 
     switch(type) {
       case("polygons"):
           shapeSelected = this.state.polygons
           const shape = shapeSelected[key]
-          //console.log(shape) //THESE BOTH CHECK OUT OK
-          //console.log(key)
-
           if (this.state.shapeMenu.shape !== shape && this.state.shapeMenu.key !== key) {
             this.setState({
               shapeMenu: { menu: <ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>, shape: shape, key: key}
             })
           }
-          
-          //return (<ShapeMenu shape={shape} keyID={key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>)
-          
       case("circles"):
           shapeSelected = this.state.circles
       case ("polylines"):
@@ -685,14 +695,10 @@ export default class MyFancyComponent extends React.PureComponent {
         if (!tracksCheck.includes(preloadedTracks.sequence[i])) {
           tracksCheck.push(preloadedTracks.sequence[i])
           polygon.trackSequence.tracks.push({track: preloadedTracks.sequence[i], effects: {volume: 0.5, playbackRate: 1, loop: true}})
-        } else {
-         // debugger 
-        }
+        } 
       }
-      //polygon.track = preloadedTracks.sequence[i]
     })
-    //console.log(polygonsDrawn)
-    debugger 
+    //debugger 
     return polygonsDrawn
   }
 
@@ -779,6 +785,7 @@ export default class MyFancyComponent extends React.PureComponent {
             //console.log(marker.polygonCoords)
         })
     } else {
+      //debugger 
       console.log("geoloc not updating")
     }
 
@@ -799,6 +806,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     effects={this.state.effects}
                     stopPlayingTest={this.state.stopPlayingTest}
                     startPlayer1={this.state.startPlayer1}
+                    startPlayer2={this.state.startPlayer2}
                     markers={this.state.markers}
                     polygons={this.state.polygons} 
                     rectangles={this.state.rectangles}
