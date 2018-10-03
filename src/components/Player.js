@@ -10,6 +10,7 @@ import '../App.css'
 
 //import { version } from '../../package.json'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
+
 import Duration from './Duration'
 import drums_2 from '../jams/shaynasong/drums_2.mp3' ///  
 import drums_3 from '../jams/shaynasong/drums_3.mp3'
@@ -41,7 +42,8 @@ class Player extends Component {
       stopPlayingTest: this.props.stopPlayingTest,
       trackSequence: this.props.sequence,
       playIndex: null,
-      effects: this.props.effects
+      effects: this.props.effects,
+      key: this.props.key,
     }
   }
 
@@ -67,13 +69,12 @@ class Player extends Component {
     console.log(synth_1)
     console.log(synth_2)
     console.log(weird_swell_1)
-    debugger 
-    */
-   //console.log(clock_ticking)
-   //debugger
+    console.log(clock_ticking)
+    debugger
+   */
 
-    //console.log("nextProps")
-    //console.log(nextProps)
+    console.log("nextProps")
+    console.log(nextProps)
 
     if (nextProps.activeTrack !== undefined) { 
       //debugger 
@@ -98,43 +99,6 @@ class Player extends Component {
       })
     }
   }
-
-  /*
-  setTrackPath(track) {
-    //console.log(track1)
-    //const trackPaths = sequence.map(track => {
-      switch(track) {
-        case("drums_2"): 
-          return "/static/media/drums_2.847758bc.mp3"
-        case("drums_3"):
-          return "/static/media/drums_3.f08fb955.mp3"
-        case("drums_main"):
-          return "/static/media/drums_main.095fe340.mp3"
-        case("heavy_synth_1"):
-          return "/static/media/heavy_synth_1.626cdb88.mp3"
-        case("heavy_synth_2"):
-          return "/static/media/heavy_synth_2.626cdb88.mp3"
-        case("strings_1"):
-          return "/static/media/strings_1.363f003e.mp3"
-        case("synth_1"):
-          return "/static/media/synth_1.bd1fb0dc.mp3"
-        case("synth_2"):
-          return "/static/media/synth_2.df4a61eb.mp3"
-        case("weird_swell_1"):
-          return "/static/media/weird_swell_1.9a4ae47f.mp3"
-        default: 
-          break 
-      }
-    //})
-    
-    /*
-    this.state.allTracks.map(track => {
-      if (track === activeTrack) {
-        return 
-      }
-    })
-  }
-  */
 
   load = url => {
     this.setState({
@@ -221,7 +185,7 @@ class Player extends Component {
   }
 
   render () {
-    const { url, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
+    const { url, key, activeTrack, playing, volume, muted, loop, played, loaded, duration, playbackRate } = this.state
     //const SEPARATOR = ' · '
     //console.log("this.state")
     //console.log(this.state)
@@ -233,10 +197,9 @@ class Player extends Component {
     return (
       <div className='app'>
         <section className='section'>
-          <h3>Player</h3>
+          <h4>Player {key}</h4>
           <div className='player-wrapper'>
-          <h4>track:</h4>
-          <h4>{url}</h4>
+          <label>{url}</label>
             <ReactPlayer
               ref={this.ref}
               className='react-player'

@@ -1,19 +1,11 @@
 /*
-
-need to send props to baseTrack from app via locationchecker
-
 still not done:
 -when start is hit on pulse, what plays?
--
-
-
 */
 
 import React, {Component} from 'react';
 import Player from './Player';
 import Player2 from './Player2';
-
-
 
 export default class Sequencer extends Component {
     constructor(props){
@@ -40,7 +32,7 @@ export default class Sequencer extends Component {
                               {track: 'something_else_maybe', 
                               effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
             effects: {volume: 0.5, playbackRate: 1, loop: false}, //is this redundant or what!?
-            playing: true,
+            playing: this.props.playing,
             playIndex: 0,
             addTrack: this.props.addTrack, //i don't think this does anything? not sure
             shapeType: undefined,
@@ -49,21 +41,8 @@ export default class Sequencer extends Component {
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
-
         //determines shape you're in, if you're in a shape, and sets this.state.trackSequence accordingly
         this.sequencing(nextProps)
-        /*
-        if (nextProps.activeTrack !== undefined){ // checks if you will be entering a location trigger
-            this.sequencing(nextProps); 
-        } else {
-            console.log("nextProps.activeTrack is undefined")
-            if (this.state.activeTrack !== undefined) {
-                //right now it shouldn't reach here because activeTrack, once defined, is never undefined again
-                //but that might change, i dunno
-                debugger 
-            }
-        }
-        */
     }
 
     sequencing(nextProps){
@@ -98,39 +77,6 @@ export default class Sequencer extends Component {
             })
             //debugger 
         }
-        
-        /* --THE ABOVE SHOULD REPLACE THIS 
-        if (this.state.shapeType !== undefined ) {
-            //debugger 
-             //check on this
-            const shape = this.state.shapeType.polygon.props.type
-            debugger 
-            this.typeOfShape(shape, nextSequence, nextSong)
-            //debugger 
-        } else {
-        // checks to see if will be entering location
-            //debugger 
-            if (nextProps.shapeType !== undefined) {
-                //debugger 
-                const shape = nextProps.shapeType.polygon.props.type 
-                this.typeOfShape(shape, nextSequence, nextSong)
-                //debugger 
-                this.setState({
-                    shapeType: nextProps.shapeType,
-                })
-            } else {
-                //debugger 
-                this.setState({ 
-                    trackSequence: 
-                        {baseTrack: this.state.inBetweenTracks.baseTrack, 
-                         sequence: this.state.inBetweenTracks.sequence},
-                    shapeType: undefined 
-                })
-            }
-            //debugger 
-            //return this.state.trackSequence
-        }
-        */
     }
 
     typeOfShape(shape, nextSequence, nextSong){
@@ -147,8 +93,6 @@ export default class Sequencer extends Component {
                 console.log(this.state.activeTrack)
                 console.log("this.state.trackSequence.baseTrack")
                 console.log(this.state.trackSequence.baseTrack)
-                
-                //console.log(this.state.trackSequence.baseTrack == this.state.activeTrack)
 
                 //this checks for new baseTrack 
                 //if found it updates state with baseTrack and current polygons tracks
@@ -157,16 +101,12 @@ export default class Sequencer extends Component {
                     const newTrackAndSequence = Object.assign({}, this.state.trackSequence)
                     newTrackAndSequence.baseTrack = nextSong //this.state.activeTrack
                     newTrackAndSequence.sequence = nextSequence //this.state.trackSequence.sequence  //yes, the [] will be the layers
-                    
                     //debugger 
                     this.setState({
                         trackSequence: newTrackAndSequence
                     })
-                    //debugger 
                     //console.log(newSequence.baseTrack)
-
                     //return newSequence
-                    
                 } else { //this means it's the same baseTrack and will only update tracks
                     //debugger 
                     if (this.state.activeTrack !== nextSong) {
@@ -197,7 +137,6 @@ export default class Sequencer extends Component {
                         trackSequence: newSequence
                     })
                 }
-                
             default:
                 //should never actually get here since shape has to be definable to get to this function
                 debugger
@@ -228,9 +167,11 @@ export default class Sequencer extends Component {
                     //set ticktockPaths (perhaps change name...)
                     //then have this set players
                 })
+                return ticktockPaths 
                 //debugger
             } else {
-                const trackPaths = sequence.sequence.map(track => {
+                const trackPaths = sequence.sequence.map(track => { //when you feel like it make the below all 
+                                                                    //objects and make path, name, effects as keys
                     switch(track.track) {
                       case("drums_2"): 
                         return ["/static/media/drums_2.47d4832d.mp3", track.effects]
@@ -257,13 +198,11 @@ export default class Sequencer extends Component {
                 return trackPaths
             }
         }
-        
     }
 
     createPlayers(playerPaths) {
         //console.log(playerPaths)
         if (playerPaths !== undefined ) {
-            
             //if only one player though eventually i might have all players viewable and only activate the ones being used or
             //i might not show players at all? dunno
             //debugger 
@@ -275,9 +214,10 @@ export default class Sequencer extends Component {
                             <div className="col">
                                 <div className="player-wrapper">
                                     <Player 
+                                        key={0}
                                         activeTrack={player[0]}  // 
                                         effects={player[1]} //this will be more specific to the part i think
-                                        playing={true}
+                                        playing={this.state.playing}
                                     />
                                 </div>
                             </div>
@@ -296,15 +236,18 @@ export default class Sequencer extends Component {
                 either be undefined (from state? or...?) or have information from polygon. 
             */
             const testPlayers = [] 
+            console.log(playerPaths)
+            //debugger //HERE! 10.2 -- KEY ISN'T WORKING AND ALSO PLAYERS AREN'T UPDATING CORRECTLY THAT IS ALL (NO THERE'S WAY MORE)
             for (let i = 0; i < 8; i++) {
                 if (playerPaths[i] !== undefined ) {
-                    const newPlayer = <Player key={i} activeTrack={playerPaths[i][0]} effects={playerPaths[i][1]} playing={true}/>
+                    const newPlayer = <Player key={i} activeTrack={playerPaths[i][0]} effects={playerPaths[i][1]} playing={this.state.playing}/>
                     testPlayers.push(newPlayer)
                 } else {
                     const otherPlayer = <Player key={i} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                     testPlayers.push(otherPlayer)
                 }
             }
+            console.log(testPlayers)
             return (
                 <div>
                     <div className="row">
@@ -398,6 +341,39 @@ export default class Sequencer extends Component {
     }
 }
 
+
+ /* --THE ABOVE SHOULD REPLACE THIS 
+        if (this.state.shapeType !== undefined ) {
+            //debugger 
+             //check on this
+            const shape = this.state.shapeType.polygon.props.type
+            debugger 
+            this.typeOfShape(shape, nextSequence, nextSong)
+            //debugger 
+        } else {
+        // checks to see if will be entering location
+            //debugger 
+            if (nextProps.shapeType !== undefined) {
+                //debugger 
+                const shape = nextProps.shapeType.polygon.props.type 
+                this.typeOfShape(shape, nextSequence, nextSong)
+                //debugger 
+                this.setState({
+                    shapeType: nextProps.shapeType,
+                })
+            } else {
+                //debugger 
+                this.setState({ 
+                    trackSequence: 
+                        {baseTrack: this.state.inBetweenTracks.baseTrack, 
+                         sequence: this.state.inBetweenTracks.sequence},
+                    shapeType: undefined 
+                })
+            }
+            //debugger 
+            //return this.state.trackSequence
+        }
+        */
 
         /*
         {playersFromPlayerPaths.length !== undefined &&

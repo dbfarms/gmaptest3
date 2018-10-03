@@ -41,7 +41,7 @@ class App extends Component {
       shapeType: undefined,
       activeTrack: undefined,
       effects: {volume: 0.5, playbackRate: 1, loop: false},
-      playing: false,
+      playing: true,
       playing2: false,
     }
 
