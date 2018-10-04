@@ -12,6 +12,8 @@ import '../App.css'
 import ReactPlayer from 'react-player' //'../ReactPlayer'
 
 import Duration from './Duration'
+
+//keep imports below otherwise it don't work!
 import drums_2 from '../jams/shaynasong/drums_2.mp3' ///  
 import drums_3 from '../jams/shaynasong/drums_3.mp3'
 import drums_main from '../jams/shaynasong/drums_main.mp3'
@@ -26,6 +28,7 @@ import clock_ticking from '../jams/clock_ticking.mp3';
 class Player extends Component {
   constructor(props) {
     super(props)
+    console.log(props)
 
     this.state = {
       url: this.props.activeTrack,
@@ -76,6 +79,11 @@ class Player extends Component {
     console.log("nextProps")
     console.log(nextProps)
 
+    if (nextProps.key !== undefined ) { 
+      debugger 
+      //key not passing down in props for some reason... 
+    }
+
     if (nextProps.activeTrack !== undefined) { 
       //debugger 
       const trackPath = nextProps.activeTrack //this.setTrackPath(nextProps.activeTrack); // this gets teh actual file path for the track
@@ -91,6 +99,11 @@ class Player extends Component {
       }
     } else {
       //if nextProps.activeTrack does equal undefined, does it matter?
+      this.setState({
+        activeTrack: undefined,
+        url: undefined,
+        playing: false, 
+      })
     }
 
     if (nextProps.playing === false) {

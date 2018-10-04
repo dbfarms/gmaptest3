@@ -239,8 +239,9 @@ export default class Sequencer extends Component {
             console.log(playerPaths)
             //debugger //HERE! 10.2 -- KEY ISN'T WORKING AND ALSO PLAYERS AREN'T UPDATING CORRECTLY THAT IS ALL (NO THERE'S WAY MORE)
             for (let i = 0; i < 8; i++) {
+                //console.log(playerPaths[i])
                 if (playerPaths[i] !== undefined ) {
-                    const newPlayer = <Player key={i} activeTrack={playerPaths[i][0]} effects={playerPaths[i][1]} playing={this.state.playing}/>
+                    const newPlayer = <Player activeTrack={playerPaths[i][0]} key={i} effects={playerPaths[i][1]} playing={this.state.playing}/>
                     testPlayers.push(newPlayer)
                 } else {
                     const otherPlayer = <Player key={i} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
@@ -285,30 +286,30 @@ export default class Sequencer extends Component {
                 <div>
                     <div className="row">
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={0} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={1} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={2} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={3} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={4} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={5} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={6} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                         <div className="col">
-                            <Player activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                            <Player key={7} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
                         </div>
                     </div>
                 </div>
@@ -323,125 +324,17 @@ export default class Sequencer extends Component {
 
         const playerPaths = this.setTrackPath(this.state.trackSequence) //gets address of tracks
         const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
-        
-        //console.log(playersFromPlayerPaths)
         //rendered below in return statement 
-        //console.log("CURRENT TRACK SEQUENCE")
-        //console.log(this.state.trackSequence)
         //console.log(playersFromPlayerPaths.length)
         //debugger 
 
         return (
             <div>
                 <div className="container">
+                    {console.log(playersFromPlayerPaths)}
                     {playersFromPlayerPaths}
                 </div>
             </div>
         )
     }
 }
-
-
- /* --THE ABOVE SHOULD REPLACE THIS 
-        if (this.state.shapeType !== undefined ) {
-            //debugger 
-             //check on this
-            const shape = this.state.shapeType.polygon.props.type
-            debugger 
-            this.typeOfShape(shape, nextSequence, nextSong)
-            //debugger 
-        } else {
-        // checks to see if will be entering location
-            //debugger 
-            if (nextProps.shapeType !== undefined) {
-                //debugger 
-                const shape = nextProps.shapeType.polygon.props.type 
-                this.typeOfShape(shape, nextSequence, nextSong)
-                //debugger 
-                this.setState({
-                    shapeType: nextProps.shapeType,
-                })
-            } else {
-                //debugger 
-                this.setState({ 
-                    trackSequence: 
-                        {baseTrack: this.state.inBetweenTracks.baseTrack, 
-                         sequence: this.state.inBetweenTracks.sequence},
-                    shapeType: undefined 
-                })
-            }
-            //debugger 
-            //return this.state.trackSequence
-        }
-        */
-
-        /*
-        {playersFromPlayerPaths.length !== undefined &&
-            <div>
-            {playersFromPlayerPaths.map((players, index) => {
-                <div className="row" key={index}>
-                    {players}
-                </div>
-            })}
-            </div>
-        }
-        {playersFromPlayerPaths == undefined && 
-            <div>
-                <h3>here</h3>
-            {playersFromPlayerPaths}
-            </div>
-        } 
-        */
-
-/*
-
-
-
-return (
-            <div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col">
-                            <div className='player-wrapper'>
-                                <Player 
-                                    activeTrack={this.state.activeTrack}  //i don't think i wnat this here after all.... 
-                                    //allTracks={this.state.preloadedTracks} 
-                                    effects={this.state.effects} 
-                                    playing={this.state.playing}
-                                    trackSequence={this.state.trackSequence}
-                                />
-                            </div>
-                        </div>
-                        <div className="col">
-                        <div className='player-wrapper2'>
-                            <Player2 sounds={this.state.sounds} />
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-
-///
-
-        //not sure what of the below i'm keeping !!!!!1 
-        
-        /*
-        const newTrackSequence = Object.assign([], this.state.trackSequence)
-       // console.log(prevState) // for in-line if statement for setting state... 
-        
-        if (nextProps.addTrack) {
-            debugger 
-            console.log(nextProps.addTrack)
-            newTrackSequence.push(nextProps.addTrack)
-            this.setState({ sequence: newTrackSequence })
-        }
-        if (nextProps.activeTrack !== this.state.activeTrack) {
-            //debugger
-            this.setState({ 
-                activeTrack: nextProps.activeTrack,
-                shapeType: nextProps.shapeType 
-            })
-        }
-
-*/
