@@ -48,6 +48,7 @@ class App extends Component {
     this.nowPlaying = this.nowPlaying.bind(this)
     this.stopPlayingTest = this.stopPlayingTest.bind(this)
     this.startPlayer1 = this.startPlayer1.bind(this)
+    this.upSpeed = this.upSpeed.bind(this)
 
     //console.log(" got here ")
     //debugger 
@@ -74,6 +75,13 @@ class App extends Component {
     this.setsTrack(polygonActive, effects)
   }
 
+  upSpeed(durationEffects) {
+    if (durationEffects.duration > 0) {
+      debugger //NOTES! HOW EFFECTS ARE SET IN SEQUENCER NEEDS TO CHANGE
+      //ALSO, DURATION AND VOLUME? MAYBE IN SAME OBJECT? I DUNNO!
+    }
+  }
+
   setsTrack(polygonActive, effects) {
     //will: erase sequence (right?), start new track-base 
     //what if anything to do about effects
@@ -96,8 +104,6 @@ class App extends Component {
         playing: true, 
       })
     }
-
-    
   }
 
   /*
@@ -148,7 +154,7 @@ class App extends Component {
             effects={this.state.effects}
             playing={this.state.playing}
             sounds={this.state.sounds}
-            
+            durationEffects={this.state.durationEffects}
           />
         </div>
         <div className="map">
@@ -160,6 +166,7 @@ class App extends Component {
             stopPlayingTest={this.stopPlayingTest}
             startPlayer1={this.startPlayer1}
             startPlayer2={this.startPlayer2}
+            upSpeed={this.upSpeed}
           />
         </div>
       </div>

@@ -25,10 +25,11 @@ export default class LocationChcker extends Component {
             startPlayer2: this.props.startPlayer2,
             timer: false,
             inShape: undefined, 
-            durationEffects: {duration: undefined, shape: undefined, playbackRate: undefined}, //for playback rate 
+            durationEffects: {duration: undefined, shape: undefined, playbackRate: 1}, //for playback rate 
             shapesList: {polygons: this.props.polygons, circles: this.props.circles,   
                  rectangles: this.props.rectangles},
             shapeTypeLocation: undefined,
+            upSpeed: this.props.upSpeed,
         }
 
     }
@@ -230,10 +231,16 @@ export default class LocationChcker extends Component {
                 //debugger 
                 const newDurationEffects = Object.assign({}, this.state.durationEffects)
                 newDurationEffects.duration = durationToSeconds 
-                this.setState({ 
-                    durationEffects: newDurationEffects,
-                })
-                //debugger 
+                newDurationEffects.playbackRate = this.state.durationEffects.playbackRate + 1 
+                console.log(newDurationEffects.playbackRate)
+                if (newDurationEffects.playbackRate > 5) {
+                    debugger //it's been 12 seconds and now what? also hoist speed
+                } else {
+                    this.state.upSpeed(newDurationEffects)
+                    this.setState({ 
+                        durationEffects: newDurationEffects,
+                    })
+                }
             }
         }
     }

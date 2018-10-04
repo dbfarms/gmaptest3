@@ -13,7 +13,7 @@ export default class Sequencer extends Component {
 
         this.state = {
             trackSequence: {baseTrack: undefined, sequence: []}, //for player1? when circle is hit, it adds a sequence from the track
-            effectsSequence: [], //for player2? is this a sequence?
+           // effectsSequence: [], //for player2? is this a sequence?
             activeTrack: undefined, //this will be from sequence, not from state unless i want to set state... ?
             activeSequence: undefined,
             //baseTrack: undefined, //still need to get this from locationChecker 

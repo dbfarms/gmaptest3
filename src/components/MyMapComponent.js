@@ -117,6 +117,7 @@ export default class MyFancyComponent extends React.PureComponent {
       stopPlayingTest: this.props.stopPlayingTest,
       startPlayer1: this.props.startPlayer1,
       startPlayer2: this.props.startPlayer2,
+      upSpeed: this.props.upSpeed,
     }
   }
 
@@ -812,6 +813,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     rectangles={this.state.rectangles}
                     circles={this.state.circles}
                     polylines={this.state.polylines}
+                    upSpeed={this.state.upSpeed}
                   />
                 </div>
                 <div className="col-sm-">
