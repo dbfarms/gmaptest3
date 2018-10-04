@@ -31,7 +31,7 @@ export default class Sequencer extends Component {
                               effects: {volume: 0.5, playbackRate: 1, loop: true}}, 
                               {track: 'something_else_maybe', 
                               effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
-            effects: {volume: 0.5, playbackRate: 1, loop: false}, //is this redundant or what!?
+            effects: {volume: 0.5, playbackRate: 1, loop: true}, //is this redundant or what!?
             playing: this.props.playing,
             playIndex: 0,
             addTrack: this.props.addTrack, //i don't think this does anything? not sure

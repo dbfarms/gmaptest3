@@ -51,27 +51,43 @@ export default class Timer extends React.Component {
     
     
     if (inShape !== undefined) {
-        if (latestShape !== inShape) {
-          //// this will check if the latestShape you're in is no longer the same shape you had been in
-          //debugger
-          console.log("new shape, resetting (allegedly) durationStart")
-         
-          this.setState({
-            durationStart: this.state.elapsed,
-            latestShape: inShape 
-          })
-        } else {
-          //still in shape... checks and hoists
-          console.log("same shape")
-          const durationInShape = this.state.elapsed - this.state.durationStart 
-          //debugger 
-          //console.log(duration)
-          if (duration > 1) {
-            //maybe this should be if baseTrack is the same and duration in shape is only for certain shapes, like circles, not polygons
-            this.state.getDuration(latestShape, durationInShape)
-          }
+      if (latestShape !== inShape) {
+        //// this will check if the latestShape you're in is no longer the same shape you had been in
+        //debugger
+        console.log("new shape, resetting (allegedly) durationStart")
+        
+        this.setState({
+          durationStart: this.state.elapsed,
+          latestShape: inShape 
+        })
+      } else {
+        //still in shape... checks and hoists
+        console.log("same shape")
+        const durationInShape = this.state.elapsed - this.state.durationStart 
+        //debugger 
+        //console.log(duration)
+        if (durationInShape > 1) {
+          //maybe this should be if baseTrack is the same and duration in shape is only for certain shapes, like circles, not polygons
+          this.state.getDuration(latestShape, durationInShape)
         }
-    } 
+      }
+    } else {
+      console.log("out of shape")
+      if (this.state.latestShape !== undefined ) {
+        this.setState({
+          durationStart: this.state.elapsed,
+          latestShape: undefined,
+        })
+      } else {
+        const durationInShape = this.state.elapsed - this.state.durationStart 
+        //debugger 
+        //console.log(durationInShape)
+        if (durationInShape % 3 === 0) {
+          //maybe this should be if baseTrack is the same and duration in shape is only for certain shapes, like circles, not polygons
+          this.state.getDuration(latestShape, durationInShape)
+        }
+      }
+    }
       
 
     return (

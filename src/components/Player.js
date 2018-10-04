@@ -39,7 +39,7 @@ class Player extends Component {
       loaded: 0,
       duration: 0,
       playbackRate: this.props.effects.playbackRate, //1.0,
-      loop: this.props.effects.loop, //false,
+      loop: this.props.effects.loop, //
       activeTrack: this.props.activeTrack,
       //allTracks: this.props.allTracks, //
       stopPlayingTest: this.props.stopPlayingTest,

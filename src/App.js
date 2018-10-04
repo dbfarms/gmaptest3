@@ -40,7 +40,7 @@ class App extends Component {
                        effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
       shapeType: undefined,
       activeTrack: undefined,
-      effects: {volume: 0.5, playbackRate: 1, loop: false},
+      effects: {volume: 0.5, playbackRate: 1, loop: true},
       playing: true,
       playing2: false,
     }
