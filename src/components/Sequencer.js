@@ -70,6 +70,7 @@ export default class Sequencer extends Component {
             nextSong = nextProps.shapeType.trackSequence.baseTrack
             this.typeOfShape(shape, nextSequence, nextSong)
         } else { //checks to see if you will be exiting state
+            debugger 
             this.setState({ 
                 trackSequence: 
                     {baseTrack: this.state.inBetweenTracks.baseTrack, 

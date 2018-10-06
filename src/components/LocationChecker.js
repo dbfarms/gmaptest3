@@ -25,7 +25,7 @@ export default class LocationChcker extends Component {
             startPlayer2: this.props.startPlayer2,
             timer: false,
             inShape: undefined, 
-            durationEffects: {duration: undefined, shape: undefined, playbackRate: 1}, //for playback rate 
+            durationEffects: {duration: 0, shape: undefined, playbackRate: 1}, //for playback rate 
             shapesList: {polygons: this.props.polygons, circles: this.props.circles,   
                  rectangles: this.props.rectangles},
             shapeTypeLocation: undefined,
@@ -112,6 +112,7 @@ export default class LocationChcker extends Component {
             //that is to say see console.log of what it looks like with effects and other stuff? 
             //though not totally necessary I guess
             //just more like, pattern-like?
+            //also in the case the tracks change for not-in-shape
 
             this.setState({
                 inShape: undefined //can move all that stuff here 
@@ -219,7 +220,8 @@ export default class LocationChcker extends Component {
         //debugger 
         const durationToSeconds = duration/1000
         console.log(latestShape)
-        console.log(duration)
+        //console.log(this.state.durationEffects.duration)
+        //console.log(durationToSeconds)
         if (latestShape !== undefined ) {
             if (durationToSeconds >= latestShape.trackEffects.duration) {
                 //hoist to Player
@@ -231,8 +233,9 @@ export default class LocationChcker extends Component {
                 //debugger 
                 const newDurationEffects = Object.assign({}, this.state.durationEffects)
                 newDurationEffects.duration = durationToSeconds 
+                //console.log(this.state.durationEffects)
                 newDurationEffects.playbackRate = this.state.durationEffects.playbackRate + 1 
-                console.log(newDurationEffects.playbackRate)
+                //console.log(newDurationEffects.playbackRate)
                 if (newDurationEffects.playbackRate > 5) {
                     debugger //it's been 12 seconds and now what? also hoist speed
                 } else {

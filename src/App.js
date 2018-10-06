@@ -1,15 +1,5 @@
-/*
-  notes: 
-  polygons change track? trigger next sequence?
-  rectanges add to sequence?
-  circles do what?
-  markers should be new songs altogether? mark of progress?
-
-*/
-
 import React, { Component } from 'react';
 
-//import MyMapComponent from './components/MyMapComponent';
 import './App.css';
 import MyFancyComponent from './components/MyMapComponent';
 import Sequencer from './components/Sequencer';
@@ -50,24 +40,15 @@ class App extends Component {
     this.startPlayer1 = this.startPlayer1.bind(this)
     this.upSpeed = this.upSpeed.bind(this)
 
-    //console.log(" got here ")
-    //debugger 
     navigator.geolocation.getCurrentPosition(position => {
-      //debugger 
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}
-      //debugger 
       console.log(geoLoc)
       this.setState({
         geoLoc: geoLoc
       })
       
     });
-  }
-
-
-  componentWillReceiveProps(nextProps){
-    //console.log(nextProps)
   }
 
   nowPlaying = (polygonActive, effects) => { //poorly named, should be something like hitsCue and then determines what to do based on that
@@ -89,25 +70,24 @@ class App extends Component {
     //debugger 
     if (polygonActive !== undefined ) {
       this.setState({
-        activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
-        activeSquence: polygonActive.trackSequence.tracks,
+        //activeTrack: polygonActive.trackSequence.baseTrack, //will also erase sequence but haven't done that yet
+        //activeSquence: polygonActive.trackSequence.tracks,
         shapeType: polygonActive, //for sequencer case statement 
         //effects: effects, //setting effects now its own function though not hooked up yet
         playing: true,
       })
     } else {
       this.setState({
-        activeTrack: this.state.inBetweenTracks.baseTrack, //is this right? no i don't think so
-        activeSquence: this.state.inBetweenTracks.sequence,
+        //activeTrack: this.state.inBetweenTracks.baseTrack, //is this right? no i don't think so
+        //activeSquence: this.state.inBetweenTracks.sequence,
         shapeType: undefined,
-        effects: this.state.inBetweenTracks.effects, // probably needs to come from somewehre else
+        effects: this.state.effects, //inBetweenTracks.effects, // probably needs to come from somewehre else
         playing: true, 
       })
     }
   }
 
   /*
-
   setsSequence(track){
     this.setState({
       addTrack: track,
@@ -147,10 +127,10 @@ class App extends Component {
       <div className="App">
         <div>
           <Sequencer 
-            activeTrack={this.state.activeTrack} //this will trigger only when a new track is loaded and clears(?) sequence
+            //activeTrack={this.state.activeTrack} //this will trigger only when a new track is loaded and clears(?) sequence
             shapeType={this.state.shapeType} //include shapeType so the case statement in sequencer knows what to do with new track info
             addTrack={this.state.addTrack} //this adds a track or whatever to sequence
-            allTracks={this.state.preloadedTracks} 
+            //allTracks={this.state.preloadedTracks} 
             effects={this.state.effects}
             playing={this.state.playing}
             sounds={this.state.sounds}
