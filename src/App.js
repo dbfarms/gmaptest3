@@ -23,7 +23,7 @@ class App extends Component {
                        'synth_1',
                        'synth_2',
                        'weird_swell_1']},
-      inBetweenTracks: {baseTrack: 'ticktock_song', 
+      inBetweenTracks: {baseTrack: 'ticktock_song',  //i don't think i'm using this but i gotta check
                        sequence: [{track: 'clock_ticking', 
                        effects: {volume: 0.5, playbackRate: 1, loop: true}}, 
                        {track: 'something_else_maybe', 
@@ -58,8 +58,12 @@ class App extends Component {
 
   upSpeed(durationEffects) {
     if (durationEffects.duration > 0) {
-      debugger //NOTES! HOW EFFECTS ARE SET IN SEQUENCER NEEDS TO CHANGE
-      //ALSO, DURATION AND VOLUME? MAYBE IN SAME OBJECT? I DUNNO!
+      const newEffects = this.state.effects 
+      newEffects.volume = durationEffects.volume 
+      newEffects.playbackRate = durationEffects.playbackRate
+
+      this.setState({effects: newEffects})
+      //debugger 
     }
   }
 

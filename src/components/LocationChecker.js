@@ -25,7 +25,7 @@ export default class LocationChcker extends Component {
             startPlayer2: this.props.startPlayer2,
             timer: false,
             inShape: undefined, 
-            durationEffects: {duration: 0, shape: undefined, playbackRate: 1}, //for playback rate 
+            durationEffects: {duration: 0, shape: undefined, playbackRate: 1, volume: 0.5}, //for playback rate 
             shapesList: {polygons: this.props.polygons, circles: this.props.circles,   
                  rectangles: this.props.rectangles},
             shapeTypeLocation: undefined,
@@ -113,13 +113,14 @@ export default class LocationChcker extends Component {
             //though not totally necessary I guess
             //just more like, pattern-like?
             //also in the case the tracks change for not-in-shape
+            //right now i'll keep it this way though cause it's fine mostly
 
             this.setState({
                 inShape: undefined //can move all that stuff here 
             })
             //debugger 
             const shape = undefined 
-            const effects=this.checkEffects(shape)
+            const effects=this.checkEffects(shape) //right now there are no effects for out-of-shape determined here but maybe one day
             this.state.nowPlaying(shape, effects)
             //this.state.startPlayer1(); //this is here but... maybe it should be in check location like the other one?
         }
@@ -235,6 +236,7 @@ export default class LocationChcker extends Component {
                 newDurationEffects.duration = durationToSeconds 
                 //console.log(this.state.durationEffects)
                 newDurationEffects.playbackRate = this.state.durationEffects.playbackRate + 1 
+                newDurationEffects.volume = this.state.durationEffects.volume + 0.1 
                 //console.log(newDurationEffects.playbackRate)
                 if (newDurationEffects.playbackRate > 5) {
                     debugger //it's been 12 seconds and now what? also hoist speed
