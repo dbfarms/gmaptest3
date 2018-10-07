@@ -62,7 +62,7 @@ class App extends Component {
       newEffects.volume = durationEffects.volume 
       newEffects.playbackRate = durationEffects.playbackRate
 
-      this.setState({effects: newEffects})
+      this.setState({effects: newEffects}) //right now this will affect all players, perhaps one day it should be based on each track?
       //debugger 
     }
   }

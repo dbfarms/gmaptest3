@@ -70,6 +70,17 @@ export default class Sequencer extends Component {
             nextSong = nextProps.shapeType.trackSequence.baseTrack
             this.typeOfShape(shape, nextSequence, nextSong)
         } else { //checks to see if you will be exiting state
+            //debugger  
+
+            //sets effects for each individual track to overall effects.. 
+            //keeping it this way in case i eventually do want each track to be affected differently.. which I think I do
+            const newInBetweenTracks = Object.assign({}, this.state.inBetweenTracks)
+            for (let i=0; i<this.state.inBetweenTracks.sequence.length - 1 ; i++) {
+                //debugger 
+                newInBetweenTracks.sequence[i].effects = this.state.effects
+            }
+            //does NOT set state for each individual track of inBetweenTracks, just in trackSequence. for now anyway
+
             //debugger 
             this.setState({ 
                 trackSequence: 
