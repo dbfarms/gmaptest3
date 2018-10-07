@@ -239,7 +239,11 @@ export default class LocationChcker extends Component {
                 newDurationEffects.volume = this.state.durationEffects.volume + 0.1 
                 //console.log(newDurationEffects.playbackRate)
                 if (newDurationEffects.playbackRate > 5) {
-                    debugger //it's been 12 seconds and now what? also hoist speed
+                    console.log("out of time, now what?")
+                    //reset effects? 
+                    //end game?
+                    //it's been 12 seconds, so what now?
+                    //debugger 
                 } else {
                     this.state.upSpeed(newDurationEffects)
                     this.setState({ 

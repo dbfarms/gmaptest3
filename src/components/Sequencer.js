@@ -36,6 +36,7 @@ export default class Sequencer extends Component {
             playIndex: 0,
             addTrack: this.props.addTrack, //i don't think this does anything? not sure
             shapeType: undefined,
+            baseTrack: undefined,
         }
     }
 
@@ -62,7 +63,12 @@ export default class Sequencer extends Component {
         if (nextProps.shapeType !== undefined ) { //checks to see if you will be in shape 
             
             if (this.state.shapeType !== nextProps.shapeType) { //sets state for shapeType if needed
-                this.setState({ shapeType: nextProps.shapeType})
+                this.setState({ shapeType: nextProps.shapeType,
+                                trackSequence: 
+                                    {baseTrack: nextProps.shapeType.trackSequence.baseTrack, 
+                                    sequence: nextProps.shapeType.trackSequence.tracks},
+                
+                })
             }
 
             shape = nextProps.shapeType.polygon.props.type //works with polygons, not sure about other shapes 
@@ -230,6 +236,7 @@ export default class Sequencer extends Component {
                                         activeTrack={player[0]}  // 
                                         effects={player[1]} //this will be more specific to the part i think
                                         playing={this.state.playing}
+                                        trackSequence={this.state.trackSequence} 
                                     />
                                 </div>
                             </div>
@@ -253,10 +260,19 @@ export default class Sequencer extends Component {
             for (let i = 0; i < 8; i++) {
                 //console.log(playerPaths[i])
                 if (playerPaths[i] !== undefined ) {
-                    const newPlayer = <Player activeTrack={playerPaths[i][0]} key={i} effects={playerPaths[i][1]} playing={this.state.playing}/>
+                    const newPlayer = <Player trackSequence={this.state.trackSequence} 
+                                              activeTrack={playerPaths[i][0]} 
+                                              key={i} 
+                                              effects={playerPaths[i][1]} 
+                                              playing={this.state.playing}/>
+                    //console.log(playerPaths[i])
                     testPlayers.push(newPlayer)
                 } else {
-                    const otherPlayer = <Player key={i} activeTrack={undefined} effects={this.state.effects} playing={undefined}/>
+                    const otherPlayer = <Player trackSequence={this.state.trackSequence} 
+                                                key={i} 
+                                                activeTrack={undefined} 
+                                                effects={this.state.effects} 
+                                                playing={undefined}/>
                     testPlayers.push(otherPlayer)
                 }
             }
@@ -294,6 +310,7 @@ export default class Sequencer extends Component {
                 </div>
             )
         } else {
+            //debugger 
             return (
                 <div>
                     <div className="row">

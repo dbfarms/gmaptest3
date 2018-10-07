@@ -13,7 +13,7 @@ import ReactPlayer from 'react-player' //'../ReactPlayer'
 
 import Duration from './Duration'
 
-//keep imports below otherwise it don't work!
+//keep imports below otherwise it don't work! ////////////////////////////
 import drums_2 from '../jams/shaynasong/drums_2.mp3' ///  
 import drums_3 from '../jams/shaynasong/drums_3.mp3'
 import drums_main from '../jams/shaynasong/drums_main.mp3'
@@ -24,6 +24,7 @@ import synth_1 from '../jams/shaynasong/synth_1.mp3'
 import synth_2 from '../jams/shaynasong/synth_2.mp3'
 import weird_swell_1 from '../jams/shaynasong/weird_swell_1.mp3'
 import clock_ticking from '../jams/clock_ticking.mp3';
+/////////////////////////////////////////////////////////
 
 class Player extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class Player extends Component {
       activeTrack: this.props.activeTrack,
       //allTracks: this.props.allTracks, //
       stopPlayingTest: this.props.stopPlayingTest,
-      trackSequence: this.props.sequence,
+      trackSequence: this.props.trackSequence,
       playIndex: null,
       effects: this.props.effects,
       key: this.props.key,
@@ -84,25 +85,40 @@ class Player extends Component {
       //key not passing down in props for some reason... 
     }
 
-    if (nextProps.activeTrack !== undefined) { 
+    if (nextProps.activeTrack !== undefined) {  
       //debugger 
       const trackPath = nextProps.activeTrack //this.setTrackPath(nextProps.activeTrack); // this gets teh actual file path for the track
       //console.log(trackPath)
-      if (trackPath !== this.state.activeTrack || this.state.playing === false) {
+      if (trackPath !== this.state.activeTrack ) { // || this.state.playing === false) {
         //debugger 
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
           playing: true,
-          //volume: nextProps.effects.volume //this ain't working but prob changing how it's done anyway so fine
+          volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
+          playbackRate: nextProps.effects.playbackRate,
+          trackSequence: nextProps.trackSequence,
         })
+      } else { //this means trackPath === this.state.activeTrack 
+        if (nextProps.trackSequence.baseTrack === "ticktock_song") {
+          this.setState({
+            //activeTrack: trackPath,
+            //url: trackPath,
+            //playing: true,
+            volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
+            playbackRate: nextProps.effects.playbackRate,
+          })
+        }
       }
-    } else {
-      //if nextProps.activeTrack does equal undefined, does it matter?
+    } else { //if nextProps.actieTrack does equal undefined, none of the below needs to be updated 
+      //debugger 
+      
       this.setState({
         activeTrack: undefined,
         url: undefined,
         playing: false, 
+        volume: nextProps.effects.volume,
+        playbackRate: nextProps.effects.playbackRate,
       })
     }
 
@@ -168,9 +184,9 @@ class Player extends Component {
 
     if (this.state.loop) {
       this.setState({ playing: this.state.loop })
-    } else if (this.state.sequence) {
+    } else if (this.state.trackSequence) {
       const index = this.state.playIndex 
-      const url = this.state.sequence[index]
+      const url = this.state.trackSequence[index]
       this.setState({
         url,
         played: 0,
