@@ -127,6 +127,7 @@ export default class LocationChcker extends Component {
                 debugger 
                 this.state.nowPlaying(shape, effects)
             }
+            this.state.nowPlaying(shape, effects)
             
             //this.state.startPlayer1(); //this is here but... maybe it should be in check location like the other one?
         }

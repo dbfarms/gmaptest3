@@ -97,7 +97,8 @@ class Player extends Component {
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
-          playing: true,
+          playing: true, // does not inherit props on this because why should it? excess code in sequencer 
+          //and app can be deleted that pass these props to children 
           volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
           playbackRate: nextProps.effects.playbackRate,
           trackSequence: nextProps.trackSequence,
@@ -107,7 +108,7 @@ class Player extends Component {
           this.setState({
             //activeTrack: trackPath,
             //url: trackPath,
-            //playing: true,
+            playing: true,
             volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
             playbackRate: nextProps.effects.playbackRate,
           })

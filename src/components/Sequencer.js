@@ -29,14 +29,14 @@ export default class Sequencer extends Component {
             inBetweenTracks: {baseTrack: 'ticktock_song', 
                               sequence: [{track: 'clock_ticking', 
                               effects: {volume: 0.5, playbackRate: 1, loop: true}}, 
-                              {track: 'something_else_maybe', 
+                              {track: 'footsteps_on_fallen_leaves', 
                               effects: {volume: 0.5, playbackRate: 1, loop: true}}]}, //, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}
             effects: this.props.effects, //{volume: 0.5, playbackRate: 1, loop: true}, //is this redundant or what!?
             playing: this.props.playing,
             playIndex: 0,
             addTrack: this.props.addTrack, //i don't think this does anything? not sure
             shapeType: undefined,
-            baseTrack: undefined,
+            //baseTrack: undefined,
         }
     }
 
@@ -61,12 +61,12 @@ export default class Sequencer extends Component {
         let nextSong = undefined 
         let shape = undefined 
         if (nextProps.shapeType !== undefined ) { //checks to see if you will be in shape 
-            
             if (this.state.shapeType !== nextProps.shapeType) { //sets state for shapeType if needed
                 this.setState({ shapeType: nextProps.shapeType,
                                 trackSequence: 
                                     {baseTrack: nextProps.shapeType.trackSequence.baseTrack, 
                                     sequence: nextProps.shapeType.trackSequence.tracks},
+                                playing: nextProps.playing,
                 
                 })
             }
@@ -76,22 +76,22 @@ export default class Sequencer extends Component {
             nextSong = nextProps.shapeType.trackSequence.baseTrack
             this.typeOfShape(shape, nextSequence, nextSong)
         } else { //checks to see if you will be exiting shape
-            debugger   //HERE- sound design, listen to clock tick and figure out what else is needed
+            //debugger   //HERE- sound design, listen to clock tick and figure out what else is needed
 
             //sets effects for each individual track to overall effects.. 
             //keeping it this way in case i eventually do want each track to be affected differently.. which I think I do
             const newInBetweenTracks = Object.assign({}, this.state.inBetweenTracks)
-            for (let i=0; i<this.state.inBetweenTracks.sequence.length - 1 ; i++) {
+            for (let i=0; i<this.state.inBetweenTracks.sequence.length-1 ; i++) {
                 //debugger 
                 newInBetweenTracks.sequence[i].effects = this.state.effects
             }
-            //does NOT set state for each individual track of inBetweenTracks, just in trackSequence. for now anyway
-
             //debugger 
+            //does NOT set state for each individual track of inBetweenTracks, just in trackSequence. for now anyway
             this.setState({ 
                 trackSequence: 
                     {baseTrack: this.state.inBetweenTracks.baseTrack, 
                      sequence: this.state.inBetweenTracks.sequence},
+                     playing: nextProps.playing,
             })
             //debugger 
         }

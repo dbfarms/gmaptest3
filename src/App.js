@@ -31,7 +31,7 @@ class App extends Component {
       shapeType: undefined,
       activeTrack: undefined,
       effects: {volume: 0.5, playbackRate: 1, loop: true},
-      playing: true,
+      playing: false,
       playing2: false,
     }
 
@@ -56,17 +56,6 @@ class App extends Component {
     this.setsTrack(polygonActive, effects)
   }
 
-  upSpeed(durationEffects) {
-    if (durationEffects.duration > 0) {
-      const newEffects = this.state.effects 
-      newEffects.volume = durationEffects.volume 
-      newEffects.playbackRate = durationEffects.playbackRate
-
-      this.setState({effects: newEffects}) //right now this will affect all players, perhaps one day it should be based on each track?
-      //debugger 
-    }
-  }
-
   setsTrack(polygonActive, effects) {
     //will: erase sequence (right?), start new track-base 
     //what if anything to do about effects
@@ -81,6 +70,7 @@ class App extends Component {
         playing: true,
       })
     } else {
+      //debugger
       this.setState({
         //activeTrack: this.state.inBetweenTracks.baseTrack, //is this right? no i don't think so
         //activeSquence: this.state.inBetweenTracks.sequence,
@@ -88,6 +78,18 @@ class App extends Component {
         effects: this.state.effects, //inBetweenTracks.effects, // probably needs to come from somewehre else
         playing: true, 
       })
+    }
+  }
+
+
+  upSpeed(durationEffects) {
+    if (durationEffects.duration > 0) {
+      const newEffects = this.state.effects 
+      newEffects.volume = durationEffects.volume 
+      newEffects.playbackRate = durationEffects.playbackRate
+
+      this.setState({effects: newEffects}) //right now this will affect all players, perhaps one day it should be based on each track?
+      //debugger 
     }
   }
 
