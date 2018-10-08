@@ -35,7 +35,7 @@ shapes:
 -POLYGONS 
   -random assortment of tracks from specific baseTrack
 -CIRCLES
-  effects
+  effects / challenges / obstacles to avoid / speeds up timer or something or else... i dunno 
 -SQUARES
   transitions? must exist between two polygons? so have them automatically added some space before getting to one or that doesn't
   make sense actually

@@ -75,8 +75,8 @@ export default class Sequencer extends Component {
             nextSequence = nextProps.shapeType.trackSequence.tracks 
             nextSong = nextProps.shapeType.trackSequence.baseTrack
             this.typeOfShape(shape, nextSequence, nextSong)
-        } else { //checks to see if you will be exiting state
-            //debugger  
+        } else { //checks to see if you will be exiting shape
+            debugger   //HERE- sound design, listen to clock tick and figure out what else is needed
 
             //sets effects for each individual track to overall effects.. 
             //keeping it this way in case i eventually do want each track to be affected differently.. which I think I do
@@ -176,6 +176,8 @@ export default class Sequencer extends Component {
                     switch(track.track) {
                         case("clock_ticking"): 
                             return ["/static/media/clock_ticking.018d1ec5.mp3", track.effects]
+                        case("footsteps_on_fallen_leaves"):
+                            return ["/static/media/footsteps_on_fallen_leaves.e4c17d10.mp3", track.effects]
                         default: 
                             break 
                     }

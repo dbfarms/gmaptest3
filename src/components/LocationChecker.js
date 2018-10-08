@@ -105,6 +105,7 @@ export default class LocationChcker extends Component {
                 inShape: polygonActive
             })
             //console.log(effects)
+            //debugger 
             this.state.nowPlaying(polygonActive, effects)
         } else {
             //not in a polygon
@@ -121,7 +122,12 @@ export default class LocationChcker extends Component {
             //debugger 
             const shape = undefined 
             const effects=this.checkEffects(shape) //right now there are no effects for out-of-shape determined here but maybe one day
-            this.state.nowPlaying(shape, effects)
+            
+            if (this.state.durationEffects.duration > 0) {
+                debugger 
+                this.state.nowPlaying(shape, effects)
+            }
+            
             //this.state.startPlayer1(); //this is here but... maybe it should be in check location like the other one?
         }
     }
