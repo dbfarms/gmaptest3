@@ -53,7 +53,7 @@ const MyMapComponent = compose(
             }
             
             {props.markersList.map((marker, key) => {
-                return marker
+                return marker.marker
             })}
 
             {props.polygonToDraw}
@@ -121,6 +121,7 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  /*
   componentWillMount() {
     //debugger 
     //this.delayedShowMarker()
@@ -131,6 +132,7 @@ export default class MyFancyComponent extends React.PureComponent {
     //console.log(prevState)
     //console.log(props)
   }
+  */
 
   componentWillReceiveProps(nextProps){
     //console.log(this)
@@ -143,33 +145,21 @@ export default class MyFancyComponent extends React.PureComponent {
     //right now it just sets to state predetermined positions based on location
     //also it creates the polygon here though it'll have to be done elsewhere soon
     if (nextProps.geoLoc) {
-      //debugger 
-      
-      //debugger
-      
       console.log("geo loc works")
 
-
-      //debugger 
       let createTestMarker;
       let actualMarker; 
       //debugger
-      
       if (this.state.testMarker.position !== "" ) {
         //console.log("this one")
         //debugger 
         createTestMarker = this.state.testMarker
        // console.log(createTestMarker)
       } else { 
-        //(this.state.testMarker.position === "") 
-        //console.log("should only happen once")
-
         createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
         marker: "", show: false}
-
         actualMarker = <Marker 
         position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
-      
         createTestMarker.marker = actualMarker
 
         /*
@@ -194,12 +184,11 @@ export default class MyFancyComponent extends React.PureComponent {
         marker effects or something triggers? affects sequences? slows down?
         how does the above work with duration affecting sequences? 
         -success sounds?
-
         */ 
 
-        //debugger 
-        //const testLatLng = props.google.maps.geometry.poly.containsLocation( actualMarker.latLng, this.state.markers[0].polygonObject.props.getPath())
-        //const thisWork = actualMarker.props.lat(actualMarker.props.position.lat)
+        //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
+        //so maybe you want to make that something else and keep this.state.markers what is at
+
         let markerListHere = []
         for (let i = 0; i<5; i++) {
           let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
@@ -226,8 +215,14 @@ export default class MyFancyComponent extends React.PureComponent {
             ];
           }
 
+          const marker = <Marker 
+              name={"marker" + i}
+              position={{lat: newMarker[0], lng: newMarker[1]}}
+              //onClick={this.onMarkerClick.bind(this)}
+              key={i}
+            />
           markerObject.polygonCoords = polygonCoordsSketch
-          markerListHere.push(markerObject)
+          markerListHere.push({marker: marker, polygon: markerObject})
         }
 
         /*
@@ -245,14 +240,12 @@ export default class MyFancyComponent extends React.PureComponent {
         ]
         //console.log(testPolyLine)
         //console.log(createTestMarker)
-
-
+        //debugger 
         this.setState ({
           markers: markerListHere,
           polylines: testPolyLine,
           testMarker: createTestMarker
         })
-
       }
     }
   }
@@ -485,11 +478,14 @@ export default class MyFancyComponent extends React.PureComponent {
     debugger 
   }
 
+  /*
   setMarkersNow = () => {
+    debugger 
     const markers = this.state.markers.map((marker, key)=> {
       //console.log(marker)
       return (
         <Marker 
+          name={"marker" + key}
           position={{lat: marker.position[0], lng: marker.position[1]}}
           //onClick={this.onMarkerClick.bind(this)}
           key={key}
@@ -497,8 +493,10 @@ export default class MyFancyComponent extends React.PureComponent {
         />
       )
     })
+    //debugger 
     return markers 
   }
+  */
 
   onMarkerClick = (props, marker, e) => {
 
@@ -524,7 +522,6 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   bindRef = (ref) => {
-
     //debugger 
 
     this.ref = ref
@@ -536,9 +533,10 @@ export default class MyFancyComponent extends React.PureComponent {
       //debugger 
       for (let i=0; i < addedPolygonMarkers.length; i++) {
         if (i === ref.props.id) {
-          addedPolygonMarkers[i].polygonObject = ref 
+          //debugger //haven't checked the below yet with the new this.state.markers
+          addedPolygonMarkers[i].polygon.polygonObject = ref //this line might be unnecessary...?
 
-          if (this.state.markers[i] !== addedPolygonMarkers[i]) {
+          if (this.state.markers[i] !== addedPolygonMarkers[i]) { //this 
             this.setState({
               markers: addedPolygonMarkers
             })
@@ -554,7 +552,7 @@ export default class MyFancyComponent extends React.PureComponent {
     //i think e is where i clicked, so probably can get rid of it
     
     const editingId = props.id; 
-    const editedPolygon = this.state.markers[editingId]
+    const editedPolygon = this.state.markers[editingId] //need to update this to reflect new this.state.markers
     const polygon = this 
     //console.log(editingId)
     //console.log(props)
@@ -630,8 +628,9 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   setPolygonsNow = () => {
+    //debugger 
     const polygonsDrawn = this.state.markers.map((polygon, key) => {
-
+      //debugger 
       const type="polygons"
       const newRef = this.bindRef.bind(this) 
       //console.log(newRef)
@@ -641,8 +640,8 @@ export default class MyFancyComponent extends React.PureComponent {
         ref={newRef}
         type={type}
         //ref={key}
-        path={polygon.polygonCoords}
-        paths={polygon.polygonCoords}
+        path={polygon.polygon.polygonCoords}
+        paths={polygon.polygon.polygonCoords}
         strokeColor="#0000FF"
         strokeOpacity={0.8}
         strokeWeight={2}
@@ -662,16 +661,12 @@ export default class MyFancyComponent extends React.PureComponent {
       //- how would sequence work? it would be associated with a set of 
       //meh come back to this later
       
-      
       // how should effectsList operate? 
       //check for the following
       //number of times in polygon(?) 
       //duration in polygon
       //sequence(?)
       //then have in Player(#?) what will happen 
-      
-
-      //debugger 
 
       return (newPolygon)
     })
@@ -735,6 +730,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   setPolygonState(polygonList){
+    //debugger 
     if (this.state.polygons.length === 0) {
       this.setState({
         polygons: polygonList
@@ -771,7 +767,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //debugger 
     if (this.state.markers.length > 0) {
-      markersList = this.setMarkersNow();
+      //markersList = this.setMarkersNow();
       polygonList = this.setPolygonsNow(); 
       //debugger 
       polygonList.forEach(polygon => {
@@ -789,10 +785,9 @@ export default class MyFancyComponent extends React.PureComponent {
       //debugger 
       console.log("geoloc not updating")
     }
-
     
     const showingDeets = this.showShapeMenuDeets() //apparently this isn't being used?
-
+    //if (this.state.markers.length >0) debugger 
     return (
         <div>
             <br />
@@ -808,7 +803,8 @@ export default class MyFancyComponent extends React.PureComponent {
                     stopPlayingTest={this.state.stopPlayingTest}
                     startPlayer1={this.state.startPlayer1}
                     startPlayer2={this.state.startPlayer2}
-                    markers={this.state.markers}
+                    markers={this.state.markers} 
+                    //keeping the below because LocationChecker sets shapesList in comonentwillreceiveprops 
                     polygons={this.state.polygons} 
                     rectangles={this.state.rectangles}
                     circles={this.state.circles}
@@ -839,7 +835,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     onMarkerClick={this.handleMarkerClick}
                     onClick={this.handleMapClick} // doesn't work 
                     geoLoc={this.props.geoLoc}
-                    markersList={markersList}
+                    markersList={this.state.markers}
                     polygonToDraw={polygonToDraw}
                     onDrawingComplete={this.handleDrawingComplete}
                     circleList={this.state.circles}

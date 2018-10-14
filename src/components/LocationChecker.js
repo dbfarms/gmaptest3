@@ -17,6 +17,7 @@ export default class LocationChcker extends Component {
             move: {dir: undefined, distance: undefined},
             marker: this.props.marker,
             markers: this.props.markers,
+            polygons: this.props.polygons,
             polylines: this.props.polylines,
             nowPlaying: this.props.nowPlaying,
             updateMap: this.props.updateMap,
@@ -36,7 +37,7 @@ export default class LocationChcker extends Component {
 
     componentWillReceiveProps(nextProps) {
         //console.log(this.state.marker)
-        //console.log(nextProps)
+        console.log(nextProps)
         //debugger 
         const newShapesList = Object.assign({}, this.state.shapesList)
         newShapesList.polygons = nextProps.polygons
@@ -123,14 +124,73 @@ export default class LocationChcker extends Component {
             const shape = undefined 
             const effects=this.checkEffects(shape) //right now there are no effects for out-of-shape determined here but maybe one day
             
+            /*
             if (this.state.durationEffects.duration > 0) {
                 debugger 
                 this.state.nowPlaying(shape, effects)
             }
+            */ 
+
             this.state.nowPlaying(shape, effects)
-            
-            //this.state.startPlayer1(); //this is here but... maybe it should be in check location like the other one?
         }
+
+        this.distanceToNearestMarker(latNow, lngNow)
+    }
+
+    distanceToNearestMarker(latNow, lngNow){
+        //this just checks to nearest marker, maybe one day i'll wnat to get distance to all
+        //also maybe change to polygons instead
+
+        /*
+// in this case set offset to 1 otherwise the nearest point will always be your reference point
+geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
+        */
+
+        //debugger 
+        const markers = {}
+        //const markers = 
+        this.state.markers.map((marker, key) => {
+            //debugger 
+            if (key > 0) { //marker at key 0 at present is geoLoc
+                //debugger 
+                Object.assign(markers, {[marker.marker.props.name]: {latitude: marker.marker.props.position.lat, 
+                    longitude: marker.marker.props.position.lng}})
+
+                //return {[marker.marker.props.name]: {latitude: marker.marker.props.position[0], 
+                                                    // longitude: marker.marker.props.position[1]}}
+            } else {
+                Object.assign(markers, {"here": {latitude: latNow, longitude: lngNow}})
+                //return {"here": {latitude: latNow, longitude: lngNow}}
+            }
+        }) 
+
+        /*
+        const spots = {"test1": {latitude: markers[1].position[0], longitude: markers[1].position[1]},
+        "test2": {latitude: markers[2].position[0], longitude: markers[2].position[1]},
+        "test3": {latitude: markers[3].position[0], longitude: markers[3].position[1]},
+        "test4": {latitude: markers[4].position[0], longitude: markers[4].position[1]},
+                     }
+                     */
+        
+                     //debugger 
+        //debugger 
+        const test = geolib.findNearest(markers['here'], markers, 1)
+
+        debugger //here - this.state.markers is changed in compwillreceiveprops in MyMapComponent, fix that
+
+        const markerLatLngs = this.state.markers.map((marker, key) => {
+            if (key > 0) { //marker at key 0 at present is geoLoc
+                return {[key]: {latitude: marker.position[0], longitude: marker.position[1]}}
+                //debugger 
+            } else {
+                return {[key]: {latitude: latNow, longitude: lngNow}}
+            }
+        })
+
+        //debugger 
+        //                    geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
+        const closestMarker = geolib.findNearest(markerLatLngs['0'], markerLatLngs, 1)
+        debugger
     }
 
     checkEffects(polygon) {
@@ -141,16 +201,8 @@ export default class LocationChcker extends Component {
                 this.state.marker.position,
                 center
             );
-
-            const bounds = geolib.getBounds(polygon.polygon.props.path)
             let effectsSet = this.state.effects //{volume: 0.5, playbackRate: 1.0, loop: false}
-            //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
-            //accordingly?
-
-            /// how should check effects work here?
-            // 1) squares
-            // 2) 
-            //
+            
             if (distanceFromCenter <= 10) {
                 //console.log("do i get here?")
                 effectsSet.volume = 0.8 //not sure about what max should be, so I made it .8 out of 1
@@ -160,8 +212,20 @@ export default class LocationChcker extends Component {
             } else if (distanceFromCenter > 20) {
                 effectsSet.volume = 0.3 //again, probably too low? not sure how to make the swell meaningful yet
             }
-            //debugger 
 
+            const bounds = geolib.getBounds(polygon.polygon.props.path)
+
+            //debugger 
+           
+            //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
+            //accordingly?
+
+            /// how should check effects work here?
+            // 1) squares
+            // 2) 
+            //
+            
+            //debugger 
             return effectsSet //{volume: , speed: , }
         } else {
             //what effects here?
@@ -193,7 +257,6 @@ export default class LocationChcker extends Component {
     startTestRun = () => {
         //moves testMarker around at pace you feel like going to better test music
         const movement = document.addEventListener('keydown', this.handleKey)
-
         const newMarkerLocation = Object.assign({}, this.state.marker)
 
         if (this.state.move.dir !== undefined) {
@@ -204,7 +267,6 @@ export default class LocationChcker extends Component {
             }
 
             newMarkerLocation.show = true; 
-
             this.checkLocation() //checks location for player update
             this.state.updateMap(newMarkerLocation)
 
@@ -232,6 +294,7 @@ export default class LocationChcker extends Component {
         //console.log(durationToSeconds)
         if (latestShape !== undefined ) {
             if (durationToSeconds >= latestShape.trackEffects.duration) {
+                //if you're in a shape for a certain amount of time, what happens? 
                 //hoist to Player
                 //console.log("DURATION TRIGGERS BUT HAVENT DEFINED YET")
                 //debugger 
@@ -247,9 +310,17 @@ export default class LocationChcker extends Component {
                 //console.log(newDurationEffects.playbackRate)
                 if (newDurationEffects.playbackRate > 5) {
                     console.log("out of time, now what?")
-                    //reset effects? 
-                    //end game?
-                    //it's been 12 seconds, so what now?
+                    //it's been 12 seconds,  probably should be more time? maybe there should be a custom amount of
+                    //time between ... so, how to do that?
+                    //options for out-of-shape tracks
+                    //so like, instead of defining inShape as undefined when not in shape, define it as a baseTrack?
+                    //does that make sense? or if it's out of shape, then you get the option to define it as a baseTrack
+                    //so different sequences can happen
+                    ///but maybe it should all be the same. hm...
+
+                    //anyway so what now?
+                    //end game? subtract something like... health? or... whatever.
+                    
                     //debugger 
                 } else {
                     this.state.upSpeed(newDurationEffects)

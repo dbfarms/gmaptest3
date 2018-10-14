@@ -1,14 +1,34 @@
 notes:
 
-to-do:
-9.24
+10.9- system for countdown: 
+-in addition to elapsed time overall, show time to get to next location
+  -in menu, polygons should go in sequence of 0 - whatever so have an option for time there
+  -timeBetween will then propagate to inform how fast the timer counts down
+  -
+-determine how much time you should be given between locations
+-create obstacles (circles?) that decrease the amount of time or have some other adverse effect
+-
 
--redraw polygons so they're all hit and for longer
+eventually:
+-geolib can determine speed and elevation, so that could be cool
+
+rails end:
+-postgres... how does it work?
+-for this app the rails end should be able to save and load maps (to edit etc), for the phone it shoudl just load them
+-
+
+to-do:
+
 -add circles/rectangles/polylines somehow and see what that does
+  -set amount of time allowed between two points... how to do that? should know what polygon they were in last so that can
+  help determine 'segment' you're on and thus can set amount of time permitted
+
+-now the purpose of and/or sound design of inShape is unclear. it's like a 'safe space' that should build or give some warning when 
+you're on your way out so you know it's time to get hustling 
+  how to do this... i already have proximity to center, so maybe proximity to edge? 
+
 -fix audio files or add a few seconds wait to make loop more seemless
 -rails? save maps?
--maybe ambitiously add manual keyboard control for movement but probably not
--hardcode baseTrack into app so it triggers with start playing
 -see below
 
 -randomized polylines that have other kinds of effects
@@ -20,9 +40,6 @@ to-do:
   -maybe polygons change to circles and then back to polygons depending on aspects of the song? like if it's been on too long?
   or if user hits a button on phone to change things up
 
-  
-
-    
   -rename things so they're more accurately named
   -set polygon triggers in location checker to better reflect shape notes below
   -

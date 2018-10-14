@@ -40,6 +40,7 @@ class App extends Component {
     this.startPlayer1 = this.startPlayer1.bind(this)
     this.upSpeed = this.upSpeed.bind(this)
 
+    //debugger
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}

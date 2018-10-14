@@ -57,11 +57,8 @@ class Player extends Component {
     -sequence is built, but how?
       -hit polygons on map (in preloaded map... what about dynamic map?)
     -
-
-
   */
   
-
   componentWillReceiveProps(nextProps) { //dont know how to use prevState,
     //debugger 
     /*
@@ -78,11 +75,9 @@ class Player extends Component {
     console.log(footsteps_on_fallen_leaves)
   debugger
    */
-  
 
     console.log("nextProps")
     console.log(nextProps)
-
     if (nextProps.key !== undefined ) { 
       debugger 
       //key not passing down in props for some reason... 
@@ -97,9 +92,8 @@ class Player extends Component {
         this.setState({
           activeTrack: trackPath,
           url: trackPath,
-          playing: true, // does not inherit props on this because why should it? excess code in sequencer 
-          //and app can be deleted that pass these props to children 
-          volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
+          playing: nextProps.playing, //true
+          volume: nextProps.effects.volume, 
           playbackRate: nextProps.effects.playbackRate,
           trackSequence: nextProps.trackSequence,
         })
@@ -108,13 +102,13 @@ class Player extends Component {
           this.setState({
             //activeTrack: trackPath,
             //url: trackPath,
-            playing: true,
-            volume: nextProps.effects.volume, //this ain't working but prob changing how it's done anyway so fine
+            playing: nextProps.playing, //true,
+            volume: nextProps.effects.volume, 
             playbackRate: nextProps.effects.playbackRate,
           })
         }
       }
-    } else { //if nextProps.actieTrack does equal undefined, none of the below needs to be updated 
+    } else { //if nextProps.activeTrack does equal undefined, none of the below needs to be updated becuase it's not a track to be played 
       //debugger 
       
       this.setState({

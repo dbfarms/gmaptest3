@@ -67,7 +67,6 @@ export default class Sequencer extends Component {
                                     {baseTrack: nextProps.shapeType.trackSequence.baseTrack, 
                                     sequence: nextProps.shapeType.trackSequence.tracks},
                                 playing: nextProps.playing,
-                
                 })
             }
 
@@ -81,7 +80,7 @@ export default class Sequencer extends Component {
             //sets effects for each individual track to overall effects.. 
             //keeping it this way in case i eventually do want each track to be affected differently.. which I think I do
             const newInBetweenTracks = Object.assign({}, this.state.inBetweenTracks)
-            for (let i=0; i<this.state.inBetweenTracks.sequence.length-1 ; i++) {
+            for (let i=0; i<this.state.inBetweenTracks.sequence.length; i++) {
                 //debugger 
                 newInBetweenTracks.sequence[i].effects = this.state.effects
             }
@@ -93,7 +92,6 @@ export default class Sequencer extends Component {
                      sequence: this.state.inBetweenTracks.sequence},
                      playing: nextProps.playing,
             })
-            //debugger 
         }
     }
 
@@ -138,10 +136,7 @@ export default class Sequencer extends Component {
                             trackSequence: newSequence
                         })
                     }
-                    //return this.state.trackSequence
                 }
-                    //return newSequence
-                //debugger 
                 break 
             case("circles"):
                 //
@@ -312,7 +307,7 @@ export default class Sequencer extends Component {
                 </div>
             )
         } else {
-            //debugger 
+            //for some reason if i delete the below it starts playing the out-of-shape tracks automatically... 
             return (
                 <div>
                     <div className="row">
@@ -348,21 +343,16 @@ export default class Sequencer extends Component {
         } 
     }
 
-
     render() {
-
-        //console.log(activeTrack)
-
-        const playerPaths = this.setTrackPath(this.state.trackSequence) //gets address of tracks
-        const playersFromPlayerPaths = this.createPlayers(playerPaths)  //takes address of tracks and builds Players to be
-        //rendered below in return statement 
-        //console.log(playersFromPlayerPaths.length)
+        const playerPaths = this.setTrackPath(this.state.trackSequence) 
+        //gets address of tracks
+        const playersFromPlayerPaths = this.createPlayers(playerPaths)  
+        //takes address of tracks and builds Players to be rendered below in return statement 
+        
         //debugger 
-
         return (
             <div>
                 <div className="container">
-                    {console.log(playersFromPlayerPaths)}
                     {playersFromPlayerPaths}
                 </div>
             </div>

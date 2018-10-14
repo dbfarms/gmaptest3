@@ -11,26 +11,23 @@ export default class TimerComponent extends React.Component {
     }
 
     timerPassThrough = () => {
-        //() => {
         const TIME_INTERVAL = 1000;
         const elapsed = this.state.elapsed
         //console.log("here now in timer pass through")
     
         if (this.state.isRunning) {
             //debugger 
-            //console.log(elapsed)
-            //this.state.elapsed(elapsed + TIME_INTERVAL)
-
             this.state.elapsedTime(elapsed + TIME_INTERVAL)
+
             this.setState({
                 elapsed: elapsed + TIME_INTERVAL
             })
-        } else {
+
+          } else {
             this.setState({
                 elapsed: elapsed 
             })
         }
-        //}
     }
 
   componentDidMount() {
@@ -45,12 +42,10 @@ export default class TimerComponent extends React.Component {
   }
 
   render() {
-    
     return (
         <div>
             <h3>timer on</h3>
         </div>
-        
     );
   }
 }
