@@ -23,7 +23,7 @@ import DrawingManager from "react-google-maps/lib/components/drawing/DrawingMana
 import ShapeMenu from './ShapeMenu';
 import { willHandleDrawingComplete } from './DrawingFunctions';
 
-//import geolib from 'geolib'
+import geolib from 'geolib'
 //still to make or maybe not i dunno
 import {onTestPolygonChange} from './PolygonFunctions'
 //import checkLocation from './TestFunctions';
@@ -118,6 +118,7 @@ export default class MyFancyComponent extends React.PureComponent {
       startPlayer1: this.props.startPlayer1,
       startPlayer2: this.props.startPlayer2,
       upSpeed: this.props.upSpeed,
+      menuSet: false,
     }
   }
 
@@ -244,7 +245,8 @@ export default class MyFancyComponent extends React.PureComponent {
         this.setState ({
           markers: markerListHere,
           polylines: testPolyLine,
-          testMarker: createTestMarker
+          testMarker: createTestMarker,
+          menuSet: true,
         })
       }
     }
@@ -758,18 +760,64 @@ export default class MyFancyComponent extends React.PureComponent {
     debugger 
   }
 
-  render() {
-    //console.log(this.props.geoLoc)
+  getInfo(){
+    //debugger 
+    const markerPositions = this.state.markers.map((marker, key) => {
+      //debugger 
+      return [key, marker.marker.props.position]
+    })
 
+    const distances = [] 
+    for (let j=0; j<markerPositions.length-1; j++) { //right now it'll go in order cause that's easier but maybe shortsighted 
+    //there's a getcurrentPosition for when it's the phone app
+      
+      const distance = geolib.getDistance(
+        {latitude: markerPositions[j][1].lat, longitude: markerPositions[j][1].lng},
+        {latitude: markerPositions[j+1][1].lat, longitude: markerPositions[j+1][1].lng}
+      );
+      distances.push(distance)
+
+      //the below is for when it's not in order
+      /*
+      for (let i=0; i<markerPositions.length; i++) {
+        geolib.getDistance(
+          {latitude: markerPositions[j][1].lat, longitude: markerPositions[j][1].lng},
+          {latitude: markerPositions[j][1].lat, longitude: markerPositions[j][1].lng}
+        );
+      }
+      */
+      
+    }
+
+    return distances //debugger 
+  }
+
+  showMenu() {
+    //debugger NEVER FINISHED THIS, NOT SURE WHAT INFO I WANT TO SEE IN MENU SO YEAH
+    const showMenuSet = this.state.menuSet 
+    if (showMenuSet === true ) {
+      const distanceBtwMarkers = this.getInfo()
+
+      const distanceMenu = distanceBtwMarkers.map((distance, key) => {
+        const timeToTravel = (distance / 1.4).toFixed(2)
+        return (
+          <div>
+            distance between {key} marker and {key + 1} marker: {distance} and time alloted: {timeToTravel}
+          </div>
+        )
+      })
+      return distanceMenu
+    }
+  }
+
+  render() {
     let markersList 
     let polygonList
     let polygonToDraw = []
 
-    //debugger 
     if (this.state.markers.length > 0) {
       //markersList = this.setMarkersNow();
       polygonList = this.setPolygonsNow(); 
-      //debugger 
       polygonList.forEach(polygon => {
         polygonToDraw.push(polygon.polygon)
       })
@@ -787,6 +835,7 @@ export default class MyFancyComponent extends React.PureComponent {
     }
     
     const showingDeets = this.showShapeMenuDeets() //apparently this isn't being used?
+    const showMenu = this.showMenu();
     //if (this.state.markers.length >0) debugger 
     return (
         <div>
@@ -810,6 +859,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     circles={this.state.circles}
                     polylines={this.state.polylines}
                     upSpeed={this.state.upSpeed}
+                    getInfo={this.getInfo}
                   />
                 </div>
                 <div className="col-sm-">
@@ -821,6 +871,7 @@ export default class MyFancyComponent extends React.PureComponent {
                 </div>
                 <div className="col">
                   <h3>menu</h3>
+                  {showMenu}
                   {this.state.polyMenu.type !== '' &&
                     <div>
                       { <ShapeMenu shape={this.state.shapeMenu.shape} keyID={this.state.shapeMenu.key} tracks={this.state.tracks} chosenTrack={this.chooseTrack}/>}
@@ -849,6 +900,32 @@ export default class MyFancyComponent extends React.PureComponent {
     )
   }
 }
+
+/*
+    if (this.state.markers.length > 0) {
+      return (
+        <div>
+          {this.state.markers.map(marker => {
+            <div>
+              key: {marker.props.name}
+
+
+            </div>
+            debugger 
+          })}
+        </div>
+      )
+    }
+    if (this.state.polygons.length > 0) {
+      return (
+        <div>
+          {this.state.polygons.map(marker => {
+            debugger 
+          })}
+        </div>
+      )
+    }
+    */
 
 //export default MyFancy
 /*

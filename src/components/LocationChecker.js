@@ -31,6 +31,7 @@ export default class LocationChcker extends Component {
                  rectangles: this.props.rectangles},
             shapeTypeLocation: undefined,
             upSpeed: this.props.upSpeed,
+            getInfo: this.props.getInfo,
         }
 
     }
@@ -138,7 +139,6 @@ export default class LocationChcker extends Component {
     distanceToNearestMarker(latNow, lngNow){
         //this just checks to nearest marker, maybe one day i'll wnat to get distance to all
         //also maybe change to polygons instead
-
         const markers = {}
         this.state.markers.map((marker, key) => {
             if (key > 0) { //marker at key 0 at present is geoLoc
@@ -151,7 +151,8 @@ export default class LocationChcker extends Component {
 
         const closestMarker = geolib.findNearest(markers['here'], markers, 1)
         //avg walking speed 1.4 meters/sec so time to place should be closestMarker/1.4 
-        const timeToNextMarker = closestMarker.distance / 1.4 
+        const timeToNextMarker = closestMarker.distance / 1.4 //maybe this change depending on if you need to run to next one..?
+        //but this should just be a suggestion 
         //debugger 
         const newDurationEffects = Object.assign({}, this.state.durationEffects)
         newDurationEffects.timeLimit = timeToNextMarker
@@ -265,6 +266,13 @@ export default class LocationChcker extends Component {
         } else {
             if (durationToSeconds % 3 === 0 && durationToSeconds !== this.state.durationEffects.duration) {
                 debugger 
+                //how far should each polygon be from each other? probably a good idea
+                //to come up with an upper limit of distance per means of movement (i.e. car, bike, walking, etc)
+                //so can/should this inform automated marker-maker in mymapcomp?
+                //which is where menu comes in handy. how far is one marker to the next?
+                //ok here's something
+                //it's for map making purposes that this matters
+
                 const newDurationEffects = Object.assign({}, this.state.durationEffects)
                 newDurationEffects.duration = durationToSeconds 
                 //console.log(this.state.durationEffects)
