@@ -26,7 +26,7 @@ export default class LocationChcker extends Component {
             startPlayer2: this.props.startPlayer2,
             timer: false,
             inShape: undefined, 
-            durationEffects: {duration: 0, shape: undefined, playbackRate: 1, volume: 0.5}, //for playback rate 
+            durationEffects: {timeLimit: 1000, duration: 0, shape: undefined, playbackRate: 1, volume: 0.5}, //for playback rate 
             shapesList: {polygons: this.props.polygons, circles: this.props.circles,   
                  rectangles: this.props.rectangles},
             shapeTypeLocation: undefined,
@@ -120,7 +120,6 @@ export default class LocationChcker extends Component {
             this.setState({
                 inShape: undefined //can move all that stuff here 
             })
-            //debugger 
             const shape = undefined 
             const effects=this.checkEffects(shape) //right now there are no effects for out-of-shape determined here but maybe one day
             
@@ -133,7 +132,6 @@ export default class LocationChcker extends Component {
 
             this.state.nowPlaying(shape, effects)
         }
-
         this.distanceToNearestMarker(latNow, lngNow)
     }
 
@@ -141,56 +139,25 @@ export default class LocationChcker extends Component {
         //this just checks to nearest marker, maybe one day i'll wnat to get distance to all
         //also maybe change to polygons instead
 
-        /*
-// in this case set offset to 1 otherwise the nearest point will always be your reference point
-geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
-        */
-
-        //debugger 
         const markers = {}
-        //const markers = 
         this.state.markers.map((marker, key) => {
-            //debugger 
             if (key > 0) { //marker at key 0 at present is geoLoc
-                //debugger 
                 Object.assign(markers, {[marker.marker.props.name]: {latitude: marker.marker.props.position.lat, 
                     longitude: marker.marker.props.position.lng}})
-
-                //return {[marker.marker.props.name]: {latitude: marker.marker.props.position[0], 
-                                                    // longitude: marker.marker.props.position[1]}}
             } else {
                 Object.assign(markers, {"here": {latitude: latNow, longitude: lngNow}})
-                //return {"here": {latitude: latNow, longitude: lngNow}}
             }
         }) 
 
-        /*
-        const spots = {"test1": {latitude: markers[1].position[0], longitude: markers[1].position[1]},
-        "test2": {latitude: markers[2].position[0], longitude: markers[2].position[1]},
-        "test3": {latitude: markers[3].position[0], longitude: markers[3].position[1]},
-        "test4": {latitude: markers[4].position[0], longitude: markers[4].position[1]},
-                     }
-                     */
-        
-                     //debugger 
+        const closestMarker = geolib.findNearest(markers['here'], markers, 1)
+        //avg walking speed 1.4 meters/sec so time to place should be closestMarker/1.4 
+        const timeToNextMarker = closestMarker.distance / 1.4 
         //debugger 
-        const test = geolib.findNearest(markers['here'], markers, 1)
-
-        debugger //here - this.state.markers is changed in compwillreceiveprops in MyMapComponent, fix that
-
-        const markerLatLngs = this.state.markers.map((marker, key) => {
-            if (key > 0) { //marker at key 0 at present is geoLoc
-                return {[key]: {latitude: marker.position[0], longitude: marker.position[1]}}
-                //debugger 
-            } else {
-                return {[key]: {latitude: latNow, longitude: lngNow}}
-            }
+        const newDurationEffects = Object.assign({}, this.state.durationEffects)
+        newDurationEffects.timeLimit = timeToNextMarker
+        this.setState({
+            durationEffects: newDurationEffects
         })
-
-        //debugger 
-        //                    geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
-        const closestMarker = geolib.findNearest(markerLatLngs['0'], markerLatLngs, 1)
-        debugger
     }
 
     checkEffects(polygon) {
@@ -216,16 +183,12 @@ geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
             const bounds = geolib.getBounds(polygon.polygon.props.path)
 
             //debugger 
-           
             //eventually! come up with some means of measuring rate of closing in on center or some inside-boundary and have volume adjust
             //accordingly?
-
             /// how should check effects work here?
             // 1) squares
             // 2) 
-            //
-            
-            //debugger 
+
             return effectsSet //{volume: , speed: , }
         } else {
             //what effects here?
@@ -301,7 +264,7 @@ geolib.findNearest(spots['Dortmund U-Tower'], spots, 1)
             }
         } else {
             if (durationToSeconds % 3 === 0 && durationToSeconds !== this.state.durationEffects.duration) {
-                //debugger 
+                debugger 
                 const newDurationEffects = Object.assign({}, this.state.durationEffects)
                 newDurationEffects.duration = durationToSeconds 
                 //console.log(this.state.durationEffects)
