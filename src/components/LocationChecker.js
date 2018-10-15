@@ -164,6 +164,7 @@ export default class LocationChcker extends Component {
     checkEffects(polygon) {
         //THIS MIGHT BE MOVED TO EFFECTSLIST FOR POLYGON SOMEHOW...
         if (polygon !== undefined ) {
+            //debugger 
             const center = geolib.getCenter(polygon.polygon.props.path)
             const distanceFromCenter = geolib.getDistance(
                 this.state.marker.position,

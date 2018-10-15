@@ -12,7 +12,7 @@ class App extends Component {
     super()
 
     this.state = {
-      geoLoc: '',
+      geoLoc: {lat: 40.876131, lng: -73.884274},
       //has baseTrack and sequence, because some sequences from one baseTrack can work in baseTrack from another
       preloadedTracks: {baseTrack: 'shayna_song', sequence: ['drums_2', 
                        'drums_3', 
@@ -41,6 +41,7 @@ class App extends Component {
     this.upSpeed = this.upSpeed.bind(this)
 
     //debugger
+    /* THIS IS FOR CURRENT POSITION WHICH I'M NOT USING RIGHT NOW
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords
       const geoLoc = {lat: latitude, lng: longitude}
@@ -48,8 +49,9 @@ class App extends Component {
       this.setState({
         geoLoc: geoLoc
       })
-      
     });
+    */
+
   }
 
   nowPlaying = (polygonActive, effects) => { //poorly named, should be something like hitsCue and then determines what to do based on that

@@ -45,7 +45,7 @@ const MyMapComponent = compose(
     <div>
         {console.log(props)}
         <GoogleMap
-            defaultZoom={17}
+            defaultZoom={20}
             defaultCenter={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }}
         >
             {props.isMarkerShown && 
@@ -122,12 +122,128 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  /*
-  componentWillMount() {
+  componentWillMount() { //THIS IS IN PLACE OF COMPONENTWILLRECEIVEPROPS BECAUSE THERE'S A SET GEOLOC FOR NOW 111111111111111
     //debugger 
-    //this.delayedShowMarker()
+
+    if (this.props.geoLoc) { //used to be nextProps.geoLoc
+      
+      let geoLoc = this.state.geoLoc 
+      let createTestMarker = {};
+      let actualMarker; 
+      //debugger
+      if (this.state.testMarker.position !== "" ) {
+        //console.log("this one")
+        //debugger 
+        createTestMarker = this.state.testMarker
+       // console.log(createTestMarker)
+      } else { 
+        //console.log(this.state.geoLoc)
+        //debugger 
+        createTestMarker = {position: {lat: this.state.geoLoc.lat - .0000005, lng: this.state.geoLoc.lng - .0000005}, 
+        marker: "", show: false}
+        actualMarker = <Marker 
+        position= {{lat: this.state.geoLoc.lat - .0000008, lng: this.state.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
+        createTestMarker.marker = actualMarker
+
+        /*
+        plan: have a few markers as points to work/walk towards
+        how: enter miles to travel?
+        -map out route with api?
+        -pointers? suggest routes?
+        -if no map (i.e. woods) then what?
+        -have volume drop if going in wrong direction... or... lose tracks from sequence! but that can be confusing if path
+        is windy
+
+        by what means should proxmity be measured? lat/lng and...? 
+
+        new plan:
+        -baseTrack plays for x-duration. 
+        -slowly shifts over time(adds tracks? subtracts tracks?)
+        -hit triggers that make additional sounds (swells?)
+        -randomly place effects as you walk?
+        -control panel on phone to change track when you want as well?
+        -arrows pointing you in possible directions to do things
+        -create 'sets' of tracks that build... so 1,2,3 then 1,2,3,4, then etc... if you move away from
+        marker effects or something triggers? affects sequences? slows down?
+        how does the above work with duration affecting sequences? 
+        -success sounds?
+        */ 
+
+        //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
+        //so maybe you want to make that something else and keep this.state.markers what is at
+
+        //const center = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
+        //debugger 
+        
+        let markerListHere = [{marker: <Marker />, 
+                               polygon: {
+                                position: geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]),
+                                polygonCoords: [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}], 
+                                polygonObject: <Polygon />}}]
+                                
+          /*                  
+        for (let i = 0; i<5; i++) {
+          let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
+          let newMarker = []
+          let polygonCoordsSketch
+          if (i === 0 ) {
+            newMarker[0] = this.state.geoLoc.lat;
+            newMarker[1] = this.state.geoLoc.lng;
+            markerObject.position = newMarker 
+            polygonCoordsSketch = [
+              {lat: newMarker[0] + .00003, lng: newMarker[1] - .00003},
+              {lat: newMarker[0] + .00005, lng: newMarker[1] - .00003},
+              {lat: newMarker[0] - .00005, lng: newMarker[1] + .00005},
+            ];
+          } else {
+            let newPosition = i * .00006
+            newMarker[0] = this.state.geoLoc.lat + newPosition;
+            newMarker[1] = this.state.geoLoc.lng + newPosition;
+            markerObject.position = newMarker 
+            polygonCoordsSketch = [
+              {lat: newMarker[0] + .00003, lng: newMarker[1] - .00003},
+              {lat: newMarker[0] - .00005, lng: newMarker[1] - .00003},
+              {lat: newMarker[0] - .00005, lng: newMarker[1] + .00005},
+            ];
+          }
+
+          const marker = <Marker 
+              name={"marker" + i}
+              position={{lat: newMarker[0], lng: newMarker[1]}}
+              onClick={this.onMarkerClick.bind(this)}
+              key={i}
+            />
+          markerObject.polygonCoords = polygonCoordsSketch
+          markerListHere.push({marker: marker, polygon: markerObject})
+        } */
+
+
+        /*
+          creates circles which do what?
+        */
+
+        this.createCircles();
+
+        //debugger 
+        const testPolyLine = [ 
+          {lat: this.state.geoLoc.lat, lng: this.state.geoLoc.lng },
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+        ]
+        //console.log(testPolyLine)
+        //console.log(createTestMarker)
+        //debugger 
+        this.setState ({
+          markers: markerListHere,
+          polylines: testPolyLine,
+          testMarker: createTestMarker,
+          menuSet: true,
+        })
+      }
+    }
   }
 
+  /*
   componentDidUpdate(prevState, props) {
     //debugger
     //console.log(prevState)
@@ -138,6 +254,7 @@ export default class MyFancyComponent extends React.PureComponent {
   componentWillReceiveProps(nextProps){
     //console.log(this)
     //console.log(nextProps)
+    debugger 
     this.setState({
       geoLoc: nextProps.geoLoc
     })
@@ -145,7 +262,8 @@ export default class MyFancyComponent extends React.PureComponent {
     //eventually this will load from the server from saved maps, or will not exist for new maps **********************888
     //right now it just sets to state predetermined positions based on location
     //also it creates the polygon here though it'll have to be done elsewhere soon
-    if (nextProps.geoLoc) {
+    debugger 
+    if (this.state.geoLoc) { //used to be nextProps.geoLoc
       console.log("geo loc works")
 
       let createTestMarker;
@@ -219,7 +337,7 @@ export default class MyFancyComponent extends React.PureComponent {
           const marker = <Marker 
               name={"marker" + i}
               position={{lat: newMarker[0], lng: newMarker[1]}}
-              //onClick={this.onMarkerClick.bind(this)}
+              onClick={()=> console.log("test")}//{this.onMarkerClick.bind(this)}
               key={i}
             />
           markerObject.polygonCoords = polygonCoordsSketch
@@ -340,11 +458,44 @@ export default class MyFancyComponent extends React.PureComponent {
           })
         ) 
       case "polygon":
-        newDrawing = {polygon: <Polygon 
-            props={props}
-            track="test"
-        />, track: ""}
 
+          debugger //DRAWN POLYGON FUNCTIONS NOT WORKING
+        const key = this.state.polygons.length 
+        const polygon = props 
+        const polygonPaths = [] //props.overlay.getPaths().getArray()[0].b[0].lng()
+        for (let i=0;i<props.overlay.getPaths().getArray()[0].length;i++) {
+          //debugger 
+          const newPath = {lat: props.overlay.getPaths().getArray()[0].b[i].lat(), lng: props.overlay.getPaths().getArray()[0].b[i].lng()}
+          polygonPaths.push(newPath)
+        }
+        //debugger 
+        console.log(polygonPaths)
+        const type="polygons"
+        const newRef = this.bindRef.bind(this) 
+        //console.log(newRef)
+        const newPolygon = {polygon: <Polygon
+          key={key}
+          id={key}
+          ref={newRef}
+          type={type}
+          //ref={key}
+          path={polygonPaths} //see below
+          paths={polygonPaths} //not sure what difference use is between the two
+          strokeColor="#0000FF"
+          strokeOpacity={0.8}
+          strokeWeight={2}
+          fillColor="#0000FF"
+          fillOpacity={0.35} 
+          onClick={this.onPolygonClick} //.bind(this)}
+          onMouseUp={this.onPolygonChange.bind(this, key) } // this.onTestPolygonChange
+          onDrag={this.onPolygonDrag}
+          onMouseOver={this.onMouseOver.bind(this, key, type)}
+          options={{
+            editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+            draggable: true 
+          }}
+        />, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
+        
         const newPolygonList = Object.assign([], this.state.polygons)
         newPolygonList.push(newDrawing)
 
@@ -420,7 +571,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   onMouseOver(key, type, props) {
-    //debugger 
+    debugger 
 
     let shapeSelected
     switch(type) {
@@ -502,6 +653,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
   onMarkerClick = (props, marker, e) => {
 
+    debugger 
     const selectedMarkerLatLng = [props.position.lat, props.position.lng]
 
     const selectedMarkerProps = this.state.markers.filter(marker => {
@@ -616,14 +768,11 @@ export default class MyFancyComponent extends React.PureComponent {
   onPolygonChange(key, props) {
 
       //const newPolygonDeets = Object.assign({}, this.state.markers[key])
-      
+      //debugger 
       const updatedMarkers = Object.assign([], this.state.markers)
       updatedMarkers[key].polygonCoords[props.vertex].lat = props.latLng.lat()
       updatedMarkers[key].polygonCoords[props.vertex].lng = props.latLng.lng()
 
-      //debugger 
-
-      //debugger 
       this.setState({
         markers: updatedMarkers
       })
@@ -793,7 +942,11 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   showMenu() {
-    //debugger NEVER FINISHED THIS, NOT SURE WHAT INFO I WANT TO SEE IN MENU SO YEAH
+    //NEVER FINISHED THIS, NOT SURE WHAT INFO I WANT TO SEE IN MENU SO YEAH
+    //debugger //next up, 10.14: be able to move polygons onPolygonDrag and then setState for new place
+    //how to deal with long distances between polygons... 
+    //maybe get rid of positions of paths on polygon...? it's kind of annoying
+    //then we'll need backend to save it 
     const showMenuSet = this.state.menuSet 
     if (showMenuSet === true ) {
       const distanceBtwMarkers = this.getInfo()
@@ -802,7 +955,7 @@ export default class MyFancyComponent extends React.PureComponent {
         const timeToTravel = (distance / 1.4).toFixed(2)
         return (
           <div>
-            distance between {key} marker and {key + 1} marker: {distance} and time alloted: {timeToTravel}
+            <p>marker {key} to marker{key + 1}: {distance} meters</p> <p>and time alloted: {timeToTravel} secs</p>
           </div>
         )
       })
