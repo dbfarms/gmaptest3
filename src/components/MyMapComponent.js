@@ -45,7 +45,7 @@ const MyMapComponent = compose(
     <div>
         {console.log(props)}
         <GoogleMap
-            defaultZoom={20}
+            defaultZoom={18}
             defaultCenter={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }}
         >
             {props.isMarkerShown && 
@@ -98,6 +98,7 @@ export default class MyFancyComponent extends React.PureComponent {
     this.handleDrawingComplete = this.handleDrawingComplete.bind(this)
     this.onTestPolygonChange = onTestPolygonChange.bind(this)
     this.chooseTrack = this.chooseTrack.bind(this)
+    //this.onRadioChange = this.onRadioChange.bind(this)
     this.state = {
       isMarkerShown: true,
       polyMenu: {key: '', type: ''},
@@ -119,6 +120,8 @@ export default class MyFancyComponent extends React.PureComponent {
       startPlayer2: this.props.startPlayer2,
       upSpeed: this.props.upSpeed,
       menuSet: false,
+      gameSet: "lee",
+      users: ["lee", "matt"]
     }
   }
 
@@ -174,12 +177,52 @@ export default class MyFancyComponent extends React.PureComponent {
 
         //const center = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
         //debugger 
-        
-        let markerListHere = [{marker: <Marker />, 
-                               polygon: {
-                                position: geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]),
-                                polygonCoords: [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}], 
-                                polygonObject: <Polygon />}}]
+
+        // EVNTUALLY THE BELOW WILL BE FETCHED FROM SERVER
+        if (this.state.gameSet=="lee") {
+
+        } else if (this.state.gameSet="matt") {
+
+        }
+        const type = "polygons"
+        const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
+        const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
+        const center1 = geolib.getCenter([{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}])
+        const polygon1 = [{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}]
+        const center2 = geolib.getCenter([{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}])
+        const polygon2 = [{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}]
+        const markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
+        //const newRef = this.bindRef.bind(this) 
+        let markerListHere = markersForMapping.map((marker, key)=> {
+          return {marker: <Marker name={"marker" + key} position={marker[0]} 
+                            onClick={this.onMarkerClick.bind(this)} key={key}/>, 
+                    polygon: {
+                    position: marker[0],
+                    polygonCoords: marker[1], 
+                    polygonObject: <Polygon key={key}
+                      id={key}
+                      ref={undefined} //newRef ... wait for mapping to bind 
+                      type={"polygons"}
+                      //ref={key}
+                      path={marker[1]} //see below
+                      paths={marker[1]} //not sure what difference use is between the two
+                      strokeColor="#0000FF"
+                      strokeOpacity={0.8}
+                      strokeWeight={2}
+                      fillColor="#0000FF"
+                      fillOpacity={0.35} 
+                      onClick={this.onPolygonClick} //.bind(this)}
+                      onMouseUp={this.onPolygonChange.bind(this, key) } // this.onTestPolygonChange
+                      onDrag={this.onPolygonDrag}
+                      onMouseOver={this.onMouseOver.bind(this, key, type)}
+                      options={{
+                        editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+                        draggable: true 
+                      }}
+                  />}}//, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
+        })                     
+        //debugger //marker and polygon above are incomplete
+        //keep making marker/'gons along set path for demo purpose
                                 
           /*                  
         for (let i = 0; i<5; i++) {
@@ -459,7 +502,7 @@ export default class MyFancyComponent extends React.PureComponent {
         ) 
       case "polygon":
 
-          debugger //DRAWN POLYGON FUNCTIONS NOT WORKING
+          //debugger //DRAWN POLYGON FUNCTIONS NOT WORKING
         const key = this.state.polygons.length 
         const polygon = props 
         const polygonPaths = [] //props.overlay.getPaths().getArray()[0].b[0].lng()
@@ -470,6 +513,7 @@ export default class MyFancyComponent extends React.PureComponent {
         }
         //debugger 
         console.log(polygonPaths)
+        debugger 
         const type="polygons"
         const newRef = this.bindRef.bind(this) 
         //console.log(newRef)
@@ -919,10 +963,10 @@ export default class MyFancyComponent extends React.PureComponent {
     const distances = [] 
     for (let j=0; j<markerPositions.length-1; j++) { //right now it'll go in order cause that's easier but maybe shortsighted 
     //there's a getcurrentPosition for when it's the phone app
-      
+      //debugger 
       const distance = geolib.getDistance(
-        {latitude: markerPositions[j][1].lat, longitude: markerPositions[j][1].lng},
-        {latitude: markerPositions[j+1][1].lat, longitude: markerPositions[j+1][1].lng}
+        {latitude: markerPositions[j][1].latitude, longitude: markerPositions[j][1].longitude}, //switched from lat/lng 
+        {latitude: markerPositions[j+1][1].latitude, longitude: markerPositions[j+1][1].longitude}
       );
       distances.push(distance)
 
@@ -963,6 +1007,12 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  onRadioChange(user){
+    if (user !== this.state.gameSet) {
+      this.setState({gameSet: user})
+    }
+  }
+
   render() {
     let markersList 
     let polygonList
@@ -970,6 +1020,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     if (this.state.markers.length > 0) {
       //markersList = this.setMarkersNow();
+      //debugger 
       polygonList = this.setPolygonsNow(); 
       polygonList.forEach(polygon => {
         polygonToDraw.push(polygon.polygon)
@@ -1016,6 +1067,24 @@ export default class MyFancyComponent extends React.PureComponent {
                   />
                 </div>
                 <div className="col-sm-">
+                  <label>user: </label>
+                  {this.state.users.map((user, key) => {
+                    return (
+                      <label>
+                      <input type="radio"
+                          key={key}
+                          name="user"
+                          value={user}
+                          checked={user === this.state.gameSet}
+                          onChange={() => this.onRadioChange(user)}
+                        />
+                        {user}
+                      </label>
+                    )
+                        
+                  })}
+                  <br />
+                  
                   <button
                     onClick={this.savesChanges.bind(this)}
                   >
