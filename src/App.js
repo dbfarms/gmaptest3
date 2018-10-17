@@ -33,6 +33,8 @@ class App extends Component {
       effects: {volume: 0.5, playbackRate: 1, loop: true},
       playing: false,
       playing2: false,
+      gameSet: "lee",
+      users: ["lee", "matt"]
     }
 
     this.nowPlaying = this.nowPlaying.bind(this)
@@ -131,6 +133,12 @@ class App extends Component {
     })
   }
 
+  onRadioChange(user){
+    if (user !== this.state.gameSet) {
+      this.setState({gameSet: user})
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -146,6 +154,25 @@ class App extends Component {
             durationEffects={this.state.durationEffects}
           />
         </div>
+        <div className="col-sm-">
+            <label>user: </label>
+            {this.state.users.map((user, key) => {
+              return (
+                <label>
+                <input type="radio"
+                    key={key}
+                    name="user"
+                    value={user}
+                    checked={user === this.state.gameSet}
+                    onChange={() => this.onRadioChange(user)}
+                  />
+                  {user}
+                </label>
+              )
+                  
+            })}
+            <br />
+        </div>
         <div className="map">
           <MyFancyComponent 
             geoLoc={this.state.geoLoc} 
@@ -156,6 +183,7 @@ class App extends Component {
             startPlayer1={this.startPlayer1}
             startPlayer2={this.startPlayer2}
             upSpeed={this.upSpeed}
+            gameSet={this.state.gameSet}
           />
         </div>
       </div>

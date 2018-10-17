@@ -120,8 +120,8 @@ export default class MyFancyComponent extends React.PureComponent {
       startPlayer2: this.props.startPlayer2,
       upSpeed: this.props.upSpeed,
       menuSet: false,
-      gameSet: "lee",
-      users: ["lee", "matt"]
+      gameSet: this.props.gameSet,
+      //users: ["lee", "matt"]
     }
   }
 
@@ -287,7 +287,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
   }
 
-  
+  /*
   componentDidUpdate(props, prevState) {
     //debugger
     //console.log(prevState)
@@ -372,11 +372,12 @@ export default class MyFancyComponent extends React.PureComponent {
       }
     }
   }
+  */
 
   componentWillReceiveProps(nextProps){
     console.log("next props")
     //console.log(this)
-    //console.log(nextProps)
+    console.log(nextProps)
     //debugger 
     this.setState({
       geoLoc: nextProps.geoLoc
@@ -388,107 +389,110 @@ export default class MyFancyComponent extends React.PureComponent {
     //debugger 
     if (this.state.geoLoc) { //used to be nextProps.geoLoc
       console.log("geo loc works")
+      if (nextProps.gameSet !== this.state.gameSet) {
 
-      let createTestMarker;
-      let actualMarker; 
-      //debugger
-      if (this.state.testMarker.position !== "" ) {
-        //console.log("this one")
-        //debugger 
-        createTestMarker = this.state.testMarker
-       // console.log(createTestMarker)
-      } else { 
-        createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
-        marker: "", show: false}
-        actualMarker = <Marker 
-        position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
-        createTestMarker.marker = actualMarker
+      } else {
+        let createTestMarker;
+        let actualMarker; 
+        //debugger
+        if (this.state.testMarker.position !== "" ) {
+          //console.log("this one")
+          //debugger 
+          createTestMarker = this.state.testMarker
+        // console.log(createTestMarker)
+        } else { 
+          createTestMarker = {position: {lat: nextProps.geoLoc.lat - .0000005, lng: nextProps.geoLoc.lng - .0000005}, 
+          marker: "", show: false}
+          actualMarker = <Marker 
+          position= {{lat: nextProps.geoLoc.lat - .0000008, lng: nextProps.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
+          createTestMarker.marker = actualMarker
 
-        /*
-        plan: have a few markers as points to work/walk towards
-        how: enter miles to travel?
-        -map out route with api?
-        -pointers? suggest routes?
-        -if no map (i.e. woods) then what?
-        -have volume drop if going in wrong direction... or... lose tracks from sequence! but that can be confusing if path
-        is windy
+          /*
+          plan: have a few markers as points to work/walk towards
+          how: enter miles to travel?
+          -map out route with api?
+          -pointers? suggest routes?
+          -if no map (i.e. woods) then what?
+          -have volume drop if going in wrong direction... or... lose tracks from sequence! but that can be confusing if path
+          is windy
 
-        by what means should proxmity be measured? lat/lng and...? 
+          by what means should proxmity be measured? lat/lng and...? 
 
-        new plan:
-        -baseTrack plays for x-duration. 
-        -slowly shifts over time(adds tracks? subtracts tracks?)
-        -hit triggers that make additional sounds (swells?)
-        -randomly place effects as you walk?
-        -control panel on phone to change track when you want as well?
-        -arrows pointing you in possible directions to do things
-        -create 'sets' of tracks that build... so 1,2,3 then 1,2,3,4, then etc... if you move away from
-        marker effects or something triggers? affects sequences? slows down?
-        how does the above work with duration affecting sequences? 
-        -success sounds?
-        */ 
+          new plan:
+          -baseTrack plays for x-duration. 
+          -slowly shifts over time(adds tracks? subtracts tracks?)
+          -hit triggers that make additional sounds (swells?)
+          -randomly place effects as you walk?
+          -control panel on phone to change track when you want as well?
+          -arrows pointing you in possible directions to do things
+          -create 'sets' of tracks that build... so 1,2,3 then 1,2,3,4, then etc... if you move away from
+          marker effects or something triggers? affects sequences? slows down?
+          how does the above work with duration affecting sequences? 
+          -success sounds?
+          */ 
 
-        //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
-        //so maybe you want to make that something else and keep this.state.markers what is at
+          //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
+          //so maybe you want to make that something else and keep this.state.markers what is at
 
-        let markerListHere = []
-        for (let i = 0; i<5; i++) {
-          let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
-          let newMarker = []
-          let polygonCoordsSketch
-          if (i === 0 ) {
-            newMarker[0] = nextProps.geoLoc.lat;
-            newMarker[1] = nextProps.geoLoc.lng;
-            markerObject.position = newMarker 
-            polygonCoordsSketch = [
-              {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
-              {lat: newMarker[0] + .0005, lng: newMarker[1] - .0003},
-              {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
-            ];
-          } else {
-            let newPosition = i * .0006
-            newMarker[0] = nextProps.geoLoc.lat + newPosition;
-            newMarker[1] = nextProps.geoLoc.lng + newPosition;
-            markerObject.position = newMarker 
-            polygonCoordsSketch = [
-              {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
-              {lat: newMarker[0] - .0005, lng: newMarker[1] - .0003},
-              {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
-            ];
+          let markerListHere = []
+          for (let i = 0; i<5; i++) {
+            let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
+            let newMarker = []
+            let polygonCoordsSketch
+            if (i === 0 ) {
+              newMarker[0] = nextProps.geoLoc.lat;
+              newMarker[1] = nextProps.geoLoc.lng;
+              markerObject.position = newMarker 
+              polygonCoordsSketch = [
+                {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
+                {lat: newMarker[0] + .0005, lng: newMarker[1] - .0003},
+                {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
+              ];
+            } else {
+              let newPosition = i * .0006
+              newMarker[0] = nextProps.geoLoc.lat + newPosition;
+              newMarker[1] = nextProps.geoLoc.lng + newPosition;
+              markerObject.position = newMarker 
+              polygonCoordsSketch = [
+                {lat: newMarker[0] + .0003, lng: newMarker[1] - .0003},
+                {lat: newMarker[0] - .0005, lng: newMarker[1] - .0003},
+                {lat: newMarker[0] - .0005, lng: newMarker[1] + .0005},
+              ];
+            }
+
+            const marker = <Marker 
+                name={"marker" + i}
+                position={{lat: newMarker[0], lng: newMarker[1]}}
+                onClick={()=> console.log("test")}//{this.onMarkerClick.bind(this)}
+                key={i}
+              />
+            markerObject.polygonCoords = polygonCoordsSketch
+            markerListHere.push({marker: marker, polygon: markerObject})
           }
 
-          const marker = <Marker 
-              name={"marker" + i}
-              position={{lat: newMarker[0], lng: newMarker[1]}}
-              onClick={()=> console.log("test")}//{this.onMarkerClick.bind(this)}
-              key={i}
-            />
-          markerObject.polygonCoords = polygonCoordsSketch
-          markerListHere.push({marker: marker, polygon: markerObject})
+          /*
+            creates circles which do what?
+          */
+
+          this.createCircles();
+
+          const geoLoc = nextProps.geoLoc
+          //debugger 
+          const testPolyLine = [ 
+            {lat: geoLoc.lat, lng: geoLoc.lng },
+            {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+            {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
+          ]
+          //console.log(testPolyLine)
+          //console.log(createTestMarker)
+          //debugger 
+          this.setState ({
+            markers: markerListHere,
+            polylines: testPolyLine,
+            testMarker: createTestMarker,
+            menuSet: true,
+          })
         }
-
-        /*
-          creates circles which do what?
-        */
-
-        this.createCircles();
-
-        const geoLoc = nextProps.geoLoc
-        //debugger 
-        const testPolyLine = [ 
-          {lat: geoLoc.lat, lng: geoLoc.lng },
-          {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
-          {lat: geoLoc.lat + .001, lng: geoLoc.lng + .002},
-        ]
-        //console.log(testPolyLine)
-        //console.log(createTestMarker)
-        //debugger 
-        this.setState ({
-          markers: markerListHere,
-          polylines: testPolyLine,
-          testMarker: createTestMarker,
-          menuSet: true,
-        })
       }
     }
   }
@@ -1087,11 +1091,13 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  /*
   onRadioChange(user){
     if (user !== this.state.gameSet) {
       this.setState({gameSet: user})
     }
   }
+  */
 
   render() {
     let markersList 
@@ -1146,25 +1152,7 @@ export default class MyFancyComponent extends React.PureComponent {
                     getInfo={this.getInfo}
                   />
                 </div>
-                <div className="col-sm-">
-                  <label>user: </label>
-                  {this.state.users.map((user, key) => {
-                    return (
-                      <label>
-                      <input type="radio"
-                          key={key}
-                          name="user"
-                          value={user}
-                          checked={user === this.state.gameSet}
-                          onChange={() => this.onRadioChange(user)}
-                        />
-                        {user}
-                      </label>
-                    )
-                        
-                  })}
-                  <br />
-                  
+                <div>
                   <button
                     onClick={this.savesChanges.bind(this)}
                   >
