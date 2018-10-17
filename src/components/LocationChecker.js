@@ -77,6 +77,7 @@ export default class LocationChcker extends Component {
                 })
                 
                 for (let i=0; i<shapeCoords.length-1; i++) {
+                    console.log("does it break here")
                     const inPolygonCheck = geolib.isPointInside(
                         {latitude: latNow, longitude: lngNow},
                         shapeCoords[i]
@@ -141,6 +142,7 @@ export default class LocationChcker extends Component {
         //also maybe change to polygons instead
         const markers = {}
         this.state.markers.map((marker, key) => {
+            //debugger 
             if (key > 0) { //marker at key 0 at present is geoLoc
                 Object.assign(markers, {[marker.marker.props.name]: {latitude: marker.marker.props.position.lat, 
                     longitude: marker.marker.props.position.lng}})
@@ -149,6 +151,7 @@ export default class LocationChcker extends Component {
             }
         }) 
 
+        //debugger 
         const closestMarker = geolib.findNearest(markers['here'], markers, 1)
         //avg walking speed 1.4 meters/sec so time to place should be closestMarker/1.4 
         const timeToNextMarker = closestMarker.distance / 1.4 //maybe this change depending on if you need to run to next one..?
@@ -163,6 +166,7 @@ export default class LocationChcker extends Component {
 
     checkEffects(polygon) {
         //THIS MIGHT BE MOVED TO EFFECTSLIST FOR POLYGON SOMEHOW...
+        //debugger 
         if (polygon !== undefined ) {
             //debugger 
             const center = geolib.getCenter(polygon.polygon.props.path)
