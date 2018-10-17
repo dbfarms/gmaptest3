@@ -82,7 +82,7 @@ export default class Timer extends React.Component {
         const durationInShape = this.state.elapsed - this.state.durationStart 
         //debugger 
         //console.log(durationInShape)
-        if (durationInShape % 3 === 0) {
+        if (durationInShape % 10 === 0) {
           //maybe this should be if baseTrack is the same and duration in shape is only for certain shapes, like circles, not polygons
           this.state.getDuration(latestShape, durationInShape)
         }

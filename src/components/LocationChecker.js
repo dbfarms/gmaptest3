@@ -269,7 +269,11 @@ export default class LocationChcker extends Component {
                 //debugger 
             }
         } else {
-            if (durationToSeconds % 3 === 0 && durationToSeconds !== this.state.durationEffects.duration) {
+            const timeLimit = this.state.durationEffects.timeLimit
+
+            //below used to be: durationToSeconds % 3 === 0 && durationToSeconds !== this.state.durationEffects.duration
+            console.log(durationToSeconds)
+            if (durationToSeconds % 10 === 0 && durationToSeconds !== this.state.durationEffects.duration) {
                 debugger 
                 //how far should each polygon be from each other? probably a good idea
                 //to come up with an upper limit of distance per means of movement (i.e. car, bike, walking, etc)
