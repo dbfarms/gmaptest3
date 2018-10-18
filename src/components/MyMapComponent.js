@@ -503,7 +503,7 @@ export default class MyFancyComponent extends React.PureComponent {
     // how to execute this? i don't know. i don't know! I DONT KNOW. gah. so you walk around and you hit a trigger and the song
     //starts and then you keep walking and it evolves so it needs some kind of meaningful designation of song parts?
     //
-    //debugger 
+    debugger  //here now, figure this out,subtracts time from total? speeds up something what?
   }
 
   /*
@@ -552,14 +552,20 @@ export default class MyFancyComponent extends React.PureComponent {
 
     switch(props.type) {
       case "circle":
+        const circleKey = this.state.circles.length 
+        const circle = props 
+        const radius = circle.overlay.radius
+        const center = {lat: circle.overlay.center.lat(), lng: circle.overlay.center.lng()}
+
+        const newCircleList = Object.assign([], this.state.circles)
+
         newDrawing = <Circle 
                         props={props}
-                        //key={key}
-                        //id={key}
+                        key={circleKey}
+                        id={circleKey}
+                        center={center}
+                        radius={radius}
                         ref={this.bindRef.bind(this)}
-                        //ref={key}
-                        //path={polygon.polygonCoords} //do i need to include this here?
-                        //paths={polygon.polygonCoords}
                         strokeColor="#0000FF"
                         strokeOpacity={0.8}
                         strokeWeight={2}
@@ -574,11 +580,9 @@ export default class MyFancyComponent extends React.PureComponent {
                           draggable: true 
                         }}
                      />
-
-        const newCircleList = Object.assign([], this.state.circles)
         newCircleList.push(newDrawing)
-
-        //debugger 
+        debugger 
+        
         return (
           this.setState({
             circles: newCircleList
@@ -607,7 +611,7 @@ export default class MyFancyComponent extends React.PureComponent {
           ref={newRef}
           type={type}
           //ref={key}
-          path={polygonPaths} //see below
+          path={polygonPaths} //see below, also i use this for a shortcut in code but it may not be necessary though other code relies on it
           paths={polygonPaths} //not sure what difference use is between the two
           strokeColor="#0000FF"
           strokeOpacity={0.8}
