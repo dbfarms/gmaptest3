@@ -51,6 +51,10 @@ const MyMapComponent = compose(
             {props.isMarkerShown && 
                 <Marker position={{ lat: props.geoLoc.lat, lng: props.geoLoc.lng }} onClick={props.onMarkerClick} />
             }
+
+            {props.circleList.map((circle, key) => {
+              return circle 
+            })}
             
             {props.markersList.map((marker, key) => {
                 return marker.marker
@@ -134,8 +138,6 @@ export default class MyFancyComponent extends React.PureComponent {
       let actualMarker; 
       //debugger
       if (this.state.testMarker.position !== "" ) {
-        //console.log("this one")
-        //debugger 
         createTestMarker = this.state.testMarker
        // console.log(createTestMarker)
       } else { 
@@ -145,65 +147,52 @@ export default class MyFancyComponent extends React.PureComponent {
         actualMarker = <Marker 
         position= {{lat: this.state.geoLoc.lat - .0000008, lng: this.state.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
         createTestMarker.marker = actualMarker
-        //debugger 
-        /*
-        plan: have a few markers as points to work/walk towards
-        how: enter miles to travel?
-        -map out route with api?
-        -pointers? suggest routes?
-        -if no map (i.e. woods) then what?
-        -have volume drop if going in wrong direction... or... lose tracks from sequence! but that can be confusing if path
-        is windy
-
-        by what means should proxmity be measured? lat/lng and...? 
-
-        new plan:
-        -baseTrack plays for x-duration. 
-        -slowly shifts over time(adds tracks? subtracts tracks?)
-        -hit triggers that make additional sounds (swells?)
-        -randomly place effects as you walk?
-        -control panel on phone to change track when you want as well?
-        -arrows pointing you in possible directions to do things
-        -create 'sets' of tracks that build... so 1,2,3 then 1,2,3,4, then etc... if you move away from
-        marker effects or something triggers? affects sequences? slows down?
-        how does the above work with duration affecting sequences? 
-        -success sounds?
-        */ 
-
-        //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
-        //so maybe you want to make that something else and keep this.state.markers what is at
-
-        //const center = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
-        //debugger 
 
         // EVNTUALLY THE BELOW WILL BE FETCHED FROM SERVER
-        let markersForMapping
+        //let markersForMapping = []
+        //let circlesForMapping = []
+        let objectsForMapping =[]
         if (this.state.gameSet=="lee") {
-          const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
-          const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
-          const center1 = geolib.getCenter([{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}])
-          const polygon1 = [{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}]
-          const center2 = geolib.getCenter([{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}])
-          const polygon2 = [{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}]
-          markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
+          objectsForMapping = this.gameLee()
         } else if (this.state.gameSet="matt") {
           debugger 
         }
-        const type = "polygons"
-        
-        //const newRef = this.bindRef.bind(this) 
-        let markerListHere = markersForMapping.map((marker, key)=> {
-          //debugger
-          return {marker: <Marker name={"marker" + key} position={{lat: parseFloat(marker[0].latitude), lng: parseFloat(marker[0].longitude)}} 
+
+        this.markMap(objectsForMapping)
+
+        const testPolyLine = [ 
+          {lat: this.state.geoLoc.lat, lng: this.state.geoLoc.lng },
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+        ]
+        //console.log(testPolyLine)
+        //debugger 
+        this.setState ({
+          //markers: markerListHere,
+          polylines: testPolyLine,
+          testMarker: createTestMarker,
+          menuSet: true,
+        })
+      }
+    }
+
+  }
+
+  markMap(objects){
+    for (var key in objects) {
+      switch(key){
+        case("markers"):
+          const type = "polygons"
+          let markerListHere = objects[key].map((marker, key) => {
+            return {marker: <Marker name={"marker" + key} position={{lat: parseFloat(marker[0].latitude), lng: parseFloat(marker[0].longitude)}} 
                             onClick={this.onMarkerClick.bind(this)} key={key}/>, 
                     polygon: {
                     position: marker[0],
                     polygonCoords: marker[1], 
                     polygonObject: <Polygon key={key}
                       id={key}
-                      ref={undefined} //newRef ... wait for mapping to bind 
+                      ref={this.bindRef.bind(this)}//{undefined} //newRef ... wait for mapping to bind 
                       type={"polygons"}
-                      //ref={key}
                       path={marker[1]} //see below
                       paths={marker[1]} //not sure what difference use is between the two
                       strokeColor="#0000FF"
@@ -220,71 +209,57 @@ export default class MyFancyComponent extends React.PureComponent {
                         draggable: true 
                       }}
                   />}}//, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
-        })                     
-        //debugger //marker and polygon above are incomplete
-        //keep making marker/'gons along set path for demo purpose
-                                
-          /*                  
-        for (let i = 0; i<5; i++) {
-          let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
-          let newMarker = []
-          let polygonCoordsSketch
-          if (i === 0 ) {
-            newMarker[0] = this.state.geoLoc.lat;
-            newMarker[1] = this.state.geoLoc.lng;
-            markerObject.position = newMarker 
-            polygonCoordsSketch = [
-              {lat: newMarker[0] + .00003, lng: newMarker[1] - .00003},
-              {lat: newMarker[0] + .00005, lng: newMarker[1] - .00003},
-              {lat: newMarker[0] - .00005, lng: newMarker[1] + .00005},
-            ];
-          } else {
-            let newPosition = i * .00006
-            newMarker[0] = this.state.geoLoc.lat + newPosition;
-            newMarker[1] = this.state.geoLoc.lng + newPosition;
-            markerObject.position = newMarker 
-            polygonCoordsSketch = [
-              {lat: newMarker[0] + .00003, lng: newMarker[1] - .00003},
-              {lat: newMarker[0] - .00005, lng: newMarker[1] - .00003},
-              {lat: newMarker[0] - .00005, lng: newMarker[1] + .00005},
-            ];
-          }
-
-          const marker = <Marker 
-              name={"marker" + i}
-              position={{lat: newMarker[0], lng: newMarker[1]}}
-              onClick={this.onMarkerClick.bind(this)}
-              key={i}
-            />
-          markerObject.polygonCoords = polygonCoordsSketch
-          markerListHere.push({marker: marker, polygon: markerObject})
-        } */
-
-
-        /*
-          creates circles which do what?
-        */
-
-        this.createCircles();
-
-        //debugger 
-        const testPolyLine = [ 
-          {lat: this.state.geoLoc.lat, lng: this.state.geoLoc.lng },
-          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
-          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
-        ]
-        //console.log(testPolyLine)
-        //console.log(createTestMarker)
-        //debugger 
-        this.setState ({
-          markers: markerListHere,
-          polylines: testPolyLine,
-          testMarker: createTestMarker,
-          menuSet: true,
-        })
+            })
+            //objectsToMap["markers"] = markerListHere
+            this.setState({markers: markerListHere})
+            break
+          case("circles"): 
+            let circleListHere = objects[key].map((circle, key) => {
+              //debugger 
+              return (<Circle 
+                key={key}
+                id={key}
+                center={circle[0]}
+                radius={circle[1]}
+                ref={this.bindRef.bind(this)}
+                strokeColor="#0000FF"
+                strokeOpacity={0.8}
+                strokeWeight={2}
+                fillColor="#0000FF"
+                fillOpacity={0.35} 
+                onClick={this.onPolygonClick} //.bind(this)}
+                onMouseUp={this.onPolygonChange.bind(this)} //, key)}
+                onMouseOver={this.onMouseOver.bind(this)}
+                onDrag={this.onPolygonDrag}
+                options={{
+                  editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+                  draggable: true 
+                }}
+              />)
+            })
+            this.setState({circles: circleListHere})
+          default: 
+            break 
       }
+      
+      //debugger 
     }
+    //const newRef = this.bindRef.bind(this)
+  }
 
+  gameLee(){
+    const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
+    const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
+    const center1 = geolib.getCenter([{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}])
+    const polygon1 = [{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}]
+    const center2 = geolib.getCenter([{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}])
+    const polygon2 = [{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}]
+    const markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
+    const radius0 = 5.265734261720755
+    const circleCenter0 = {lat: 40.87593884982505, lng: -73.88429448229363}
+    const circlesForMapping = [[circleCenter0, radius0]]
+    const objectsForMapping = {markers: markersForMapping, circles: circlesForMapping}
+    return objectsForMapping
   }
 
   /*
@@ -497,14 +472,6 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
-  createCircles() {
-
-    //circles will affect effects, so volume? speed? maybe 
-    // how to execute this? i don't know. i don't know! I DONT KNOW. gah. so you walk around and you hit a trigger and the song
-    //starts and then you keep walking and it evolves so it needs some kind of meaningful designation of song parts?
-    //
-    debugger  //here now, figure this out,subtracts time from total? speeds up something what?
-  }
 
   /*
   handleDrawingComplete(props) {
