@@ -257,7 +257,9 @@ export default class MyFancyComponent extends React.PureComponent {
     const markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
     const radius0 = 5.265734261720755
     const circleCenter0 = {lat: 40.87593884982505, lng: -73.88429448229363}
-    const circlesForMapping = [[circleCenter0, radius0]]
+    const radius1 = 14.17858803596248
+    const circleCenter1 = {lat: 40.87520061938387, lng: -73.8837312184005}
+    const circlesForMapping = [[circleCenter0, radius0], [circleCenter1, radius1]]
     const objectsForMapping = {markers: markersForMapping, circles: circlesForMapping}
     return objectsForMapping
   }
