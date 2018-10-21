@@ -25,12 +25,39 @@ import synth_2 from '../jams/shaynasong/synth_2.mp3'
 import weird_swell_1 from '../jams/shaynasong/weird_swell_1.mp3'
 import clock_ticking from '../jams/clock_ticking.mp3';
 import footsteps_on_fallen_leaves from '../jams/footsteps_on_fallen_leaves.mp3';
+import title_theme from '../jams/metroid/sm01.mp3' //at polygon start
+import boss_theme_1 from '../jams/metroid/sm05.mp3' //or inbetween places? or some in betweens
+import space_pirates from '../jams/metroid/sm11.mp3' // title theme
+import item_ambience from '../jams/metroid/sm13.mp3' // not sure yet
+import success from '../jams/metroid/sm14.mp3' //successful sound
+import jungle_floor from '../jams/metroid/sm15.mp3' //good long piece for general walking around, will play if you hit a 
+//safe square and then maybe switches back to earlier theme or danger music
+import undeground_depths from '../jams/metroid/sm16.mp3' // creepy music, longer
+import boss_theme_2 from '../jams/metroid/sm17.mp3' // minor creepy
+import boss_theme_3 from '../jams/metroid/sm19.mp3' // next level desperation, after first inbetween music time limit is up?
 /////////////////////////////////////////////////////////
+/*
+out of shape music has a sequence, so it gets more and more intense with tracks
+figure out which metroid tracks! and/or bring earbuds!
+2) prologue minus intro for... something HAVEN'T USED THIS ONE YET CAUSE I HAVEN'T EDITED IT
+*/
 
 class Player extends Component {
   constructor(props) {
     super(props)
     console.log(props)
+    /*
+    console.log(title_theme) // from '../jams/metroid/sm01.mp3' //at polygon start
+  console.log(boss_theme_1) // from '../jams/metroid/sm05.mp3' //or inbetween places? or some in betweens
+  console.log(space_pirates) // from '../jams/metroid/sm11.mp3' // title theme
+  console.log(item_ambience)// from '../jams/metroid/sm13.mp3' // not sure yet
+  console.log(success) // from '../jams/metroid/sm14.mp3' //successful sound
+  console.log(jungle_floor) // from '../jams/metroid/sm15.mp3' //good long piece for general walking around, will play if you hit a 
+  //safe square and then maybe switches back to earlier theme or danger music
+  console.log(undeground_depths) // from '../jams/metroid/sm16.mp3' // creepy music, longer
+  console.log(boss_theme_2) // from '../james/metroid/sm17.mp3' // minor creepy
+  console.log(boss_theme_3)
+  */
 
     this.state = {
       url: this.props.activeTrack,
@@ -60,7 +87,6 @@ class Player extends Component {
   */
   
   componentWillReceiveProps(nextProps) { //dont know how to use prevState,
-    //debugger 
     /*
     console.log(drums_2) 
     console.log(drums_3) 
@@ -74,7 +100,19 @@ class Player extends Component {
     console.log(clock_ticking)
     console.log(footsteps_on_fallen_leaves)
   debugger
-   */
+  console.log(title_theme) // from '../jams/metroid/sm01.mp3' //at polygon start
+  console.log(boss_theme_1) // from '../jams/metroid/sm05.mp3' //or inbetween places? or some in betweens
+  console.log(space_pirates) // from '../jams/metroid/sm11.mp3' // title theme
+  console.log(item_ambience)// from '../jams/metroid/sm13.mp3' // not sure yet
+  console.log(success) // from '../jams/metroid/sm14.mp3' //successful sound
+  console.log(jungle_floor) // from '../jams/metroid/sm15.mp3' //good long piece for general walking around, will play if you hit a 
+  //safe square and then maybe switches back to earlier theme or danger music
+  console.log(undeground_depths) // from '../jams/metroid/sm16.mp3' // creepy music, longer
+  console.log(boss_theme_2) // from '../james/metroid/sm17.mp3' // minor creepy
+  console.log(boss_theme_3)
+ */
+
+   //debugger 
 
     console.log("nextProps")
     console.log(nextProps)

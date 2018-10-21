@@ -206,6 +206,24 @@ export default class Sequencer extends Component {
                         return ["/static/media/synth_2.76c1a280.mp3", track.effects]
                       case("weird_swell_1"):
                         return ["/static/media/weird_swell_1.ec27bfe8.mp3", track.effects]
+                      case("title_theme"): 
+                        return ["/static/media/sm01.9a0b42e8.mp3", track.effects]
+                      case("boss_theme_1"): 
+                        return ["/static/media/sm05.ff4bf716.mp3", track.effects]
+                      case("space_pirates"):
+                        return ["/static/media/sm11.2d804c8c.mp3", track.effects] 
+                      case("item_ambience"): 
+                        return ["/static/media/sm13.16d3a161.mp3", track.effects]
+                      case("success"):
+                        return ["/static/media/sm14.d618523e.mp3", track.effects]
+                      case("jungle_floor"):
+                        return ["/static/media/sm15.fbcc2cec.mp3", track.effects] 
+                      case("undeground_depths"):
+                        return ["/static/media/sm16.cb0f49ec.mp3", track.effects]
+                      case("boss_theme_2"):
+                        return ["/static/media/sm17.876ee180.mp3", track.effects]
+                      case("boss_theme_3"): 
+                        return ["/static/media/sm19.11f91494.mp3", track.effects]
                       default: 
                         break 
                     }
