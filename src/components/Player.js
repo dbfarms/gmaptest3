@@ -46,18 +46,18 @@ class Player extends Component {
   constructor(props) {
     super(props)
     console.log(props)
-    /*
-    console.log(title_theme) // from '../jams/metroid/sm01.mp3' //at polygon start
-  console.log(boss_theme_1) // from '../jams/metroid/sm05.mp3' //or inbetween places? or some in betweens
-  console.log(space_pirates) // from '../jams/metroid/sm11.mp3' // title theme
-  console.log(item_ambience)// from '../jams/metroid/sm13.mp3' // not sure yet
-  console.log(success) // from '../jams/metroid/sm14.mp3' //successful sound
-  console.log(jungle_floor) // from '../jams/metroid/sm15.mp3' //good long piece for general walking around, will play if you hit a 
-  //safe square and then maybe switches back to earlier theme or danger music
-  console.log(undeground_depths) // from '../jams/metroid/sm16.mp3' // creepy music, longer
-  console.log(boss_theme_2) // from '../james/metroid/sm17.mp3' // minor creepy
-  console.log(boss_theme_3)
-  */
+      /*
+      console.log(title_theme) // from '../jams/metroid/sm01.mp3' //at polygon start
+    console.log(boss_theme_1) // from '../jams/metroid/sm05.mp3' //or inbetween places? or some in betweens
+    console.log(space_pirates) // from '../jams/metroid/sm11.mp3' // title theme
+    console.log(item_ambience)// from '../jams/metroid/sm13.mp3' // not sure yet
+    console.log(success) // from '../jams/metroid/sm14.mp3' //successful sound
+    console.log(jungle_floor) // from '../jams/metroid/sm15.mp3' //good long piece for general walking around, will play if you hit a 
+    //safe square and then maybe switches back to earlier theme or danger music
+    console.log(undeground_depths) // from '../jams/metroid/sm16.mp3' // creepy music, longer
+    console.log(boss_theme_2) // from '../james/metroid/sm17.mp3' // minor creepy
+    console.log(boss_theme_3)
+    */
 
     this.state = {
       url: this.props.activeTrack,

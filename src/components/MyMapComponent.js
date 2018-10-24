@@ -129,10 +129,11 @@ export default class MyFancyComponent extends React.PureComponent {
     }
   }
 
+  /*
   componentWillMount() { //THIS IS IN PLACE OF COMPONENTWILLRECEIVEPROPS BECAUSE THERE'S A SET GEOLOC FOR NOW 111111111111111
     //debugger 
     if (this.props.geoLoc) { //used to be nextProps.geoLoc
-      
+      debugger 
       let geoLoc = this.state.geoLoc 
       let createTestMarker = {};
       let actualMarker; 
@@ -153,9 +154,13 @@ export default class MyFancyComponent extends React.PureComponent {
         //let circlesForMapping = []
         let objectsForMapping =[]
         if (this.state.gameSet=="lee") {
+          debugger 
           objectsForMapping = this.gameLee()
         } else if (this.state.gameSet="matt") {
           debugger 
+          objectsForMapping = this.gameMatt()
+        } else {
+          debugger //can delete this whenever
         }
 
         this.markMap(objectsForMapping)
@@ -175,8 +180,8 @@ export default class MyFancyComponent extends React.PureComponent {
         })
       }
     }
-
   }
+  */
 
   markMap(objects){
     for (var key in objects) {
@@ -247,6 +252,28 @@ export default class MyFancyComponent extends React.PureComponent {
     //const newRef = this.bindRef.bind(this)
   }
 
+  /*
+{lat: 41.36866619491484, lng: -74.2588418088531}, {lat: 41.368613858859085, lng: -74.25875597816463}, {lat: 41.368613858859085, lng: -74.25884717327114}
+  */
+
+  gameMatt(){
+    const center0 = geolib.getCenter([{lat: 41.36926818803424, lng: -74.25868482020405}, {lat: 41.36913936193636, lng: -74.25855070975331}, {lat: 41.3692601364106, lng: -74.25837904837636}])
+    const polygon0 = [{lat: 41.36926818803424, lng: -74.25868482020405}, {lat: 41.36913936193636, lng: -74.25855070975331}, {lat: 41.3692601364106, lng: -74.25837904837636}]
+    const center1 = geolib.getCenter([{lat: 41.36906273981549, lng: -74.25851457935329}, {lat: 41.36896209413049, lng: -74.25854140144344}, {lat: 41.36898423619456, lng: -74.25841265541072}])
+    const polygon1 = [{lat: 41.36906273981549, lng: -74.25851457935329}, {lat: 41.36896209413049, lng: -74.25854140144344}, {lat: 41.36898423619456, lng: -74.25841265541072}]
+    const center2 = geolib.getCenter([{lat: 41.36884534494084, lng: -74.25863259654994}, {lat: 41.36875476352867, lng: -74.25849043947215}, {lat: 41.368847357859664, lng: -74.25854140144344}])
+    const polygon2 = [{lat: 41.36884534494084, lng: -74.25863259654994}, {lat: 41.36875476352867, lng: -74.25849043947215}, {lat: 41.368847357859664, lng: -74.25854140144344}]
+    const center3 = geolib.getCenter([{lat: 41.36866619491484, lng: -74.2588418088531}, {lat: 41.368613858859085, lng: -74.25875597816463}, {lat: 41.368613858859085, lng: -74.25884717327114}])
+    const polygon3 = [{lat: 41.36866619491484, lng: -74.2588418088531}, {lat: 41.368613858859085, lng: -74.25875597816463}, {lat: 41.368613858859085, lng: -74.25884717327114}]
+    const markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2], [center3, polygon3]]
+    const radius0 = 2.4876586413772963
+    const circleCenter0 = {lat: 41.368875846951404, lng: -74.2584683942261}
+    const circlesForMapping = [[circleCenter0, radius0]]
+    const objectsForMapping = {markers: markersForMapping, circles: circlesForMapping}
+    //debugger 
+    return objectsForMapping
+  }
+
   gameLee(){
     const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
     const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
@@ -264,93 +291,6 @@ export default class MyFancyComponent extends React.PureComponent {
     return objectsForMapping
   }
 
-  /*
-  componentDidUpdate(props, prevState) {
-    //debugger
-    //console.log(prevState)
-    //console.log(props)
-    console.log("did update")
-    
-    if (this.props.geoLoc) { //used to be nextProps.geoLoc, do i need this? 
-      let geoLoc = this.state.geoLoc 
-      let createTestMarker = {};
-      let actualMarker; 
-      if (this.state.gameSet === prevState.gameSet) {
-        createTestMarker = this.state.testMarker //what is this doing here, will this break?
-      } else { 
-        //starts game over
-        createTestMarker = {position: {lat: this.state.geoLoc.lat - .0000005, lng: this.state.geoLoc.lng - .0000005}, 
-        marker: "", show: false}
-        actualMarker = <Marker 
-        position= {{lat: this.state.geoLoc.lat - .0000008, lng: this.state.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
-        createTestMarker.marker = actualMarker
-
-        let markersForMapping
-        if (this.state.gameSet=="lee") {
-          const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
-          const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
-          const center1 = geolib.getCenter([{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}])
-          const polygon1 = [{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}]
-          const center2 = geolib.getCenter([{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}])
-          const polygon2 = [{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}]
-          markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
-        } else if (this.state.gameSet="matt") {
-          debugger //need to create map still duh
-        }
-        
-        //const newRef = this.bindRef.bind(this) 
-        let markerListHere = markersForMapping.map((marker, key)=> {
-          const type = "polygons"
-          return {marker: <Marker name={"marker" + key} position={marker[0]} 
-                            onClick={this.onMarkerClick.bind(this)} key={key}/>, 
-                    polygon: {
-                    position: marker[0],
-                    polygonCoords: marker[1], 
-                    polygonObject: <Polygon key={key}
-                      id={key}
-                      ref={undefined} //newRef ... wait for mapping to bind 
-                      type={"polygons"}
-                      //ref={key}
-                      path={marker[1]} //see below
-                      paths={marker[1]} //not sure what difference use is between the two
-                      strokeColor="#0000FF"
-                      strokeOpacity={0.8}
-                      strokeWeight={2}
-                      fillColor="#0000FF"
-                      fillOpacity={0.35} 
-                      onClick={this.onPolygonClick} //.bind(this)}
-                      onMouseUp={this.onPolygonChange.bind(this, key) } // this.onTestPolygonChange
-                      onDrag={this.onPolygonDrag}
-                      onMouseOver={this.onMouseOver.bind(this, key, type)}
-                      options={{
-                        editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
-                        draggable: true 
-                      }}
-            />}}//, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
-        })                     
-
-        this.createCircles();
-
-        //debugger 
-        const testPolyLine = [ 
-          {lat: this.state.geoLoc.lat, lng: this.state.geoLoc.lng },
-          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
-          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
-        ]
-        //console.log(testPolyLine)
-        //console.log(createTestMarker)
-        //debugger 
-        this.setState ({
-          markers: markerListHere,
-          polylines: testPolyLine,
-          testMarker: createTestMarker,
-          menuSet: true,
-        })
-      }
-    }
-  }
-  */
-
   componentWillReceiveProps(nextProps){
     console.log("next props")
     //console.log(this)
@@ -364,8 +304,9 @@ export default class MyFancyComponent extends React.PureComponent {
     //right now it just sets to state predetermined positions based on location
     //also it creates the polygon here though it'll have to be done elsewhere soon
     //debugger 
-    if (this.state.geoLoc) { //used to be nextProps.geoLoc
+    if (nextProps.geoLoc) { //used to be nextProps.geoLoc
       console.log("geo loc works")
+      //debugger 
       if (nextProps.gameSet !== this.state.gameSet) {
 
       } else {
@@ -373,8 +314,6 @@ export default class MyFancyComponent extends React.PureComponent {
         let actualMarker; 
         //debugger
         if (this.state.testMarker.position !== "" ) {
-          //console.log("this one")
-          //debugger 
           createTestMarker = this.state.testMarker
         // console.log(createTestMarker)
         } else { 
@@ -411,6 +350,19 @@ export default class MyFancyComponent extends React.PureComponent {
           //debugger //HERE, 10.11 - this.state.markers is the polygon and location of marker, but not marker props
           //so maybe you want to make that something else and keep this.state.markers what is at
 
+          let objectsForMapping =[]
+          if (this.state.gameSet=="lee") {
+            debugger 
+            objectsForMapping = this.gameLee()
+          } else if (this.state.gameSet="matt") {
+            //debugger 
+            objectsForMapping = this.gameMatt()
+          } else {
+            debugger //can delete this whenever
+          }
+          this.markMap(objectsForMapping)
+
+          /* THIS WAS FOR AN EARLIER POLYGON TESTING 
           let markerListHere = []
           for (let i = 0; i<5; i++) {
             let markerObject = {position: [], polygonCoords: [], polygonObject: []}; 
@@ -445,13 +397,7 @@ export default class MyFancyComponent extends React.PureComponent {
               />
             markerObject.polygonCoords = polygonCoordsSketch
             markerListHere.push({marker: marker, polygon: markerObject})
-          }
-
-          /*
-            creates circles which do what?
-          */
-
-          this.createCircles();
+          }*/
 
           const geoLoc = nextProps.geoLoc
           //debugger 
@@ -464,7 +410,7 @@ export default class MyFancyComponent extends React.PureComponent {
           //console.log(createTestMarker)
           //debugger 
           this.setState ({
-            markers: markerListHere,
+            //markers: markerListHere,
             polylines: testPolyLine,
             testMarker: createTestMarker,
             menuSet: true,
@@ -562,10 +508,12 @@ export default class MyFancyComponent extends React.PureComponent {
           //debugger //DRAWN POLYGON FUNCTIONS NOT WORKING
         const key = this.state.polygons.length 
         const polygon = props 
+        //debugger 
         const polygonPaths = [] //props.overlay.getPaths().getArray()[0].b[0].lng()
         for (let i=0;i<props.overlay.getPaths().getArray()[0].length;i++) {
           //debugger 
-          const newPath = {lat: props.overlay.getPaths().getArray()[0].b[i].lat(), lng: props.overlay.getPaths().getArray()[0].b[i].lng()}
+          //const newPath = {lat: props.overlay.getPaths().getArray()[0].b[i].lat(), lng: props.overlay.getPaths().getArray()[0].b[i].lng()}
+          const newPath = {lat: props.overlay.getPath().getArray()[i].lat(), lng: props.overlay.getPath().getArray()[i].lng()}
           polygonPaths.push(newPath)
         }
         //debugger 
@@ -880,7 +828,7 @@ export default class MyFancyComponent extends React.PureComponent {
   }
 
   setPolygonsNow = () => {
-    //debugger 
+    debugger //set tracks to metroid instead
     const polygonsDrawn = this.state.markers.map((polygon, key) => {
       //debugger 
       const type="polygons"
@@ -908,6 +856,10 @@ export default class MyFancyComponent extends React.PureComponent {
           draggable: true 
         }}
       />, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
+      //was baseTrack: 'shayna_song'
+      //steps
+      //1) change all instances of shayna_song to metroid_song
+      
       //baseTrack hard-coded at the moment
       //oh wait, maybe sequence should be used... polygons add track and add a sequencing event?
       //- how would sequence work? it would be associated with a set of 
@@ -925,6 +877,7 @@ export default class MyFancyComponent extends React.PureComponent {
 
     //randomly assigns track to polygon, eventually this will be thought out
     polygonsDrawn.map(polygon => {
+      /*
       let preloadedTracks = {baseTrack: 'shayna_song', sequence: ['drums_2', 
       'drums_3', 
       'drums_main', 
@@ -934,6 +887,27 @@ export default class MyFancyComponent extends React.PureComponent {
       'synth_1',
       'synth_2',
       'weird_swell_1']}
+      */
+    let preloadedTracks = {baseTrack: 'metroid', sequence: []} //how to do this? no longer def have multiple players
+    debugger 
+    //auto play space_pirates when apps start
+    //baseTrack should play title_theme on start
+    //polygons will have an order of tracks to play, but what is a good sequence?
+    //1) 
+    //squares ... relief type music? what's the difference w/ polygons?
+    //1) success -
+    //2) jungle_floor
+    //circles also different 
+    //out of shape
+    //1) boss_theme_1
+    //2) underground_depths
+    //3) boss_theme_3 (ups creepiness allegedly)
+    /*
+  console.log(item_ambience)// from '../jams/metroid/sm13.mp3' // not sure yet
+  console.log(undeground_depths) // from '../jams/metroid/sm16.mp3' // creepy music, longer
+  console.log(boss_theme_2) // from '../james/metroid/sm17.mp3' // minor creepy
+  */
+
       
       //eventually baseTrack won't be preloaded 
       const tracksCheck = []
@@ -1073,6 +1047,7 @@ export default class MyFancyComponent extends React.PureComponent {
   */
 
   render() {
+    console.log(this.state)
     let markersList 
     let polygonList
     let polygonToDraw = []
@@ -1126,6 +1101,7 @@ export default class MyFancyComponent extends React.PureComponent {
                   />
                 </div>
                 <div>
+                  {this.state.gameSet}
                   <button
                     onClick={this.savesChanges.bind(this)}
                   >
@@ -1327,3 +1303,90 @@ export default connect()
         testPolyLine: testPolyLine,
         testMarker: createTestMarker
       }) */
+
+      /*
+  componentDidUpdate(props, prevState) {
+    //debugger
+    //console.log(prevState)
+    //console.log(props)
+    console.log("did update")
+    
+    if (this.props.geoLoc) { //used to be nextProps.geoLoc, do i need this? 
+      let geoLoc = this.state.geoLoc 
+      let createTestMarker = {};
+      let actualMarker; 
+      if (this.state.gameSet === prevState.gameSet) {
+        createTestMarker = this.state.testMarker //what is this doing here, will this break?
+      } else { 
+        //starts game over
+        createTestMarker = {position: {lat: this.state.geoLoc.lat - .0000005, lng: this.state.geoLoc.lng - .0000005}, 
+        marker: "", show: false}
+        actualMarker = <Marker 
+        position= {{lat: this.state.geoLoc.lat - .0000008, lng: this.state.geoLoc.lng - .0000008}} latLng={this.latLng} lat={this.lat} lng={this.lng}/>
+        createTestMarker.marker = actualMarker
+
+        let markersForMapping
+        if (this.state.gameSet=="lee") {
+          const center0 = geolib.getCenter([{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}])
+          const polygon0 = [{lat: 40.87618528878572, lng: -73.88435958684386}, {lat: 40.8762258505083, lng: -73.8844561463684}, {lat: 40.876152839389775, lng: -73.88447089851798}]
+          const center1 = geolib.getCenter([{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}])
+          const polygon1 = [{lat: 40.87588628646609, lng: -73.88355468029476}, {lat: 40.875772712997694, lng: -73.88368342632748}, {lat: 40.875752432000695, lng: -73.88348226065136}]
+          const center2 = geolib.getCenter([{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}])
+          const polygon2 = [{lat: 40.875048635084084, lng: -73.88400480372002}, {lat: 40.87493911642865, lng: -73.88411745649864}, {lat: 40.87496751017153, lng: -73.88384923559715}]
+          markersForMapping = [[center0, polygon0], [center1, polygon1], [center2, polygon2]]
+        } else if (this.state.gameSet="matt") {
+          debugger //need to create map still duh
+        }
+        
+        //const newRef = this.bindRef.bind(this) 
+        let markerListHere = markersForMapping.map((marker, key)=> {
+          const type = "polygons"
+          return {marker: <Marker name={"marker" + key} position={marker[0]} 
+                            onClick={this.onMarkerClick.bind(this)} key={key}/>, 
+                    polygon: {
+                    position: marker[0],
+                    polygonCoords: marker[1], 
+                    polygonObject: <Polygon key={key}
+                      id={key}
+                      ref={undefined} //newRef ... wait for mapping to bind 
+                      type={"polygons"}
+                      //ref={key}
+                      path={marker[1]} //see below
+                      paths={marker[1]} //not sure what difference use is between the two
+                      strokeColor="#0000FF"
+                      strokeOpacity={0.8}
+                      strokeWeight={2}
+                      fillColor="#0000FF"
+                      fillOpacity={0.35} 
+                      onClick={this.onPolygonClick} //.bind(this)}
+                      onMouseUp={this.onPolygonChange.bind(this, key) } // this.onTestPolygonChange
+                      onDrag={this.onPolygonDrag}
+                      onMouseOver={this.onMouseOver.bind(this, key, type)}
+                      options={{
+                        editable: true, // this.state.editPolygon ? true : false, //this doesn't work and i don't know why 
+                        draggable: true 
+                      }}
+            />}}//, trackSequence: {baseTrack: 'shayna_song', tracks: []}, trackEffects: {duration: 3, visits: 2, sequence: 1, speed: 1}} /// see below
+        })                     
+
+        this.createCircles();
+
+        //debugger 
+        const testPolyLine = [ 
+          {lat: this.state.geoLoc.lat, lng: this.state.geoLoc.lng },
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+          {lat: this.state.geoLoc.lat + .001, lng: this.state.geoLoc.lng + .002},
+        ]
+        //console.log(testPolyLine)
+        //console.log(createTestMarker)
+        //debugger 
+        this.setState ({
+          markers: markerListHere,
+          polylines: testPolyLine,
+          testMarker: createTestMarker,
+          menuSet: true,
+        })
+      }
+    }
+  }
+  */

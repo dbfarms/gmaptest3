@@ -185,6 +185,7 @@ export default class Sequencer extends Component {
                 return ticktockPaths 
                 //debugger
             } else {
+                //still need to test metroid tracks...
                 const trackPaths = sequence.sequence.map(track => { //when you feel like it make the below all 
                                                                     //objects and make path, name, effects as keys
                     switch(track.track) {
